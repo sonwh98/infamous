@@ -1,3 +1,6 @@
+![](https://clojars.org/famous-cljs/latest-version.svg)
+
+
 https://github.com/Famous/global-seed
 
 
