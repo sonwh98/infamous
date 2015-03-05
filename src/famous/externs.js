@@ -37,31 +37,7 @@ var _setPerspective = usePrefix ? function(element, perspective) {
  * @private
  * @param {Node} container Element in which content will be inserted
  */
-function Context(container) {
-    this.container = container;
-    this._allocator = new ElementAllocator(container);
-
-    this._node = new RenderNode();
-    this._eventOutput = new EventHandler();
-    this._size = _getElementSize(this.container);
-
-    this._perspectiveState = new Transitionable(0);
-    this._perspective = undefined;
-
-    this._nodeContext = {
-        allocator: this._allocator,
-        transform: Transform.identity,
-        opacity: 1,
-        origin: _zeroZero,
-        align: _zeroZero,
-        size: this._size
-    };
-
-    this._eventOutput.on('resize', function() {
-        this.setSize(_getElementSize(this.container));
-    }.bind(this));
-
-}
+function Context(container) {}
 
 // Note: Unused
 Context.prototype.getAllocator = function getAllocator() {
@@ -76,9 +52,7 @@ Context.prototype.getAllocator = function getAllocator() {
  * @param {Object} obj renderable object
  * @return {RenderNode} RenderNode wrapping this object, if not already a RenderNode
  */
-Context.prototype.add = function add(obj) {
-    return this._node.add(obj);
-};
+Context.prototype.add = function add(obj) {};
 
 /**
  * Move this Context to another containing document element.
@@ -87,11 +61,7 @@ Context.prototype.add = function add(obj) {
  *
  * @param {Node} container Element to which content will be migrated
  */
-Context.prototype.migrate = function migrate(container) {
-    if (container === this.container) return;
-    this.container = container;
-    this._allocator.migrate(container);
-};
+Context.prototype.migrate = function migrate(container) {};
 
 /**
  * Gets viewport size for Context.
@@ -111,11 +81,7 @@ Context.prototype.getSize = function getSize() {
  *
  * @param {Array.Number} size [width, height].  If unspecified, use size of root document element.
  */
-Context.prototype.setSize = function setSize(size) {
-    if (!size) size = _getElementSize(this.container);
-    this._size[0] = size[0];
-    this._size[1] = size[1];
-};
+Context.prototype.setSize = function setSize(size) {};
 
 /**
  * Commit this Context's content changes to the document.
@@ -124,22 +90,7 @@ Context.prototype.setSize = function setSize(size) {
  * @method update
  * @param {Object} contextParameters engine commit specification
  */
-Context.prototype.update = function update(contextParameters) {
-    if (contextParameters) {
-        if (contextParameters.transform) this._nodeContext.transform = contextParameters.transform;
-        if (contextParameters.opacity) this._nodeContext.opacity = contextParameters.opacity;
-        if (contextParameters.origin) this._nodeContext.origin = contextParameters.origin;
-        if (contextParameters.align) this._nodeContext.align = contextParameters.align;
-        if (contextParameters.size) this._nodeContext.size = contextParameters.size;
-    }
-    var perspective = this._perspectiveState.get();
-    if (perspective !== this._perspective) {
-        _setPerspective(this.container, perspective);
-        this._perspective = perspective;
-    }
-
-    this._node.commit(this._nodeContext);
-};
+Context.prototype.update = function update(contextParameters) {};
 
 /**
  * Get current perspective of this context in pixels.
@@ -147,9 +98,7 @@ Context.prototype.update = function update(contextParameters) {
  * @method getPerspective
  * @return {Number} depth perspective in pixels
  */
-Context.prototype.getPerspective = function getPerspective() {
-    return this._perspectiveState.get();
-};
+Context.prototype.getPerspective = function getPerspective() {};
 
 /**
  * Set current perspective of this context in pixels.
@@ -159,9 +108,7 @@ Context.prototype.getPerspective = function getPerspective() {
  * @param {Object} [transition] Transitionable object for applying the change
  * @param {function(Object)} callback function called on completion of transition
  */
-Context.prototype.setPerspective = function setPerspective(perspective, transition, callback) {
-    return this._perspectiveState.set(perspective, transition, callback);
-};
+Context.prototype.setPerspective = function setPerspective(perspective, transition, callback) {};
 
 /**
  * Trigger an event, sending to all downstream handlers
@@ -173,9 +120,7 @@ Context.prototype.setPerspective = function setPerspective(perspective, transiti
  * @param {Object} event event data
  * @return {EventHandler} this
  */
-Context.prototype.emit = function emit(type, event) {
-    return this._eventOutput.emit(type, event);
-};
+Context.prototype.emit = function emit(type, event) {};
 
 /**
  * Bind a callback function to an event type handled by this object.
@@ -186,9 +131,7 @@ Context.prototype.emit = function emit(type, event) {
  * @param {function(string, Object)} handler callback
  * @return {EventHandler} this
  */
-Context.prototype.on = function on(type, handler) {
-    return this._eventOutput.on(type, handler);
-};
+Context.prototype.on = function on(type, handler) {};
 
 /**
  * Unbind an event by type and handler.
@@ -200,9 +143,7 @@ Context.prototype.on = function on(type, handler) {
  * @param {function} handler function object to remove
  * @return {EventHandler} internal event handler object (for chaining)
  */
-Context.prototype.removeListener = function removeListener(type, handler) {
-    return this._eventOutput.removeListener(type, handler);
-};
+Context.prototype.removeListener = function removeListener(type, handler) {};
 
 /**
  * Add event handler object to set of downstream handlers.
@@ -212,9 +153,7 @@ Context.prototype.removeListener = function removeListener(type, handler) {
  * @param {EventHandler} target event handler target object
  * @return {EventHandler} passed event handler
  */
-Context.prototype.pipe = function pipe(target) {
-    return this._eventOutput.pipe(target);
-};
+Context.prototype.pipe = function pipe(target) {};
 
 /**
  * Remove handler object from set of downstream handlers.
@@ -225,9 +164,7 @@ Context.prototype.pipe = function pipe(target) {
  * @param {EventHandler} target target handler object
  * @return {EventHandler} provided target
  */
-Context.prototype.unpipe = function unpipe(target) {
-    return this._eventOutput.unpipe(target);
-};
+Context.prototype.unpipe = function unpipe(target) {};
 
 module.exports = Context;
 },{"../transitions/Transitionable":88,"./ElementAllocator":2,"./EventHandler":7,"./RenderNode":11,"./Transform":15}],2:[function(_dereq_,module,exports){
@@ -253,12 +190,7 @@ module.exports = Context;
  * @private
  * @param {Node} container document element in which Famo.us content will be inserted
  */
-function ElementAllocator(container) {
-    if (!container) container = document.createDocumentFragment();
-    this.container = container;
-    this.detachedNodes = {};
-    this.nodeCount = 0;
-}
+function ElementAllocator(container) {}
 
 /**
  * Move the document elements from their original container to a new one.
@@ -268,21 +200,7 @@ function ElementAllocator(container) {
  *
  * @param {Node} container document element to which Famo.us content will be migrated
  */
-ElementAllocator.prototype.migrate = function migrate(container) {
-    var oldContainer = this.container;
-    if (container === oldContainer) return;
-
-    if (oldContainer instanceof DocumentFragment) {
-        container.appendChild(oldContainer);
-    }
-    else {
-        while (oldContainer.hasChildNodes()) {
-            container.appendChild(oldContainer.firstChild);
-        }
-    }
-
-    this.container = container;
-};
+ElementAllocator.prototype.migrate = function migrate(container) {};
 
 /**
  * Allocate an element of specified type from the pool.
@@ -293,21 +211,7 @@ ElementAllocator.prototype.migrate = function migrate(container) {
  * @param {string} type type of element, e.g. 'div'
  * @return {Node} allocated document element
  */
-ElementAllocator.prototype.allocate = function allocate(type) {
-    type = type.toLowerCase();
-    if (!(type in this.detachedNodes)) this.detachedNodes[type] = [];
-    var nodeStore = this.detachedNodes[type];
-    var result;
-    if (nodeStore.length > 0) {
-        result = nodeStore.pop();
-    }
-    else {
-        result = document.createElement(type);
-        this.container.appendChild(result);
-    }
-    this.nodeCount++;
-    return result;
-};
+ElementAllocator.prototype.allocate = function allocate(type) {};
 
 /**
  * De-allocate an element of specified type to the pool.
@@ -317,12 +221,7 @@ ElementAllocator.prototype.allocate = function allocate(type) {
  *
  * @param {Node} element document element to deallocate
  */
-ElementAllocator.prototype.deallocate = function deallocate(element) {
-    var nodeType = element.nodeName.toLowerCase();
-    var nodeStore = this.detachedNodes[nodeType];
-    nodeStore.push(element);
-    this.nodeCount--;
-};
+ElementAllocator.prototype.deallocate = function deallocate(element) {};
 
 /**
  * Get count of total allocated nodes in the document.
@@ -365,29 +264,7 @@ var devicePixelRatio = window.devicePixelRatio || 1;
  *
  * @param {Node} element document parent of this container
  */
-function ElementOutput(element) {
-    this._matrix = null;
-    this._opacity = 1;
-    this._origin = null;
-    this._size = null;
-
-    this._eventOutput = new EventHandler();
-    this._eventOutput.bindThis(this);
-
-    /** @ignore */
-    this.eventForwarder = function eventForwarder(event) {
-        this._eventOutput.emit(event.type, event);
-    }.bind(this);
-
-    this.id = Entity.register(this);
-    this._element = null;
-    this._sizeDirty = false;
-    this._originDirty = false;
-    this._transformDirty = false;
-
-    this._invisible = false;
-    if (element) this.attach(element);
-}
+function ElementOutput(element) {}
 
 /**
  * Bind a callback function to an event type handled by this object.
@@ -398,10 +275,7 @@ function ElementOutput(element) {
  * @param {function(string, Object)} fn handler callback
  * @return {EventHandler} this
  */
-ElementOutput.prototype.on = function on(type, fn) {
-    if (this._element) this._element.addEventListener(type, this.eventForwarder);
-    this._eventOutput.on(type, fn);
-};
+ElementOutput.prototype.on = function on(type, fn) {};
 
 /**
  * Unbind an event by type and handler.
@@ -411,9 +285,7 @@ ElementOutput.prototype.on = function on(type, fn) {
  * @param {string} type event type key (for example, 'click')
  * @param {function(string, Object)} fn handler
  */
-ElementOutput.prototype.removeListener = function removeListener(type, fn) {
-    this._eventOutput.removeListener(type, fn);
-};
+ElementOutput.prototype.removeListener = function removeListener(type, fn) {};
 
 /**
  * Trigger an event, sending to all downstream handlers
@@ -425,12 +297,7 @@ ElementOutput.prototype.removeListener = function removeListener(type, fn) {
  * @param {Object} [event] event data
  * @return {EventHandler} this
  */
-ElementOutput.prototype.emit = function emit(type, event) {
-    if (event && !event.origin) event.origin = this;
-    var handled = this._eventOutput.emit(type, event);
-    if (handled && event && event.stopPropagation) event.stopPropagation();
-    return handled;
-};
+ElementOutput.prototype.emit = function emit(type, event) {};
 
 /**
  * Add event handler object to set of downstream handlers.
@@ -440,9 +307,7 @@ ElementOutput.prototype.emit = function emit(type, event) {
  * @param {EventHandler} target event handler target object
  * @return {EventHandler} passed event handler
  */
-ElementOutput.prototype.pipe = function pipe(target) {
-    return this._eventOutput.pipe(target);
-};
+ElementOutput.prototype.pipe = function pipe(target) {};
 
 /**
  * Remove handler object from set of downstream handlers.
@@ -453,9 +318,7 @@ ElementOutput.prototype.pipe = function pipe(target) {
  * @param {EventHandler} target target handler object
  * @return {EventHandler} provided target
  */
-ElementOutput.prototype.unpipe = function unpipe(target) {
-    return this._eventOutput.unpipe(target);
-};
+ElementOutput.prototype.unpipe = function unpipe(target) {};
 
 /**
  * Return spec for this surface. Note that for a base surface, this is
@@ -465,26 +328,16 @@ ElementOutput.prototype.unpipe = function unpipe(target) {
  * @private
  * @return {Object} render spec for this surface (spec id)
  */
-ElementOutput.prototype.render = function render() {
-    return this.id;
-};
+ElementOutput.prototype.render = function render() {};
 
 //  Attach Famous event handling to document events emanating from target
 //    document element.  This occurs just after attachment to the document.
 //    Calling this enables methods like #on and #pipe.
-function _addEventListeners(target) {
-    for (var i in this._eventOutput.listeners) {
-        target.addEventListener(i, this.eventForwarder);
-    }
-}
+function _addEventListeners(target) {}
 
 //  Detach Famous event handling from document events emanating from target
 //  document element.  This occurs just before detach from the document.
-function _removeEventListeners(target) {
-    for (var i in this._eventOutput.listeners) {
-        target.removeEventListener(i, this.eventForwarder);
-    }
-}
+function _removeEventListeners(target) {}
 
 /**
  * Return a Matrix's webkit css representation to be used with the
@@ -496,17 +349,7 @@ function _removeEventListeners(target) {
  * @param {FamousMatrix} m matrix
  * @return {string} matrix3d CSS style representation of the transform
  */
-function _formatCSSTransform(m) {
-    m[12] = Math.round(m[12] * devicePixelRatio) / devicePixelRatio;
-    m[13] = Math.round(m[13] * devicePixelRatio) / devicePixelRatio;
-
-    var result = 'matrix3d(';
-    for (var i = 0; i < 15; i++) {
-        result += (m[i] < 0.000001 && m[i] > -0.000001) ? '0,' : m[i] + ',';
-    }
-    result += m[15] + ')';
-    return result;
-}
+function _formatCSSTransform(m) {}
 
 /**
  * Directly apply given FamousMatrix to the document element as the
@@ -539,9 +382,7 @@ else {
 }
 
 // format origin as CSS percentage string
-function _formatCSSOrigin(origin) {
-    return (100 * origin[0]) + '% ' + (100 * origin[1]) + '%';
-}
+function _formatCSSOrigin(origin) {}
 
 // Directly apply given origin coordinates to the document element as the
 // appropriate webkit CSS style.
@@ -560,9 +401,7 @@ var _setInvisible = usePrefix ? function(element) {
     element.style.opacity = 0;
 };
 
-function _xyNotEquals(a, b) {
-    return (a && b) ? (a[0] !== b[0] || a[1] !== b[1]) : a !== b;
-}
+function _xyNotEquals(a, b) {}
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -573,63 +412,9 @@ function _xyNotEquals(a, b) {
  * @method commit
  * @param {Context} context commit context
  */
-ElementOutput.prototype.commit = function commit(context) {
-    var target = this._element;
-    if (!target) return;
+ElementOutput.prototype.commit = function commit(context) {};
 
-    var matrix = context.transform;
-    var opacity = context.opacity;
-    var origin = context.origin;
-    var size = context.size;
-
-    if (!matrix && this._matrix) {
-        this._matrix = null;
-        this._opacity = 0;
-        _setInvisible(target);
-        return;
-    }
-
-    if (_xyNotEquals(this._origin, origin)) this._originDirty = true;
-    if (Transform.notEquals(this._matrix, matrix)) this._transformDirty = true;
-
-    if (this._invisible) {
-        this._invisible = false;
-        this._element.style.display = '';
-    }
-
-    if (this._opacity !== opacity) {
-        this._opacity = opacity;
-        target.style.opacity = (opacity >= 1) ? '0.999999' : opacity;
-    }
-
-    if (this._transformDirty || this._originDirty || this._sizeDirty) {
-        if (this._sizeDirty) this._sizeDirty = false;
-
-        if (this._originDirty) {
-            if (origin) {
-                if (!this._origin) this._origin = [0, 0];
-                this._origin[0] = origin[0];
-                this._origin[1] = origin[1];
-            }
-            else this._origin = null;
-            _setOrigin(target, this._origin);
-            this._originDirty = false;
-        }
-
-        if (!matrix) matrix = Transform.identity;
-        this._matrix = matrix;
-        var aaMatrix = this._size ? Transform.thenMove(matrix, [-this._size[0]*origin[0], -this._size[1]*origin[1], 0]) : matrix;
-        _setMatrix(target, aaMatrix);
-        this._transformDirty = false;
-    }
-};
-
-ElementOutput.prototype.cleanup = function cleanup() {
-    if (this._element) {
-        this._invisible = true;
-        this._element.style.display = 'none';
-    }
-};
+ElementOutput.prototype.cleanup = function cleanup() {};
 
 /**
  * Place the document element that this component manages into the document.
@@ -638,10 +423,7 @@ ElementOutput.prototype.cleanup = function cleanup() {
  * @method attach
  * @param {Node} target document parent of this container
  */
-ElementOutput.prototype.attach = function attach(target) {
-    this._element = target;
-    _addEventListeners.call(this, target);
-};
+ElementOutput.prototype.attach = function attach(target) {};
 
 /**
  * Remove any contained document content associated with this surface
@@ -650,18 +432,7 @@ ElementOutput.prototype.attach = function attach(target) {
  * @private
  * @method detach
  */
-ElementOutput.prototype.detach = function detach() {
-    var target = this._element;
-    if (target) {
-        _removeEventListeners.call(this, target);
-        if (this._invisible) {
-            this._invisible = false;
-            this._element.style.display = '';
-        }
-    }
-    this._element = null;
-    return target;
-};
+ElementOutput.prototype.detach = function detach() {};
 
 module.exports = ElementOutput;
 },{"./Entity":5,"./EventHandler":7,"./Transform":15}],4:[function(_dereq_,module,exports){
@@ -735,35 +506,7 @@ var MAX_DEFER_FRAME_TIME = 10;
  * @private
  * @method step
  */
-Engine.step = function step() {
-    currentFrame++;
-    nextTickFrame = currentFrame;
-
-    var currentTime = Date.now();
-
-    // skip frame if we're over our framerate cap
-    if (frameTimeLimit && currentTime - lastTime < frameTimeLimit) return;
-
-    var i = 0;
-
-    frameTime = currentTime - lastTime;
-    lastTime = currentTime;
-
-    eventHandler.emit('prerender');
-
-    // empty the queue
-    var numFunctions = nextTickQueue.length;
-    while (numFunctions--) (nextTickQueue.shift())(currentFrame);
-
-    // limit total execution time for deferrable functions
-    while (deferQueue.length && (Date.now() - currentTime) < MAX_DEFER_FRAME_TIME) {
-        deferQueue.shift().call(this);
-    }
-
-    for (i = 0; i < contexts.length; i++) contexts[i].update();
-
-    eventHandler.emit('postrender');
-};
+Engine.step = function step() {};
 
 // engage requestAnimationFrame
 function loop() {
@@ -797,25 +540,10 @@ handleResize();
  * @private
  * @method initialize
  */
-function initialize() {
-    // prevent scrolling via browser
-    window.addEventListener('touchmove', function(event) {
-        event.preventDefault();
-    }, true);
-
-    addRootClasses();
-}
+function initialize() {}
 var initialized = false;
 
-function addRootClasses() {
-    if (!document.body) {
-        Engine.nextTick(addRootClasses);
-        return;
-    }
-
-    document.body.classList.add('famous-root');
-    document.documentElement.classList.add('famous-root');
-}
+function addRootClasses() {}
 
 /**
  * Add event handler object to set of downstream handlers.
@@ -825,10 +553,7 @@ function addRootClasses() {
  * @param {EventHandler} target event handler target object
  * @return {EventHandler} passed event handler
  */
-Engine.pipe = function pipe(target) {
-    if (target.subscribe instanceof Function) return target.subscribe(Engine);
-    else return eventHandler.pipe(target);
-};
+Engine.pipe = function pipe(target) {};
 
 /**
  * Remove handler object from set of downstream handlers.
@@ -839,10 +564,7 @@ Engine.pipe = function pipe(target) {
  * @param {EventHandler} target target handler object
  * @return {EventHandler} provided target
  */
-Engine.unpipe = function unpipe(target) {
-    if (target.unsubscribe instanceof Function) return target.unsubscribe(Engine);
-    else return eventHandler.unpipe(target);
-};
+Engine.unpipe = function unpipe(target) {};
 
 /**
  * Bind a callback function to an event type handled by this object.
@@ -854,23 +576,9 @@ Engine.unpipe = function unpipe(target) {
  * @param {function(string, Object)} handler callback
  * @return {EventHandler} this
  */
-Engine.on = function on(type, handler) {
-    if (!(type in eventForwarders)) {
-        eventForwarders[type] = eventHandler.emit.bind(eventHandler, type);
+Engine.on = function on(type, handler) {};
 
-        addEngineListener(type, eventForwarders[type]);
-    }
-    return eventHandler.on(type, handler);
-};
-
-function addEngineListener(type, forwarder) {
-    if (!document.body) {
-        Engine.nextTick(addEventListener.bind(this, type, forwarder));
-        return;
-    }
-
-    document.body.addEventListener(type, forwarder);
-}
+function addEngineListener(type, forwarder) {}
 
 /**
  * Trigger an event, sending to all downstream handlers
@@ -923,9 +631,7 @@ Engine.getFPS = function getFPS() {
  *
  * @param {Number} fps maximum frames per second
  */
-Engine.setFPSCap = function setFPSCap(fps) {
-    frameTimeLimit = Math.floor(1000 / fps);
-};
+Engine.setFPSCap = function setFPSCap(fps) {};
 
 /**
  * Return engine options.
@@ -935,9 +641,7 @@ Engine.setFPSCap = function setFPSCap(fps) {
  * @param {string} key
  * @return {Object} engine options
  */
-Engine.getOptions = function getOptions(key) {
-    return optionsManager.getOptions(key);
-};
+Engine.getOptions = function getOptions(key) {};
 
 /**
  * Set engine options
@@ -951,9 +655,7 @@ Engine.getOptions = function getOptions(key) {
  * @param {string} [options.containerType="div"] type of container element.  Defaults to 'div'.
  * @param {string} [options.containerClass="famous-container"] type of container element.  Defaults to 'famous-container'.
  */
-Engine.setOptions = function setOptions(options) {
-    return optionsManager.setOptions.apply(optionsManager, arguments);
-};
+Engine.setOptions = function setOptions(options) {};
 
 /**
  * Creates a new Context for rendering and event handling with
@@ -966,33 +668,9 @@ Engine.setOptions = function setOptions(options) {
  * @param {Node} el will be top of Famo.us document element tree
  * @return {Context} new Context within el
  */
-Engine.createContext = function createContext(el) {
-    if (!initialized && options.appMode) Engine.nextTick(initialize);
+Engine.createContext = function createContext(el) {};
 
-    var needMountContainer = false;
-    if (!el) {
-        el = document.createElement(options.containerType);
-        el.classList.add(options.containerClass);
-        needMountContainer = true;
-    }
-
-    var context = new Context(el);
-    Engine.registerContext(context);
-
-    if (needMountContainer) mount(context, el);
-
-    return context;
-};
-
-function mount(context, el) {
-    if (!document.body) {
-        Engine.nextTick(mount.bind(this, context, el));
-        return;
-    }
-
-    document.body.appendChild(el);
-    context.emit('resize');
-}
+function mount(context, el) {}
 
 /**
  * Registers an existing context to be updated within the run loop.
@@ -1003,10 +681,7 @@ function mount(context, el) {
  * @param {Context} context Context to register
  * @return {FamousContext} provided context
  */
-Engine.registerContext = function registerContext(context) {
-    contexts.push(context);
-    return context;
-};
+Engine.registerContext = function registerContext(context) {};
 
 /**
  * Returns a list of all contexts.
@@ -1015,9 +690,7 @@ Engine.registerContext = function registerContext(context) {
  * @method getContexts
  * @return {Array} contexts that are updated on each tick
  */
-Engine.getContexts = function getContexts() {
-    return contexts;
-};
+Engine.getContexts = function getContexts() {};
 
 /**
  * Removes a context from the run loop. Note: this does not do any
@@ -1028,10 +701,7 @@ Engine.getContexts = function getContexts() {
  *
  * @param {Context} context Context to deregister
  */
-Engine.deregisterContext = function deregisterContext(context) {
-    var i = contexts.indexOf(context);
-    if (i >= 0) contexts.splice(i, 1);
-};
+Engine.deregisterContext = function deregisterContext(context) {};
 
 /**
  * Queue a function to be executed on the next tick of the
@@ -1042,9 +712,7 @@ Engine.deregisterContext = function deregisterContext(context) {
  *
  * @param {function(Object)} fn function accepting window object
  */
-Engine.nextTick = function nextTick(fn) {
-    nextTickQueue.push(fn);
-};
+Engine.nextTick = function nextTick(fn) {};
 
 /**
  * Queue a function to be executed sometime soon, at a time that is
@@ -1055,20 +723,9 @@ Engine.nextTick = function nextTick(fn) {
  *
  * @param {Function} fn
  */
-Engine.defer = function defer(fn) {
-    deferQueue.push(fn);
-};
+Engine.defer = function defer(fn) {};
 
-optionsManager.on('change', function(data) {
-    if (data.id === 'fpsCap') Engine.setFPSCap(data.value);
-    else if (data.id === 'runLoop') {
-        // kick off the loop only if it was stopped
-        if (!loopEnabled && data.value) {
-            loopEnabled = true;
-            window.requestAnimationFrame(loop);
-        }
-    }
-});
+optionsManager.on('change', function(data) {});
 
 module.exports = Engine;
 },{"./Context":1,"./EventHandler":7,"./OptionsManager":10}],5:[function(_dereq_,module,exports){
@@ -1102,9 +759,7 @@ var entities = [];
  * @param {Number} id entity registration id
  * @return {Surface} entity in the global index
  */
-function get(id) {
-    return entities[id];
-}
+function get(id) {}
 
 /**
  * Overwrite entity in the global index
@@ -1114,9 +769,7 @@ function get(id) {
  * @param {Number} id entity registration id
  * @param {Surface} entity to add to the global index
  */
-function set(id, entity) {
-    entities[id] = entity;
-}
+function set(id, entity) {}
 
 /**
  * Add entity to global index
@@ -1126,11 +779,7 @@ function set(id, entity) {
  * @param {Surface} entity to add to global index
  * @return {Number} new id
  */
-function register(entity) {
-    var id = entities.length;
-    set(id, entity);
-    return id;
-}
+function register(entity) {}
 
 /**
  * Remove entity from global index
@@ -1139,16 +788,9 @@ function register(entity) {
  * @method unregister
  * @param {Number} id entity registration id
  */
-function unregister(id) {
-    set(id, null);
-}
+function unregister(id) {}
 
-module.exports = {
-    register: register,
-    unregister: unregister,
-    get: get,
-    set: set
-};
+module.exports = {};
 },{}],6:[function(_dereq_,module,exports){
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1167,10 +809,7 @@ module.exports = {
  * @class EventEmitter
  * @constructor
  */
-function EventEmitter() {
-    this.listeners = {};
-    this._owner = this;
-}
+function EventEmitter() {}
 
 /**
  * Trigger an event, sending to all downstream handlers
@@ -1182,15 +821,7 @@ function EventEmitter() {
  * @param {Object} event event data
  * @return {EventHandler} this
  */
-EventEmitter.prototype.emit = function emit(type, event) {
-    var handlers = this.listeners[type];
-    if (handlers) {
-        for (var i = 0; i < handlers.length; i++) {
-            handlers[i].call(this._owner, event);
-        }
-    }
-    return this;
-};
+EventEmitter.prototype.emit = function emit(type, event) {};
 
 /**
  * Bind a callback function to an event type handled by this object.
@@ -1201,12 +832,7 @@ EventEmitter.prototype.emit = function emit(type, event) {
  * @param {function(string, Object)} handler callback
  * @return {EventHandler} this
  */
-   EventEmitter.prototype.on = function on(type, handler) {
-    if (!(type in this.listeners)) this.listeners[type] = [];
-    var index = this.listeners[type].indexOf(handler);
-    if (index < 0) this.listeners[type].push(handler);
-    return this;
-};
+   EventEmitter.prototype.on = function on(type, handler) {};
 
 /**
  * Alias for "on".
@@ -1224,14 +850,7 @@ EventEmitter.prototype.addListener = EventEmitter.prototype.on;
  * @param {function} handler function object to remove
  * @return {EventEmitter} this
  */
-EventEmitter.prototype.removeListener = function removeListener(type, handler) {
-    var listener = this.listeners[type];
-    if (listener !== undefined) {
-        var index = listener.indexOf(handler);
-        if (index >= 0) listener.splice(index, 1);
-    }
-    return this;
-};
+EventEmitter.prototype.removeListener = function removeListener(type, handler) {};
 
 /**
  * Call event handlers with this set to owner.
@@ -1265,15 +884,7 @@ var EventEmitter = _dereq_('./EventEmitter');
  * @extends EventEmitter
  * @constructor
  */
-function EventHandler() {
-    EventEmitter.apply(this, arguments);
-
-    this.downstream = []; // downstream event handlers
-    this.downstreamFn = []; // downstream functions
-
-    this.upstream = []; // upstream event handlers
-    this.upstreamListeners = {}; // upstream listeners
-}
+function EventHandler() {}
 EventHandler.prototype = Object.create(EventEmitter.prototype);
 EventHandler.prototype.constructor = EventHandler;
 
@@ -1286,13 +897,7 @@ EventHandler.prototype.constructor = EventHandler;
  * @param {Object} object object to mix trigger, subscribe, and unsubscribe functions into
  * @param {EventHandler} handler assigned event handler
  */
-EventHandler.setInputHandler = function setInputHandler(object, handler) {
-    object.trigger = handler.trigger.bind(handler);
-    if (handler.subscribe && handler.unsubscribe) {
-        object.subscribe = handler.subscribe.bind(handler);
-        object.unsubscribe = handler.unsubscribe.bind(handler);
-    }
-};
+EventHandler.setInputHandler = function setInputHandler(object, handler) {};
 
 /**
  * Assign an event handler to receive an object's output events.
@@ -1303,14 +908,7 @@ EventHandler.setInputHandler = function setInputHandler(object, handler) {
  * @param {Object} object object to mix pipe, unpipe, on, addListener, and removeListener functions into
  * @param {EventHandler} handler assigned event handler
  */
-EventHandler.setOutputHandler = function setOutputHandler(object, handler) {
-    if (handler instanceof EventHandler) handler.bindThis(object);
-    object.pipe = handler.pipe.bind(handler);
-    object.unpipe = handler.unpipe.bind(handler);
-    object.on = handler.on.bind(handler);
-    object.addListener = object.on;
-    object.removeListener = handler.removeListener.bind(handler);
-};
+EventHandler.setOutputHandler = function setOutputHandler(object, handler) {};
 
 /**
  * Trigger an event, sending to all downstream handlers
@@ -1322,17 +920,7 @@ EventHandler.setOutputHandler = function setOutputHandler(object, handler) {
  * @param {Object} event event data
  * @return {EventHandler} this
  */
-EventHandler.prototype.emit = function emit(type, event) {
-    EventEmitter.prototype.emit.apply(this, arguments);
-    var i = 0;
-    for (i = 0; i < this.downstream.length; i++) {
-        if (this.downstream[i].trigger) this.downstream[i].trigger(type, event);
-    }
-    for (i = 0; i < this.downstreamFn.length; i++) {
-        this.downstreamFn[i](type, event);
-    }
-    return this;
-};
+EventHandler.prototype.emit = function emit(type, event) {};
 
 /**
  * Alias for emit
@@ -1348,18 +936,7 @@ EventHandler.prototype.trigger = EventHandler.prototype.emit;
  * @param {EventHandler} target event handler target object
  * @return {EventHandler} passed event handler
  */
-EventHandler.prototype.pipe = function pipe(target) {
-    if (target.subscribe instanceof Function) return target.subscribe(this);
-
-    var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
-    var index = downstreamCtx.indexOf(target);
-    if (index < 0) downstreamCtx.push(target);
-
-    if (target instanceof Function) target('pipe', null);
-    else if (target.trigger) target.trigger('pipe', null);
-
-    return target;
-};
+EventHandler.prototype.pipe = function pipe(target) {};
 
 /**
  * Remove handler object from set of downstream handlers.
@@ -1370,19 +947,7 @@ EventHandler.prototype.pipe = function pipe(target) {
  * @param {EventHandler} target target handler object
  * @return {EventHandler} provided target
  */
-EventHandler.prototype.unpipe = function unpipe(target) {
-    if (target.unsubscribe instanceof Function) return target.unsubscribe(this);
-
-    var downstreamCtx = (target instanceof Function) ? this.downstreamFn : this.downstream;
-    var index = downstreamCtx.indexOf(target);
-    if (index >= 0) {
-        downstreamCtx.splice(index, 1);
-        if (target instanceof Function) target('unpipe', null);
-        else if (target.trigger) target.trigger('unpipe', null);
-        return target;
-    }
-    else return false;
-};
+EventHandler.prototype.unpipe = function unpipe(target) {};
 
 /**
  * Bind a callback function to an event type handled by this object.
@@ -1393,17 +958,7 @@ EventHandler.prototype.unpipe = function unpipe(target) {
  * @param {function(string, Object)} handler callback
  * @return {EventHandler} this
  */
-EventHandler.prototype.on = function on(type, handler) {
-    EventEmitter.prototype.on.apply(this, arguments);
-    if (!(type in this.upstreamListeners)) {
-        var upstreamListener = this.trigger.bind(this, type);
-        this.upstreamListeners[type] = upstreamListener;
-        for (var i = 0; i < this.upstream.length; i++) {
-            this.upstream[i].on(type, upstreamListener);
-        }
-    }
-    return this;
-};
+EventHandler.prototype.on = function on(type, handler) {};
 
 /**
  * Alias for "on"
@@ -1419,16 +974,7 @@ EventHandler.prototype.addListener = EventHandler.prototype.on;
  * @param {EventEmitter} source source emitter object
  * @return {EventHandler} this
  */
-EventHandler.prototype.subscribe = function subscribe(source) {
-    var index = this.upstream.indexOf(source);
-    if (index < 0) {
-        this.upstream.push(source);
-        for (var type in this.upstreamListeners) {
-            source.on(type, this.upstreamListeners[type]);
-        }
-    }
-    return this;
-};
+EventHandler.prototype.subscribe = function subscribe(source) {};
 
 /**
  * Stop listening to events from an upstream event handler.
@@ -1438,16 +984,7 @@ EventHandler.prototype.subscribe = function subscribe(source) {
  * @param {EventEmitter} source source emitter object
  * @return {EventHandler} this
  */
-EventHandler.prototype.unsubscribe = function unsubscribe(source) {
-    var index = this.upstream.indexOf(source);
-    if (index >= 0) {
-        this.upstream.splice(index, 1);
-        for (var type in this.upstreamListeners) {
-            source.removeListener(type, this.upstreamListeners[type]);
-        }
-    }
-    return this;
-};
+EventHandler.prototype.unsubscribe = function unsubscribe(source) {};
 
 module.exports = EventHandler;
 },{"./EventEmitter":6}],8:[function(_dereq_,module,exports){
@@ -1476,14 +1013,7 @@ var Surface = _dereq_('./Surface');
  * @constructor
  * @param {Object} [options] Surface options array (see Surface})
  */
-function Group(options) {
-    Surface.call(this, options);
-    this._shouldRecalculateSize = false;
-    this._container = document.createDocumentFragment();
-    this.context = new Context(this._container);
-    this.setContent(this._container);
-    this._groupSize = [undefined, undefined];
-}
+function Group(options) {}
 
 /** @const */
 Group.SIZE_ZERO = [0, 0];
@@ -1500,9 +1030,7 @@ Group.prototype.elementClass = 'famous-group';
  * @param {Object} obj renderable object
  * @return {RenderNode} Render wrapping provided object, if not already a RenderNode
  */
-Group.prototype.add = function add() {
-    return this.context.add.apply(this.context, arguments);
-};
+Group.prototype.add = function add() {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -1511,9 +1039,7 @@ Group.prototype.add = function add() {
  * @method render
  * @return {Number} Render spec for this component
  */
-Group.prototype.render = function render() {
-    return Surface.prototype.render.call(this);
-};
+Group.prototype.render = function render() {};
 
 /**
  * Place the document element this component manages into the document.
@@ -1522,9 +1048,7 @@ Group.prototype.render = function render() {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-Group.prototype.deploy = function deploy(target) {
-    this.context.migrate(target);
-};
+Group.prototype.deploy = function deploy(target) {};
 
 /**
  * Remove this component and contained content from the document
@@ -1534,10 +1058,7 @@ Group.prototype.deploy = function deploy(target) {
  *
  * @param {Node} target node to which the component was deployed
  */
-Group.prototype.recall = function recall(target) {
-    this._container = document.createDocumentFragment();
-    this.context.migrate(this._container);
-};
+Group.prototype.recall = function recall(target) {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -1547,30 +1068,7 @@ Group.prototype.recall = function recall(target) {
  *
  * @param {Object} context update spec passed in from above in the render tree.
  */
-Group.prototype.commit = function commit(context) {
-    var transform = context.transform;
-    var origin = context.origin;
-    var opacity = context.opacity;
-    var size = context.size;
-    var result = Surface.prototype.commit.call(this, {
-        allocator: context.allocator,
-        transform: Transform.thenMove(transform, [-origin[0] * size[0], -origin[1] * size[1], 0]),
-        opacity: opacity,
-        origin: origin,
-        size: Group.SIZE_ZERO
-    });
-    if (size[0] !== this._groupSize[0] || size[1] !== this._groupSize[1]) {
-        this._groupSize[0] = size[0];
-        this._groupSize[1] = size[1];
-        this.context.setSize(size);
-    }
-    this.context.update({
-        transform: Transform.translate(-origin[0] * size[0], -origin[1] * size[1], 0),
-        origin: origin,
-        size: size
-    });
-    return result;
-};
+Group.prototype.commit = function commit(context) {};
 
 module.exports = Group;
 },{"./Context":1,"./Surface":14,"./Transform":15}],9:[function(_dereq_,module,exports){
@@ -1604,36 +1102,7 @@ var TransitionableTransform = _dereq_('../transitions/TransitionableTransform');
  * @param {Array.Number} [options.origin] origin adjustment
  * @param {Array.Number} [options.size] size to apply to descendants
  */
-function Modifier(options) {
-    this._transformGetter = null;
-    this._opacityGetter = null;
-    this._originGetter = null;
-    this._alignGetter = null;
-    this._sizeGetter = null;
-    this._proportionGetter = null;
-
-    /* TODO: remove this when deprecation complete */
-    this._legacyStates = {};
-
-    this._output = {
-        transform: Transform.identity,
-        opacity: 1,
-        origin: null,
-        align: null,
-        size: null,
-        proportions: null,
-        target: null
-    };
-
-    if (options) {
-        if (options.transform) this.transformFrom(options.transform);
-        if (options.opacity !== undefined) this.opacityFrom(options.opacity);
-        if (options.origin) this.originFrom(options.origin);
-        if (options.align) this.alignFrom(options.align);
-        if (options.size) this.sizeFrom(options.size);
-        if (options.proportions) this.proportionsFrom(options.proportions);
-    }
-}
+function Modifier(options) {}
 
 /**
  * Function, object, or static transform matrix which provides the transform.
@@ -1644,15 +1113,7 @@ function Modifier(options) {
  * @param {Object} transform transform provider object
  * @return {Modifier} this
  */
-Modifier.prototype.transformFrom = function transformFrom(transform) {
-    if (transform instanceof Function) this._transformGetter = transform;
-    else if (transform instanceof Object && transform.get) this._transformGetter = transform.get.bind(transform);
-    else {
-        this._transformGetter = null;
-        this._output.transform = transform;
-    }
-    return this;
-};
+Modifier.prototype.transformFrom = function transformFrom(transform) {};
 
 /**
  * Set function, object, or number to provide opacity, in range [0,1].
@@ -1662,15 +1123,7 @@ Modifier.prototype.transformFrom = function transformFrom(transform) {
  * @param {Object} opacity provider object
  * @return {Modifier} this
  */
-Modifier.prototype.opacityFrom = function opacityFrom(opacity) {
-    if (opacity instanceof Function) this._opacityGetter = opacity;
-    else if (opacity instanceof Object && opacity.get) this._opacityGetter = opacity.get.bind(opacity);
-    else {
-        this._opacityGetter = null;
-        this._output.opacity = opacity;
-    }
-    return this;
-};
+Modifier.prototype.opacityFrom = function opacityFrom(opacity) {};
 
 /**
  * Set function, object, or numerical array to provide origin, as [x,y],
@@ -1681,15 +1134,7 @@ Modifier.prototype.opacityFrom = function opacityFrom(opacity) {
  * @param {Object} origin provider object
  * @return {Modifier} this
  */
-Modifier.prototype.originFrom = function originFrom(origin) {
-    if (origin instanceof Function) this._originGetter = origin;
-    else if (origin instanceof Object && origin.get) this._originGetter = origin.get.bind(origin);
-    else {
-        this._originGetter = null;
-        this._output.origin = origin;
-    }
-    return this;
-};
+Modifier.prototype.originFrom = function originFrom(origin) {};
 
 /**
  * Set function, object, or numerical array to provide align, as [x,y],
@@ -1700,15 +1145,7 @@ Modifier.prototype.originFrom = function originFrom(origin) {
  * @param {Object} align provider object
  * @return {Modifier} this
  */
-Modifier.prototype.alignFrom = function alignFrom(align) {
-    if (align instanceof Function) this._alignGetter = align;
-    else if (align instanceof Object && align.get) this._alignGetter = align.get.bind(align);
-    else {
-        this._alignGetter = null;
-        this._output.align = align;
-    }
-    return this;
-};
+Modifier.prototype.alignFrom = function alignFrom(align) {};
 
 /**
  * Set function, object, or numerical array to provide size, as [width, height].
@@ -1718,15 +1155,7 @@ Modifier.prototype.alignFrom = function alignFrom(align) {
  * @param {Object} size provider object
  * @return {Modifier} this
  */
-Modifier.prototype.sizeFrom = function sizeFrom(size) {
-    if (size instanceof Function) this._sizeGetter = size;
-    else if (size instanceof Object && size.get) this._sizeGetter = size.get.bind(size);
-    else {
-        this._sizeGetter = null;
-        this._output.size = size;
-    }
-    return this;
-};
+Modifier.prototype.sizeFrom = function sizeFrom(size) {};
 
 /**
  * Set function, object, or numerical array to provide proportions, as [percent of width, percent of height].
@@ -1736,15 +1165,7 @@ Modifier.prototype.sizeFrom = function sizeFrom(size) {
  * @param {Object} proportions provider object
  * @return {Modifier} this
  */
-Modifier.prototype.proportionsFrom = function proportionsFrom(proportions) {
-    if (proportions instanceof Function) this._proportionGetter = proportions;
-    else if (proportions instanceof Object && proportions.get) this._proportionGetter = proportions.get.bind(proportions);
-    else {
-        this._proportionGetter = null;
-        this._output.proportions = proportions;
-    }
-    return this;
-};
+Modifier.prototype.proportionsFrom = function proportionsFrom(proportions) {};
 
  /**
  * Deprecated: Prefer transformFrom with static Transform, or use a TransitionableTransform.
@@ -1756,18 +1177,7 @@ Modifier.prototype.proportionsFrom = function proportionsFrom(proportions) {
  * @param {Function} callback callback to call after transition completes
  * @return {Modifier} this
  */
-Modifier.prototype.setTransform = function setTransform(transform, transition, callback) {
-    if (transition || this._legacyStates.transform) {
-        if (!this._legacyStates.transform) {
-            this._legacyStates.transform = new TransitionableTransform(this._output.transform);
-        }
-        if (!this._transformGetter) this.transformFrom(this._legacyStates.transform);
-
-        this._legacyStates.transform.set(transform, transition, callback);
-        return this;
-    }
-    else return this.transformFrom(transform);
-};
+Modifier.prototype.setTransform = function setTransform(transform, transition, callback) {};
 
 /**
  * Deprecated: Prefer opacityFrom with static opacity array, or use a Transitionable with that opacity.
@@ -1779,17 +1189,7 @@ Modifier.prototype.setTransform = function setTransform(transform, transition, c
  * @param {Function} callback callback to call after transition completes
  * @return {Modifier} this
  */
-Modifier.prototype.setOpacity = function setOpacity(opacity, transition, callback) {
-    if (transition || this._legacyStates.opacity) {
-        if (!this._legacyStates.opacity) {
-            this._legacyStates.opacity = new Transitionable(this._output.opacity);
-        }
-        if (!this._opacityGetter) this.opacityFrom(this._legacyStates.opacity);
-
-        return this._legacyStates.opacity.set(opacity, transition, callback);
-    }
-    else return this.opacityFrom(opacity);
-};
+Modifier.prototype.setOpacity = function setOpacity(opacity, transition, callback) {};
 
 /**
  * Deprecated: Prefer originFrom with static origin array, or use a Transitionable with that origin.
@@ -1801,20 +1201,7 @@ Modifier.prototype.setOpacity = function setOpacity(opacity, transition, callbac
  * @param {Function} callback callback to call after transition completes
  * @return {Modifier} this
  */
-Modifier.prototype.setOrigin = function setOrigin(origin, transition, callback) {
-    /* TODO: remove this if statement when deprecation complete */
-    if (transition || this._legacyStates.origin) {
-
-        if (!this._legacyStates.origin) {
-            this._legacyStates.origin = new Transitionable(this._output.origin || [0, 0]);
-        }
-        if (!this._originGetter) this.originFrom(this._legacyStates.origin);
-
-        this._legacyStates.origin.set(origin, transition, callback);
-        return this;
-    }
-    else return this.originFrom(origin);
-};
+Modifier.prototype.setOrigin = function setOrigin(origin, transition, callback) {};
 
 /**
  * Deprecated: Prefer alignFrom with static align array, or use a Transitionable with that align.
@@ -1826,20 +1213,7 @@ Modifier.prototype.setOrigin = function setOrigin(origin, transition, callback) 
  * @param {Function} callback callback to call after transition completes
  * @return {Modifier} this
  */
-Modifier.prototype.setAlign = function setAlign(align, transition, callback) {
-    /* TODO: remove this if statement when deprecation complete */
-    if (transition || this._legacyStates.align) {
-
-        if (!this._legacyStates.align) {
-            this._legacyStates.align = new Transitionable(this._output.align || [0, 0]);
-        }
-        if (!this._alignGetter) this.alignFrom(this._legacyStates.align);
-
-        this._legacyStates.align.set(align, transition, callback);
-        return this;
-    }
-    else return this.alignFrom(align);
-};
+Modifier.prototype.setAlign = function setAlign(align, transition, callback) {};
 
 /**
  * Deprecated: Prefer sizeFrom with static origin array, or use a Transitionable with that size.
@@ -1850,18 +1224,7 @@ Modifier.prototype.setAlign = function setAlign(align, transition, callback) {
  * @param {Function} callback callback to call after transition completes
  * @return {Modifier} this
  */
-Modifier.prototype.setSize = function setSize(size, transition, callback) {
-    if (size && (transition || this._legacyStates.size)) {
-        if (!this._legacyStates.size) {
-            this._legacyStates.size = new Transitionable(this._output.size || [0, 0]);
-        }
-        if (!this._sizeGetter) this.sizeFrom(this._legacyStates.size);
-
-        this._legacyStates.size.set(size, transition, callback);
-        return this;
-    }
-    else return this.sizeFrom(size);
-};
+Modifier.prototype.setSize = function setSize(size, transition, callback) {};
 
 /**
  * Deprecated: Prefer proportionsFrom with static origin array, or use a Transitionable with those proportions.
@@ -1872,38 +1235,14 @@ Modifier.prototype.setSize = function setSize(size, transition, callback) {
  * @param {Function} callback callback to call after transition completes
  * @return {Modifier} this
  */
-Modifier.prototype.setProportions = function setProportions(proportions, transition, callback) {
-    if (proportions && (transition || this._legacyStates.proportions)) {
-        if (!this._legacyStates.proportions) {
-            this._legacyStates.proportions = new Transitionable(this._output.proportions || [0, 0]);
-        }
-        if (!this._proportionGetter) this.proportionsFrom(this._legacyStates.proportions);
-
-        this._legacyStates.proportions.set(proportions, transition, callback);
-        return this;
-    }
-    else return this.proportionsFrom(proportions);
-};
+Modifier.prototype.setProportions = function setProportions(proportions, transition, callback) {};
 
 /**
  * Deprecated: Prefer to stop transform in your provider object.
  * @deprecated
  * @method halt
  */
-Modifier.prototype.halt = function halt() {
-    if (this._legacyStates.transform) this._legacyStates.transform.halt();
-    if (this._legacyStates.opacity) this._legacyStates.opacity.halt();
-    if (this._legacyStates.origin) this._legacyStates.origin.halt();
-    if (this._legacyStates.align) this._legacyStates.align.halt();
-    if (this._legacyStates.size) this._legacyStates.size.halt();
-    if (this._legacyStates.proportions) this._legacyStates.proportions.halt();
-    this._transformGetter = null;
-    this._opacityGetter = null;
-    this._originGetter = null;
-    this._alignGetter = null;
-    this._sizeGetter = null;
-    this._proportionGetter = null;
-};
+Modifier.prototype.halt = function halt() {};
 
 /**
  * Deprecated: Prefer to use your provided transform or output of your transform provider.
@@ -1921,9 +1260,7 @@ Modifier.prototype.getTransform = function getTransform() {
  * @method getFinalTransform
  * @return {Transform} transform matrix
  */
-Modifier.prototype.getFinalTransform = function getFinalTransform() {
-    return this._legacyStates.transform ? this._legacyStates.transform.getFinal() : this._output.transform;
-};
+Modifier.prototype.getFinalTransform = function getFinalTransform() {};
 
 /**
  * Deprecated: Prefer to use your provided opacity or output of your opacity provider.
@@ -1931,9 +1268,7 @@ Modifier.prototype.getFinalTransform = function getFinalTransform() {
  * @method getOpacity
  * @return {Object} opacity provider object
  */
-Modifier.prototype.getOpacity = function getOpacity() {
-    return this._opacityGetter();
-};
+Modifier.prototype.getOpacity = function getOpacity() {};
 
 /**
  * Deprecated: Prefer to use your provided origin or output of your origin provider.
@@ -1941,9 +1276,7 @@ Modifier.prototype.getOpacity = function getOpacity() {
  * @method getOrigin
  * @return {Object} origin provider object
  */
-Modifier.prototype.getOrigin = function getOrigin() {
-    return this._originGetter();
-};
+Modifier.prototype.getOrigin = function getOrigin() {};
 
 /**
  * Deprecated: Prefer to use your provided align or output of your align provider.
@@ -1951,9 +1284,7 @@ Modifier.prototype.getOrigin = function getOrigin() {
  * @method getAlign
  * @return {Object} align provider object
  */
-Modifier.prototype.getAlign = function getAlign() {
-    return this._alignGetter();
-};
+Modifier.prototype.getAlign = function getAlign() {};
 
 /**
  * Deprecated: Prefer to use your provided size or output of your size provider.
@@ -1961,9 +1292,7 @@ Modifier.prototype.getAlign = function getAlign() {
  * @method getSize
  * @return {Object} size provider object
  */
-Modifier.prototype.getSize = function getSize() {
-    return this._sizeGetter ? this._sizeGetter() : this._output.size;
-};
+Modifier.prototype.getSize = function getSize() {};
 
 /**
  * Deprecated: Prefer to use your provided proportions or output of your proportions provider.
@@ -1971,19 +1300,10 @@ Modifier.prototype.getSize = function getSize() {
  * @method getProportions
  * @return {Object} proportions provider object
  */
-Modifier.prototype.getProportions = function getProportions() {
-    return this._proportionGetter ? this._proportionGetter() : this._output.proportions;
-};
+Modifier.prototype.getProportions = function getProportions() {};
 
 // call providers on tick to receive render spec elements to apply
-function _update() {
-    if (this._transformGetter) this._output.transform = this._transformGetter();
-    if (this._opacityGetter) this._output.opacity = this._opacityGetter();
-    if (this._originGetter) this._output.origin = this._originGetter();
-    if (this._alignGetter) this._output.align = this._alignGetter();
-    if (this._sizeGetter) this._output.size = this._sizeGetter();
-    if (this._proportionGetter) this._output.proportions = this._proportionGetter();
-}
+function _update() {}
 
 /**
  * Return render spec for this Modifier, applying to the provided
@@ -1997,11 +1317,7 @@ function _update() {
  * @return {Object} render spec for this Modifier, including the
  *    provided target
  */
-Modifier.prototype.modify = function modify(target) {
-    _update.call(this);
-    this._output.target = target;
-    return this._output;
-};
+Modifier.prototype.modify = function modify(target) {};
 
 module.exports = Modifier;
 },{"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89,"./Transform":15}],10:[function(_dereq_,module,exports){
@@ -2039,10 +1355,7 @@ var EventHandler = _dereq_('./EventHandler');
  * @constructor
  * @param {Object} value options dictionary
  */
-function OptionsManager(value) {
-    this._value = value;
-    this.eventOutput = null;
-}
+function OptionsManager(value) {}
 
 /**
  * Create options manager from source dictionary with arguments overriden by patch dictionary.
@@ -2054,17 +1367,9 @@ function OptionsManager(value) {
  * @param {...Object} data argument additions and overwrites
  * @return {Object} source object
  */
-OptionsManager.patch = function patchObject(source, data) {
-    var manager = new OptionsManager(source);
-    for (var i = 1; i < arguments.length; i++) manager.patch(arguments[i]);
-    return source;
-};
+OptionsManager.patch = function patchObject(source, data) {};
 
-function _createEventOutput() {
-    this.eventOutput = new EventHandler();
-    this.eventOutput.bindThis(this);
-    EventHandler.setOutputHandler(this, this.eventOutput);
-}
+function _createEventOutput() {}
 
 /**
  * Create OptionsManager from source with arguments overriden by patches.
@@ -2076,21 +1381,7 @@ function _createEventOutput() {
  * @param {...Object} arguments list of patch objects
  * @return {OptionsManager} this
  */
-OptionsManager.prototype.patch = function patch() {
-    var myState = this._value;
-    for (var i = 0; i < arguments.length; i++) {
-        var data = arguments[i];
-        for (var k in data) {
-            if ((k in myState) && (data[k] && data[k].constructor === Object) && (myState[k] && myState[k].constructor === Object)) {
-                if (!myState.hasOwnProperty(k)) myState[k] = Object.create(myState[k]);
-                this.key(k).patch(data[k]);
-                if (this.eventOutput) this.eventOutput.emit('change', {id: k, value: this.key(k).value()});
-            }
-            else this.set(k, data[k]);
-        }
-    }
-    return this;
-};
+OptionsManager.prototype.patch = function patch() {};
 
 /**
  * Alias for patch
@@ -2108,11 +1399,7 @@ OptionsManager.prototype.setOptions = OptionsManager.prototype.patch;
  * @param {string} identifier key
  * @return {OptionsManager} new options manager with the value
  */
-OptionsManager.prototype.key = function key(identifier) {
-    var result = new OptionsManager(this._value[identifier]);
-    if (!(result._value instanceof Object) || result._value instanceof Array) result._value = {};
-    return result;
-};
+OptionsManager.prototype.key = function key(identifier) {};
 
 /**
  * Look up value by key or get the full options hash
@@ -2121,9 +1408,7 @@ OptionsManager.prototype.key = function key(identifier) {
  * @param {string} key key
  * @return {Object} associated object or full options hash
  */
-OptionsManager.prototype.get = function get(key) {
-    return key ? this._value[key] : this._value;
-};
+OptionsManager.prototype.get = function get(key) {};
 
 /**
  * Alias for get
@@ -2140,12 +1425,7 @@ OptionsManager.prototype.getOptions = OptionsManager.prototype.get;
  * @param {Object} value value object
  * @return {OptionsManager} new options manager based on the value object
  */
-OptionsManager.prototype.set = function set(key, value) {
-    var originalValue = this.get(key);
-    this._value[key] = value;
-    if (this.eventOutput && value !== originalValue) this.eventOutput.emit('change', {id: key, value: value});
-    return this;
-};
+OptionsManager.prototype.set = function set(key, value) {};
 
 /**
  * Bind a callback function to an event type handled by this object.
@@ -2156,10 +1436,7 @@ OptionsManager.prototype.set = function set(key, value) {
  * @param {function(string, Object)} handler callback
  * @return {EventHandler} this
  */
-OptionsManager.prototype.on = function on() {
-    _createEventOutput.call(this);
-    return this.on.apply(this, arguments);
-};
+OptionsManager.prototype.on = function on() {};
 
 /**
  * Unbind an event by type and handler.
@@ -2171,10 +1448,7 @@ OptionsManager.prototype.on = function on() {
  * @param {function} handler function object to remove
  * @return {EventHandler} internal event handler object (for chaining)
  */
-OptionsManager.prototype.removeListener = function removeListener() {
-    _createEventOutput.call(this);
-    return this.removeListener.apply(this, arguments);
-};
+OptionsManager.prototype.removeListener = function removeListener() {};
 
 /**
  * Add event handler object to set of downstream handlers.
@@ -2184,10 +1458,7 @@ OptionsManager.prototype.removeListener = function removeListener() {
  * @param {EventHandler} target event handler target object
  * @return {EventHandler} passed event handler
  */
-OptionsManager.prototype.pipe = function pipe() {
-    _createEventOutput.call(this);
-    return this.pipe.apply(this, arguments);
-};
+OptionsManager.prototype.pipe = function pipe() {};
 
 /**
  * Remove handler object from set of downstream handlers.
@@ -2198,10 +1469,7 @@ OptionsManager.prototype.pipe = function pipe() {
  * @param {EventHandler} target target handler object
  * @return {EventHandler} provided target
  */
-OptionsManager.prototype.unpipe = function unpipe() {
-    _createEventOutput.call(this);
-    return this.unpipe.apply(this, arguments);
-};
+OptionsManager.prototype.unpipe = function unpipe() {};
 
 module.exports = OptionsManager;
 },{"./EventHandler":7}],11:[function(_dereq_,module,exports){
@@ -2226,20 +1494,7 @@ var SpecParser = _dereq_('./SpecParser');
  *
  * @param {Object} object Target renderable component
  */
-function RenderNode(object) {
-    this._object = null;
-    this._child = null;
-    this._hasMultipleChildren = false;
-    this._isRenderable = false;
-    this._isModifier = false;
-
-    this._resultCache = {};
-    this._prevResults = {};
-
-    this._childResult = null;
-
-    if (object) this.set(object);
-}
+function RenderNode(object) {}
 
 /**
  * Append a renderable to the list of this node's children.
@@ -2250,18 +1505,7 @@ function RenderNode(object) {
  * @param {Object} child renderable object
  * @return {RenderNode} new render node wrapping child
  */
-RenderNode.prototype.add = function add(child) {
-    var childNode = (child instanceof RenderNode) ? child : new RenderNode(child);
-    if (this._child instanceof Array) this._child.push(childNode);
-    else if (this._child) {
-        this._child = [this._child, childNode];
-        this._hasMultipleChildren = true;
-        this._childResult = []; // to be used later
-    }
-    else this._child = childNode;
-
-    return childNode;
-};
+RenderNode.prototype.add = function add(child) {};
 
 /**
  * Return the single wrapped object.  Returns null if this node has multiple child nodes.
@@ -2270,9 +1514,7 @@ RenderNode.prototype.add = function add(child) {
  *
  * @return {Ojbect} contained renderable object
  */
-RenderNode.prototype.get = function get() {
-    return this._object || (this._hasMultipleChildren ? null : (this._child ? this._child.get() : null));
-};
+RenderNode.prototype.get = function get() {};
 
 /**
  * Overwrite the list of children to contain the single provided object
@@ -2281,16 +1523,7 @@ RenderNode.prototype.get = function get() {
  * @param {Object} child renderable object
  * @return {RenderNode} this render node, or child if it is a RenderNode
  */
-RenderNode.prototype.set = function set(child) {
-    this._childResult = null;
-    this._hasMultipleChildren = false;
-    this._isRenderable = child.render ? true : false;
-    this._isModifier = child.modify ? true : false;
-    this._object = child;
-    this._child = null;
-    if (child instanceof RenderNode) return child;
-    else return this;
-};
+RenderNode.prototype.set = function set(child) {};
 
 /**
  * Get render size of contained object.
@@ -2298,28 +1531,10 @@ RenderNode.prototype.set = function set(child) {
  * @method getSize
  * @return {Array.Number} size of this or size of single child.
  */
-RenderNode.prototype.getSize = function getSize() {
-    var result = null;
-    var target = this.get();
-    if (target && target.getSize) result = target.getSize();
-    if (!result && this._child && this._child.getSize) result = this._child.getSize();
-    return result;
-};
+RenderNode.prototype.getSize = function getSize() {};
 
 // apply results of rendering this subtree to the document
-function _applyCommit(spec, context, cacheStorage) {
-    var result = SpecParser.parse(spec, context);
-    var keys = Object.keys(result);
-    for (var i = 0; i < keys.length; i++) {
-        var id = keys[i];
-        var childNode = Entity.get(id);
-        var commitParams = result[id];
-        commitParams.allocator = context.allocator;
-        var commitResult = childNode.commit(commitParams);
-        if (commitResult) _applyCommit(commitResult, context, cacheStorage);
-        else cacheStorage[id] = commitParams;
-    }
-}
+function _applyCommit(spec, context, cacheStorage) {}
 
 /**
  * Commit the content change from this node to the document.
@@ -2328,21 +1543,7 @@ function _applyCommit(spec, context, cacheStorage) {
  * @method commit
  * @param {Context} context render context
  */
-RenderNode.prototype.commit = function commit(context) {
-    // free up some divs from the last loop
-    var prevKeys = Object.keys(this._prevResults);
-    for (var i = 0; i < prevKeys.length; i++) {
-        var id = prevKeys[i];
-        if (this._resultCache[id] === undefined) {
-            var object = Entity.get(id);
-            if (object.cleanup) object.cleanup(context.allocator);
-        }
-    }
-
-    this._prevResults = this._resultCache;
-    this._resultCache = {};
-    _applyCommit(this.render(), context, this._resultCache);
-};
+RenderNode.prototype.commit = function commit(context) {};
 
 /**
  * Generate a render spec from the contents of the wrapped component.
@@ -2353,21 +1554,7 @@ RenderNode.prototype.commit = function commit(context) {
  * @return {Object} render specification for the component subtree
  *    only under this node.
  */
-RenderNode.prototype.render = function render() {
-    if (this._isRenderable) return this._object.render();
-
-    var result = null;
-    if (this._hasMultipleChildren) {
-        result = this._childResult;
-        var children = this._child;
-        for (var i = 0; i < children.length; i++) {
-            result[i] = children[i].render();
-        }
-    }
-    else if (this._child) result = this._child.render();
-
-    return this._isModifier ? this._object.modify(result) : result;
-};
+RenderNode.prototype.render = function render() {};
 
 module.exports = RenderNode;
 },{"./Entity":5,"./SpecParser":13}],12:[function(_dereq_,module,exports){
@@ -2392,15 +1579,7 @@ var RenderNode = _dereq_('./RenderNode');
  * @constructor
  * @param {Object|Array|Spec} definition in the format of a render spec.
  */
-function Scene(definition) {
-    this.id = null;
-    this._objects = null;
-
-    this.node = new RenderNode();
-    this._definition = null;
-
-    if (definition) this.load(definition);
-}
+function Scene(definition) {}
 
 var _MATRIX_GENERATORS = {
     'translate': Transform.translate,
@@ -2422,93 +1601,18 @@ var _MATRIX_GENERATORS = {
  * @method create
  * @return {Scene} deep copy of this scene
  */
-Scene.prototype.create = function create() {
-    return new Scene(this._definition);
-};
+Scene.prototype.create = function create() {};
 
-function _resolveTransformMatrix(matrixDefinition) {
-    for (var type in _MATRIX_GENERATORS) {
-        if (type in matrixDefinition) {
-            var args = matrixDefinition[type];
-            if (!(args instanceof Array)) args = [args];
-            return _MATRIX_GENERATORS[type].apply(this, args);
-        }
-    }
-}
+function _resolveTransformMatrix(matrixDefinition) {}
 
 // parse transform into tree of render nodes, doing matrix multiplication
 // when available
-function _parseTransform(definition) {
-    var transformDefinition = definition.transform;
-    var opacity = definition.opacity;
-    var origin = definition.origin;
-    var align = definition.align;
-    var size = definition.size;
-    var transform = Transform.identity;
-    if (transformDefinition instanceof Array) {
-        if (transformDefinition.length === 16 && typeof transformDefinition[0] === 'number') {
-            transform = transformDefinition;
-        }
-        else {
-            for (var i = 0; i < transformDefinition.length; i++) {
-                transform = Transform.multiply(transform, _resolveTransformMatrix(transformDefinition[i]));
-            }
-        }
-    }
-    else if (transformDefinition instanceof Function) {
-        transform = transformDefinition;
-    }
-    else if (transformDefinition instanceof Object) {
-        transform = _resolveTransformMatrix(transformDefinition);
-    }
+function _parseTransform(definition) {}
 
-    var result = new Modifier({
-        transform: transform,
-        opacity: opacity,
-        origin: origin,
-        align: align,
-        size: size
-    });
-    return result;
-}
-
-function _parseArray(definition) {
-    var result = new RenderNode();
-    for (var i = 0; i < definition.length; i++) {
-        var obj = _parse.call(this, definition[i]);
-        if (obj) result.add(obj);
-    }
-    return result;
-}
+function _parseArray(definition) {}
 
 // parse object directly into tree of RenderNodes
-function _parse(definition) {
-    var result;
-    var id;
-    if (definition instanceof Array) {
-        result = _parseArray.call(this, definition);
-    }
-    else {
-        id = this._objects.length;
-        if (definition.render && (definition.render instanceof Function)) {
-            result = definition;
-        }
-        else if (definition.target) {
-            var targetObj = _parse.call(this, definition.target);
-            var obj = _parseTransform.call(this, definition);
-
-            result = new RenderNode(obj);
-            result.add(targetObj);
-            if (definition.id) this.id[definition.id] = obj;
-        }
-        else if (definition.id) {
-            result = new RenderNode();
-            this.id[definition.id] = result;
-        }
-    }
-    this._objects[id] = result;
-    return result;
-}
+function _parse(definition) {}
 
 /**
  * Builds and renders a scene graph based on a canonical declarative scene definition.
@@ -2517,12 +1621,7 @@ function _parse(definition) {
  * @method load
  * @param {Object} definition definition in the format of a render spec.
  */
-Scene.prototype.load = function load(definition) {
-    this._definition = definition;
-    this.id = {};
-    this._objects = [];
-    this.node.set(_parse.call(this, definition));
-};
+Scene.prototype.load = function load(definition) {};
 
 /**
  * Add renderables to this component's render tree
@@ -2532,9 +1631,7 @@ Scene.prototype.load = function load(definition) {
  * @param {Object} obj renderable object
  * @return {RenderNode} Render wrapping provided object, if not already a RenderNode
  */
-Scene.prototype.add = function add() {
-    return this.node.add.apply(this.node, arguments);
-};
+Scene.prototype.add = function add() {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -2543,9 +1640,7 @@ Scene.prototype.add = function add() {
  * @method render
  * @return {number} Render spec for this component
  */
-Scene.prototype.render = function render() {
-    return this.node.render.apply(this.node, arguments);
-};
+Scene.prototype.render = function render() {};
 
 module.exports = Scene;
 },{"./Modifier":9,"./RenderNode":11,"./Transform":15}],13:[function(_dereq_,module,exports){
@@ -2570,9 +1665,7 @@ var Transform = _dereq_('./Transform');
  * @class SpecParser
  * @constructor
  */
-function SpecParser() {
-    this.result = {};
-}
+function SpecParser() {}
 SpecParser._instance = new SpecParser();
 
 /**
@@ -2589,9 +1682,7 @@ SpecParser._instance = new SpecParser();
  * @return {Object} the resulting update spec (if no callback
  *   specified, else none)
  */
-SpecParser.parse = function parse(spec, context) {
-    return SpecParser._instance.parse(spec, context);
-};
+SpecParser.parse = function parse(spec, context) {};
 
 /**
  * Convert a renderSpec coming from the context's render chain to an update
@@ -2605,11 +1696,7 @@ SpecParser.parse = function parse(spec, context) {
  * @param {Context} context
  * @return {updateSpec} the resulting update spec
  */
-SpecParser.prototype.parse = function parse(spec, context) {
-    this.reset();
-    this._parseSpec(spec, context, Transform.identity);
-    return this.result;
-};
+SpecParser.prototype.parse = function parse(spec, context) {};
 
 /**
  * Prepare SpecParser for re-use (or first use) by setting internal state
@@ -2618,18 +1705,10 @@ SpecParser.prototype.parse = function parse(spec, context) {
  * @private
  * @method reset
  */
-SpecParser.prototype.reset = function reset() {
-    this.result = {};
-};
+SpecParser.prototype.reset = function reset() {};
 
 // Multiply matrix M by vector v
-function _vecInContext(v, m) {
-    return [
-        v[0] * m[0] + v[1] * m[4] + v[2] * m[8],
-        v[0] * m[1] + v[1] * m[5] + v[2] * m[9],
-        v[0] * m[2] + v[1] * m[6] + v[2] * m[10]
-    ];
-}
+function _vecInContext(v, m) {}
 
 var _zeroZero = [0, 0];
 
@@ -2638,89 +1717,7 @@ var _zeroZero = [0, 0];
 //    the provided renderSpec tree structure. On completion, those
 //    properties of 'this' object should be ready to use to build an
 //    updateSpec.
-SpecParser.prototype._parseSpec = function _parseSpec(spec, parentContext, sizeContext) {
-    var id;
-    var target;
-    var transform;
-    var opacity;
-    var origin;
-    var align;
-    var size;
-
-    if (typeof spec === 'number') {
-        id = spec;
-        transform = parentContext.transform;
-        align = parentContext.align || _zeroZero;
-        if (parentContext.size && align && (align[0] || align[1])) {
-            var alignAdjust = [align[0] * parentContext.size[0], align[1] * parentContext.size[1], 0];
-            transform = Transform.thenMove(transform, _vecInContext(alignAdjust, sizeContext));
-        }
-        this.result[id] = {
-            transform: transform,
-            opacity: parentContext.opacity,
-            origin: parentContext.origin || _zeroZero,
-            align: parentContext.align || _zeroZero,
-            size: parentContext.size
-        };
-    }
-    else if (!spec) { // placed here so 0 will be cached earlier
-        return;
-    }
-    else if (spec instanceof Array) {
-        for (var i = 0; i < spec.length; i++) {
-            this._parseSpec(spec[i], parentContext, sizeContext);
-        }
-    }
-    else {
-        target = spec.target;
-        transform = parentContext.transform;
-        opacity = parentContext.opacity;
-        origin = parentContext.origin;
-        align = parentContext.align;
-        size = parentContext.size;
-        var nextSizeContext = sizeContext;
-
-        if (spec.opacity !== undefined) opacity = parentContext.opacity * spec.opacity;
-        if (spec.transform) transform = Transform.multiply(parentContext.transform, spec.transform);
-        if (spec.origin) {
-            origin = spec.origin;
-            nextSizeContext = parentContext.transform;
-        }
-        if (spec.align) align = spec.align;
-
-        if (spec.size || spec.proportions) {
-            var parentSize = size;
-            size = [size[0], size[1]];
-
-            if (spec.size) {
-                if (spec.size[0] !== undefined) size[0] = spec.size[0];
-                if (spec.size[1] !== undefined) size[1] = spec.size[1];
-            }
-
-            if (spec.proportions) {
-                if (spec.proportions[0] !== undefined) size[0] = size[0] * spec.proportions[0];
-                if (spec.proportions[1] !== undefined) size[1] = size[1] * spec.proportions[1];
-            }
-
-            if (parentSize) {
-                if (align && (align[0] || align[1])) transform = Transform.thenMove(transform, _vecInContext([align[0] * parentSize[0], align[1] * parentSize[1], 0], sizeContext));
-                if (origin && (origin[0] || origin[1])) transform = Transform.moveThen([-origin[0] * size[0], -origin[1] * size[1], 0], transform);
-            }
-
-            nextSizeContext = parentContext.transform;
-            origin = null;
-            align = null;
-        }
-
-        this._parseSpec(target, {
-            transform: transform,
-            opacity: opacity,
-            origin: origin,
-            align: align,
-            size: size
-        }, nextSizeContext);
-    }
-};
+SpecParser.prototype._parseSpec = function _parseSpec(spec, parentContext, sizeContext) {};
 
 module.exports = SpecParser;
 },{"./Transform":15}],14:[function(_dereq_,module,exports){
@@ -2751,30 +1748,7 @@ var ElementOutput = _dereq_('./ElementOutput');
  * @param {Array} [options.attributes] string dictionary of HTML attributes to set on target div
  * @param {string} [options.content] inner (HTML) content of surface
  */
-function Surface(options) {
-    ElementOutput.call(this);
-
-    this.options = {};
-
-    this.properties = {};
-    this.attributes = {};
-    this.content = '';
-    this.classList = [];
-    this.size = null;
-
-    this._classesDirty = true;
-    this._stylesDirty = true;
-    this._attributesDirty = true;
-    this._sizeDirty = true;
-    this._contentDirty = true;
-    this._trueSizeCheck = true;
-
-    this._dirtyClasses = [];
-
-    if (options) this.setOptions(options);
-
-    this._currentTarget = null;
-}
+function Surface(options) {}
 Surface.prototype = Object.create(ElementOutput.prototype);
 Surface.prototype.constructor = Surface;
 Surface.prototype.elementType = 'div';
@@ -2787,13 +1761,7 @@ Surface.prototype.elementClass = 'famous-surface';
  * @method setAttributes
 * @param {Object} attributes property dictionary of "key" => "value"
  */
-Surface.prototype.setAttributes = function setAttributes(attributes) {
-    for (var n in attributes) {
-        if (n === 'style') throw new Error('Cannot set styles via "setAttributes" as it will break Famo.us.  Use "setProperties" instead.');
-        this.attributes[n] = attributes[n];
-    }
-    this._attributesDirty = true;
-};
+Surface.prototype.setAttributes = function setAttributes(attributes) {};
 
 /**
  * Get HTML attributes on this Surface.
@@ -2802,9 +1770,7 @@ Surface.prototype.setAttributes = function setAttributes(attributes) {
  *
  * @return {Object} Dictionary of this Surface's attributes.
  */
-Surface.prototype.getAttributes = function getAttributes() {
-    return this.attributes;
-};
+Surface.prototype.getAttributes = function getAttributes() {};
 
 /**
  * Set CSS-style properties on this Surface. Note that this will cause
@@ -2814,13 +1780,7 @@ Surface.prototype.getAttributes = function getAttributes() {
  * @chainable
  * @param {Object} properties property dictionary of "key" => "value"
  */
-Surface.prototype.setProperties = function setProperties(properties) {
-    for (var n in properties) {
-        this.properties[n] = properties[n];
-    }
-    this._stylesDirty = true;
-    return this;
-};
+Surface.prototype.setProperties = function setProperties(properties) {};
 
 /**
  * Get CSS-style properties on this Surface.
@@ -2829,9 +1789,7 @@ Surface.prototype.setProperties = function setProperties(properties) {
  *
  * @return {Object} Dictionary of this Surface's properties.
  */
-Surface.prototype.getProperties = function getProperties() {
-    return this.properties;
-};
+Surface.prototype.getProperties = function getProperties() {};
 
 /**
  * Add CSS-style class to the list of classes on this Surface. Note
@@ -2842,13 +1800,7 @@ Surface.prototype.getProperties = function getProperties() {
  * @chainable
  * @param {string} className name of class to add
  */
-Surface.prototype.addClass = function addClass(className) {
-    if (this.classList.indexOf(className) < 0) {
-        this.classList.push(className);
-        this._classesDirty = true;
-    }
-    return this;
-};
+Surface.prototype.addClass = function addClass(className) {};
 
 /**
  * Remove CSS-style class from the list of classes on this Surface.
@@ -2859,14 +1811,7 @@ Surface.prototype.addClass = function addClass(className) {
  * @chainable
  * @param {string} className name of class to remove
  */
-Surface.prototype.removeClass = function removeClass(className) {
-    var i = this.classList.indexOf(className);
-    if (i >= 0) {
-        this._dirtyClasses.push(this.classList.splice(i, 1)[0]);
-        this._classesDirty = true;
-    }
-    return this;
-};
+Surface.prototype.removeClass = function removeClass(className) {};
 
 /**
  * Toggle CSS-style class from the list of classes on this Surface.
@@ -2876,15 +1821,7 @@ Surface.prototype.removeClass = function removeClass(className) {
  * @method toggleClass
  * @param {string} className name of class to toggle
  */
-Surface.prototype.toggleClass = function toggleClass(className) {
-    var i = this.classList.indexOf(className);
-    if (i >= 0) {
-        this.removeClass(className);
-    } else {
-        this.addClass(className);
-    }
-    return this;
-};
+Surface.prototype.toggleClass = function toggleClass(className) {};
 
 /**
  * Reset class list to provided dictionary.
@@ -2892,17 +1829,7 @@ Surface.prototype.toggleClass = function toggleClass(className) {
  * @chainable
  * @param {Array.string} classList
  */
-Surface.prototype.setClasses = function setClasses(classList) {
-    var i = 0;
-    var removal = [];
-    for (i = 0; i < this.classList.length; i++) {
-        if (classList.indexOf(this.classList[i]) < 0) removal.push(this.classList[i]);
-    }
-    for (i = 0; i < removal.length; i++) this.removeClass(removal[i]);
-    // duplicates are already checked by addClass()
-    for (i = 0; i < classList.length; i++) this.addClass(classList[i]);
-    return this;
-};
+Surface.prototype.setClasses = function setClasses(classList) {};
 
 /**
  * Get array of CSS-style classes attached to this div.
@@ -2910,9 +1837,7 @@ Surface.prototype.setClasses = function setClasses(classList) {
  * @method getClasslist
  * @return {Array.string} array of class names
  */
-Surface.prototype.getClassList = function getClassList() {
-    return this.classList;
-};
+Surface.prototype.getClassList = function getClassList() {};
 
 /**
  * Set or overwrite inner (HTML) content of this surface. Note that this
@@ -2922,13 +1847,7 @@ Surface.prototype.getClassList = function getClassList() {
  * @chainable
  * @param {string|Document Fragment} content HTML content
  */
-Surface.prototype.setContent = function setContent(content) {
-    if (this.content !== content) {
-        this.content = content;
-        this._contentDirty = true;
-    }
-    return this;
-};
+Surface.prototype.setContent = function setContent(content) {};
 
 /**
  * Return inner (HTML) content of this surface.
@@ -2937,9 +1856,7 @@ Surface.prototype.setContent = function setContent(content) {
  *
  * @return {string} inner (HTML) content
  */
-Surface.prototype.getContent = function getContent() {
-    return this.content;
-};
+Surface.prototype.getContent = function getContent() {};
 
 /**
  * Set options for this surface
@@ -2948,56 +1865,28 @@ Surface.prototype.getContent = function getContent() {
  * @chainable
  * @param {Object} [options] overrides for default options.  See constructor.
  */
-Surface.prototype.setOptions = function setOptions(options) {
-    if (options.size) this.setSize(options.size);
-    if (options.classes) this.setClasses(options.classes);
-    if (options.properties) this.setProperties(options.properties);
-    if (options.attributes) this.setAttributes(options.attributes);
-    if (options.content) this.setContent(options.content);
-    return this;
-};
+Surface.prototype.setOptions = function setOptions(options) {};
 
 //  Apply to document all changes from removeClass() since last setup().
-function _cleanupClasses(target) {
-    for (var i = 0; i < this._dirtyClasses.length; i++) target.classList.remove(this._dirtyClasses[i]);
-    this._dirtyClasses = [];
-}
+function _cleanupClasses(target) {}
 
 // Apply values of all Famous-managed styles to the document element.
 //  These will be deployed to the document on call to #setup().
-function _applyStyles(target) {
-    for (var n in this.properties) {
-        target.style[n] = this.properties[n];
-    }
-}
+function _applyStyles(target) {}
 
 // Clear all Famous-managed styles from the document element.
 // These will be deployed to the document on call to #setup().
-function _cleanupStyles(target) {
-    for (var n in this.properties) {
-        target.style[n] = '';
-    }
-}
+function _cleanupStyles(target) {}
 
 // Apply values of all Famous-managed attributes to the document element.
 //  These will be deployed to the document on call to #setup().
-function _applyAttributes(target) {
-    for (var n in this.attributes) {
-        target.setAttribute(n, this.attributes[n]);
-    }
-}
+function _applyAttributes(target) {}
 
 // Clear all Famous-managed attributes from the document element.
 // These will be deployed to the document on call to #setup().
-function _cleanupAttributes(target) {
-    for (var n in this.attributes) {
-        target.removeAttribute(n);
-    }
-}
+function _cleanupAttributes(target) {}
 
-function _xyNotEquals(a, b) {
-    return (a && b) ? (a[0] !== b[0] || a[1] !== b[1]) : a !== b;
-}
+function _xyNotEquals(a, b) {}
 
 /**
  * One-time setup for an element to be ready for commits to document.
@@ -3007,30 +1896,7 @@ function _xyNotEquals(a, b) {
  *
  * @param {ElementAllocator} allocator document element pool for this context
  */
-Surface.prototype.setup = function setup(allocator) {
-    var target = allocator.allocate(this.elementType);
-    if (this.elementClass) {
-        if (this.elementClass instanceof Array) {
-            for (var i = 0; i < this.elementClass.length; i++) {
-                target.classList.add(this.elementClass[i]);
-            }
-        }
-        else {
-            target.classList.add(this.elementClass);
-        }
-    }
-    target.style.display = '';
-    this.attach(target);
-    this._opacity = null;
-    this._currentTarget = target;
-    this._stylesDirty = true;
-    this._classesDirty = true;
-    this._attributesDirty = true;
-    this._sizeDirty = true;
-    this._contentDirty = true;
-    this._originDirty = true;
-    this._transformDirty = true;
-};
+Surface.prototype.setup = function setup(allocator) {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -3041,91 +1907,7 @@ Surface.prototype.setup = function setup(allocator) {
  * @method commit
  * @param {Context} context commit context
  */
-Surface.prototype.commit = function commit(context) {
-    if (!this._currentTarget) this.setup(context.allocator);
-    var target = this._currentTarget;
-    var size = context.size;
-
-    if (this._classesDirty) {
-        _cleanupClasses.call(this, target);
-        var classList = this.getClassList();
-        for (var i = 0; i < classList.length; i++) target.classList.add(classList[i]);
-        this._classesDirty = false;
-        this._trueSizeCheck = true;
-    }
-
-    if (this._stylesDirty) {
-        _applyStyles.call(this, target);
-        this._stylesDirty = false;
-        this._trueSizeCheck = true;
-    }
-
-    if (this._attributesDirty) {
-        _applyAttributes.call(this, target);
-        this._attributesDirty = false;
-        this._trueSizeCheck = true;
-    }
-
-    if (this.size) {
-        var origSize = context.size;
-        size = [this.size[0], this.size[1]];
-        if (size[0] === undefined) size[0] = origSize[0];
-        if (size[1] === undefined) size[1] = origSize[1];
-        if (size[0] === true || size[1] === true) {
-            if (size[0] === true){
-                if (this._trueSizeCheck || (this._size[0] === 0)) {
-                    var width = target.offsetWidth;
-                    if (this._size && this._size[0] !== width) {
-                        this._size[0] = width;
-                        this._sizeDirty = true;
-                    }
-                    size[0] = width;
-                } else {
-                    if (this._size) size[0] = this._size[0];
-                }
-            }
-            if (size[1] === true){
-                if (this._trueSizeCheck || (this._size[1] === 0)) {
-                    var height = target.offsetHeight;
-                    if (this._size && this._size[1] !== height) {
-                        this._size[1] = height;
-                        this._sizeDirty = true;
-                    }
-                    size[1] = height;
-                } else {
-                    if (this._size) size[1] = this._size[1];
-                }
-            }
-            this._trueSizeCheck = false;
-        }
-    }
-
-    if (_xyNotEquals(this._size, size)) {
-        if (!this._size) this._size = [0, 0];
-        this._size[0] = size[0];
-        this._size[1] = size[1];
-
-        this._sizeDirty = true;
-    }
-
-    if (this._sizeDirty) {
-        if (this._size) {
-            target.style.width = (this.size && this.size[0] === true) ? '' : this._size[0] + 'px';
-            target.style.height = (this.size && this.size[1] === true) ?  '' : this._size[1] + 'px';
-        }
-
-        this._eventOutput.emit('resize');
-    }
-
-    if (this._contentDirty) {
-        this.deploy(target);
-        this._eventOutput.emit('deploy');
-        this._contentDirty = false;
-        this._trueSizeCheck = true;
-    }
-
-    ElementOutput.prototype.commit.call(this, context);
-};
+Surface.prototype.commit = function commit(context) {};
 
 /**
  *  Remove all Famous-relevant attributes from a document element.
@@ -3136,34 +1918,7 @@ Surface.prototype.commit = function commit(context) {
  * @method cleanup
  * @param {ElementAllocator} allocator
  */
-Surface.prototype.cleanup = function cleanup(allocator) {
-    var i = 0;
-    var target = this._currentTarget;
-    this._eventOutput.emit('recall');
-    this.recall(target);
-    target.style.display = 'none';
-    target.style.opacity = '';
-    target.style.width = '';
-    target.style.height = '';
-    _cleanupStyles.call(this, target);
-    _cleanupAttributes.call(this, target);
-    var classList = this.getClassList();
-    _cleanupClasses.call(this, target);
-    for (i = 0; i < classList.length; i++) target.classList.remove(classList[i]);
-    if (this.elementClass) {
-        if (this.elementClass instanceof Array) {
-            for (i = 0; i < this.elementClass.length; i++) {
-                target.classList.remove(this.elementClass[i]);
-            }
-        }
-        else {
-            target.classList.remove(this.elementClass);
-        }
-    }
-    this.detach(target);
-    this._currentTarget = null;
-    allocator.deallocate(target);
-};
+Surface.prototype.cleanup = function cleanup(allocator) {};
 
 /**
  * Place the document element that this component manages into the document.
@@ -3172,14 +1927,7 @@ Surface.prototype.cleanup = function cleanup(allocator) {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-Surface.prototype.deploy = function deploy(target) {
-    var content = this.getContent();
-    if (content instanceof Node) {
-        while (target.hasChildNodes()) target.removeChild(target.firstChild);
-        target.appendChild(content);
-    }
-    else target.innerHTML = content;
-};
+Surface.prototype.deploy = function deploy(target) {};
 
 /**
  * Remove any contained document content associated with this surface
@@ -3188,11 +1936,7 @@ Surface.prototype.deploy = function deploy(target) {
  * @private
  * @method recall
  */
-Surface.prototype.recall = function recall(target) {
-    var df = document.createDocumentFragment();
-    while (target.hasChildNodes()) df.appendChild(target.firstChild);
-    this.setContent(df);
-};
+Surface.prototype.recall = function recall(target) {};
 
 /**
  *  Get the x and y dimensions of the surface.
@@ -3200,9 +1944,7 @@ Surface.prototype.recall = function recall(target) {
  * @method getSize
  * @return {Array.Number} [x,y] size of surface
  */
-Surface.prototype.getSize = function getSize() {
-    return this._size ? this._size : this.size;
-};
+Surface.prototype.getSize = function getSize() {};
 
 /**
  * Set x and y dimensions of the surface.
@@ -3211,11 +1953,7 @@ Surface.prototype.getSize = function getSize() {
  * @chainable
  * @param {Array.Number} size as [width, height]
  */
-Surface.prototype.setSize = function setSize(size) {
-    this.size = size ? [size[0], size[1]] : null;
-    this._sizeDirty = true;
-    return this;
-};
+Surface.prototype.setSize = function setSize(size) {};
 
 module.exports = Surface;
 },{"./ElementOutput":3}],15:[function(_dereq_,module,exports){
@@ -3267,26 +2005,7 @@ Transform.identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
  * @param {Transform} b right Transform
  * @return {Transform}
  */
-Transform.multiply4x4 = function multiply4x4(a, b) {
-    return [
-        a[0] * b[0] + a[4] * b[1] + a[8] * b[2] + a[12] * b[3],
-        a[1] * b[0] + a[5] * b[1] + a[9] * b[2] + a[13] * b[3],
-        a[2] * b[0] + a[6] * b[1] + a[10] * b[2] + a[14] * b[3],
-        a[3] * b[0] + a[7] * b[1] + a[11] * b[2] + a[15] * b[3],
-        a[0] * b[4] + a[4] * b[5] + a[8] * b[6] + a[12] * b[7],
-        a[1] * b[4] + a[5] * b[5] + a[9] * b[6] + a[13] * b[7],
-        a[2] * b[4] + a[6] * b[5] + a[10] * b[6] + a[14] * b[7],
-        a[3] * b[4] + a[7] * b[5] + a[11] * b[6] + a[15] * b[7],
-        a[0] * b[8] + a[4] * b[9] + a[8] * b[10] + a[12] * b[11],
-        a[1] * b[8] + a[5] * b[9] + a[9] * b[10] + a[13] * b[11],
-        a[2] * b[8] + a[6] * b[9] + a[10] * b[10] + a[14] * b[11],
-        a[3] * b[8] + a[7] * b[9] + a[11] * b[10] + a[15] * b[11],
-        a[0] * b[12] + a[4] * b[13] + a[8] * b[14] + a[12] * b[15],
-        a[1] * b[12] + a[5] * b[13] + a[9] * b[14] + a[13] * b[15],
-        a[2] * b[12] + a[6] * b[13] + a[10] * b[14] + a[14] * b[15],
-        a[3] * b[12] + a[7] * b[13] + a[11] * b[14] + a[15] * b[15]
-    ];
-};
+Transform.multiply4x4 = function multiply4x4(a, b) {};
 
 /**
  * Fast-multiply two or more Transform matrix types to return a
@@ -3298,26 +2017,7 @@ Transform.multiply4x4 = function multiply4x4(a, b) {
  * @param {Transform} b right Transform
  * @return {Transform}
  */
-Transform.multiply = function multiply(a, b) {
-    return [
-        a[0] * b[0] + a[4] * b[1] + a[8] * b[2],
-        a[1] * b[0] + a[5] * b[1] + a[9] * b[2],
-        a[2] * b[0] + a[6] * b[1] + a[10] * b[2],
-        0,
-        a[0] * b[4] + a[4] * b[5] + a[8] * b[6],
-        a[1] * b[4] + a[5] * b[5] + a[9] * b[6],
-        a[2] * b[4] + a[6] * b[5] + a[10] * b[6],
-        0,
-        a[0] * b[8] + a[4] * b[9] + a[8] * b[10],
-        a[1] * b[8] + a[5] * b[9] + a[9] * b[10],
-        a[2] * b[8] + a[6] * b[9] + a[10] * b[10],
-        0,
-        a[0] * b[12] + a[4] * b[13] + a[8] * b[14] + a[12],
-        a[1] * b[12] + a[5] * b[13] + a[9] * b[14] + a[13],
-        a[2] * b[12] + a[6] * b[13] + a[10] * b[14] + a[14],
-        1
-    ];
-};
+Transform.multiply = function multiply(a, b) {};
 
 /**
  * Return a Transform translated by additional amounts in each
@@ -3331,10 +2031,7 @@ Transform.multiply = function multiply(a, b) {
  * @param {Array.Number} t floats delta vector of length 2 or 3
  * @return {Transform}
  */
-Transform.thenMove = function thenMove(m, t) {
-    if (!t[2]) t[2] = 0;
-    return [m[0], m[1], m[2], 0, m[4], m[5], m[6], 0, m[8], m[9], m[10], 0, m[12] + t[0], m[13] + t[1], m[14] + t[2], 1];
-};
+Transform.thenMove = function thenMove(m, t) {};
 
 /**
  * Return a Transform matrix which represents the result of a transform matrix
@@ -3349,13 +2046,7 @@ Transform.thenMove = function thenMove(m, t) {
  * @param {Transform} m matrix to apply afterwards
  * @return {Transform} the resulting matrix
  */
-Transform.moveThen = function moveThen(v, m) {
-    if (!v[2]) v[2] = 0;
-    var t0 = v[0] * m[0] + v[1] * m[4] + v[2] * m[8];
-    var t1 = v[0] * m[1] + v[1] * m[5] + v[2] * m[9];
-    var t2 = v[0] * m[2] + v[1] * m[6] + v[2] * m[10];
-    return Transform.thenMove(m, [t0, t1, t2]);
-};
+Transform.moveThen = function moveThen(v, m) {};
 
 /**
  * Return a Transform which represents a translation by specified
@@ -3368,10 +2059,7 @@ Transform.moveThen = function moveThen(v, m) {
  * @param {Number} z z translation
  * @return {Transform}
  */
-Transform.translate = function translate(x, y, z) {
-    if (z === undefined) z = 0;
-    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1];
-};
+Transform.translate = function translate(x, y, z) {};
 
 /**
  * Return a Transform scaled by a vector in each
@@ -3386,14 +2074,7 @@ Transform.translate = function translate(x, y, z) {
  *    array.length == 3)
  * @return {Transform}
  */
-Transform.thenScale = function thenScale(m, s) {
-    return [
-        s[0] * m[0], s[1] * m[1], s[2] * m[2], 0,
-        s[0] * m[4], s[1] * m[5], s[2] * m[6], 0,
-        s[0] * m[8], s[1] * m[9], s[2] * m[10], 0,
-        s[0] * m[12], s[1] * m[13], s[2] * m[14], 1
-    ];
-};
+Transform.thenScale = function thenScale(m, s) {};
 
 /**
  * Return a Transform which represents a scale by specified amounts
@@ -3406,11 +2087,7 @@ Transform.thenScale = function thenScale(m, s) {
  * @param {Number} z z scale factor
  * @return {Transform}
  */
-Transform.scale = function scale(x, y, z) {
-    if (z === undefined) z = 1;
-    if (y === undefined) y = x;
-    return [x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1];
-};
+Transform.scale = function scale(x, y, z) {};
 
 /**
  * Return a Transform which represents a clockwise
@@ -3421,11 +2098,7 @@ Transform.scale = function scale(x, y, z) {
  * @param {Number} theta radians
  * @return {Transform}
  */
-Transform.rotateX = function rotateX(theta) {
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-    return [1, 0, 0, 0, 0, cosTheta, sinTheta, 0, 0, -sinTheta, cosTheta, 0, 0, 0, 0, 1];
-};
+Transform.rotateX = function rotateX(theta) {};
 
 /**
  * Return a Transform which represents a clockwise
@@ -3436,11 +2109,7 @@ Transform.rotateX = function rotateX(theta) {
  * @param {Number} theta radians
  * @return {Transform}
  */
-Transform.rotateY = function rotateY(theta) {
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-    return [cosTheta, 0, -sinTheta, 0, 0, 1, 0, 0, sinTheta, 0, cosTheta, 0, 0, 0, 0, 1];
-};
+Transform.rotateY = function rotateY(theta) {};
 
 /**
  * Return a Transform which represents a clockwise
@@ -3451,11 +2120,7 @@ Transform.rotateY = function rotateY(theta) {
  * @param {Number} theta radians
  * @return {Transform}
  */
-Transform.rotateZ = function rotateZ(theta) {
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-    return [cosTheta, sinTheta, 0, 0, -sinTheta, cosTheta, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-};
+Transform.rotateZ = function rotateZ(theta) {};
 
 /**
  * Return a Transform which represents composed clockwise
@@ -3469,30 +2134,7 @@ Transform.rotateZ = function rotateZ(theta) {
  * @param {Number} psi radians to rotate about the positive z axis
  * @return {Transform}
  */
-Transform.rotate = function rotate(phi, theta, psi) {
-    var cosPhi = Math.cos(phi);
-    var sinPhi = Math.sin(phi);
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-    var cosPsi = Math.cos(psi);
-    var sinPsi = Math.sin(psi);
-    var result = [
-        cosTheta * cosPsi,
-        cosPhi * sinPsi + sinPhi * sinTheta * cosPsi,
-        sinPhi * sinPsi - cosPhi * sinTheta * cosPsi,
-        0,
-        -cosTheta * sinPsi,
-        cosPhi * cosPsi - sinPhi * sinTheta * sinPsi,
-        sinPhi * cosPsi + cosPhi * sinTheta * sinPsi,
-        0,
-        sinTheta,
-        -sinPhi * cosTheta,
-        cosPhi * cosTheta,
-        0,
-        0, 0, 0, 1
-    ];
-    return result;
-};
+Transform.rotate = function rotate(phi, theta, psi) {};
 
 /**
  * Return a Transform which represents an axis-angle rotation
@@ -3503,29 +2145,7 @@ Transform.rotate = function rotate(phi, theta, psi) {
  * @param {Number} theta radians to rotate clockwise about the axis
  * @return {Transform}
  */
-Transform.rotateAxis = function rotateAxis(v, theta) {
-    var sinTheta = Math.sin(theta);
-    var cosTheta = Math.cos(theta);
-    var verTheta = 1 - cosTheta; // versine of theta
-
-    var xxV = v[0] * v[0] * verTheta;
-    var xyV = v[0] * v[1] * verTheta;
-    var xzV = v[0] * v[2] * verTheta;
-    var yyV = v[1] * v[1] * verTheta;
-    var yzV = v[1] * v[2] * verTheta;
-    var zzV = v[2] * v[2] * verTheta;
-    var xs = v[0] * sinTheta;
-    var ys = v[1] * sinTheta;
-    var zs = v[2] * sinTheta;
-
-    var result = [
-        xxV + cosTheta, xyV + zs, xzV - ys, 0,
-        xyV - zs, yyV + cosTheta, yzV + xs, 0,
-        xzV + ys, yzV - xs, zzV + cosTheta, 0,
-        0, 0, 0, 1
-    ];
-    return result;
-};
+Transform.rotateAxis = function rotateAxis(v, theta) {};
 
 /**
  * Return a Transform which represents a transform matrix applied about
@@ -3537,12 +2157,7 @@ Transform.rotateAxis = function rotateAxis(v, theta) {
  * @param {Transform} m matrix to apply
  * @return {Transform}
  */
-Transform.aboutOrigin = function aboutOrigin(v, m) {
-    var t0 = v[0] - (v[0] * m[0] + v[1] * m[4] + v[2] * m[8]);
-    var t1 = v[1] - (v[0] * m[1] + v[1] * m[5] + v[2] * m[9]);
-    var t2 = v[2] - (v[0] * m[2] + v[1] * m[6] + v[2] * m[10]);
-    return Transform.thenMove(m, [t0, t1, t2]);
-};
+Transform.aboutOrigin = function aboutOrigin(v, m) {};
 
 /**
  * Return a Transform representation of a skew transformation
@@ -3554,9 +2169,7 @@ Transform.aboutOrigin = function aboutOrigin(v, m) {
  * @param {Number} psi scale factor skew in the z axis
  * @return {Transform}
  */
-Transform.skew = function skew(phi, theta, psi) {
-    return [1, Math.tan(theta), 0, 0, Math.tan(psi), 1, 0, 0, 0, Math.tan(phi), 1, 0, 0, 0, 0, 1];
-};
+Transform.skew = function skew(phi, theta, psi) {};
 
 /**
  * Return a Transform representation of a skew in the x-direction
@@ -3566,9 +2179,7 @@ Transform.skew = function skew(phi, theta, psi) {
  * @param {Number} angle the angle between the top and left sides
  * @return {Transform}
  */
-Transform.skewX = function skewX(angle) {
-    return [1, 0, 0, 0, Math.tan(angle), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-};
+Transform.skewX = function skewX(angle) {};
 
 /**
  * Return a Transform representation of a skew in the y-direction
@@ -3578,9 +2189,7 @@ Transform.skewX = function skewX(angle) {
  * @param {Number} angle the angle between the top and right sides
  * @return {Transform}
  */
-Transform.skewY = function skewY(angle) {
-    return [1, Math.tan(angle), 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-};
+Transform.skewY = function skewY(angle) {};
 
 /**
  * Returns a perspective Transform matrix
@@ -3590,9 +2199,7 @@ Transform.skewY = function skewY(angle) {
  * @param {Number} focusZ z position of focal point
  * @return {Transform}
  */
-Transform.perspective = function perspective(focusZ) {
-    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -1 / focusZ, 0, 0, 0, 1];
-};
+Transform.perspective = function perspective(focusZ) {};
 
 /**
  * Return translation vector component of given Transform
@@ -3602,9 +2209,7 @@ Transform.perspective = function perspective(focusZ) {
  * @param {Transform} m Transform
  * @return {Array.Number} the translation vector [t_x, t_y, t_z]
  */
-Transform.getTranslate = function getTranslate(m) {
-    return [m[12], m[13], m[14]];
-};
+Transform.getTranslate = function getTranslate(m) {};
 
 /**
  * Return inverse affine transform for given Transform.
@@ -3616,30 +2221,7 @@ Transform.getTranslate = function getTranslate(m) {
  * @param {Transform} m Transform
  * @return {Transform}
  */
-Transform.inverse = function inverse(m) {
-    // only need to consider 3x3 section for affine
-    var c0 = m[5] * m[10] - m[6] * m[9];
-    var c1 = m[4] * m[10] - m[6] * m[8];
-    var c2 = m[4] * m[9] - m[5] * m[8];
-    var c4 = m[1] * m[10] - m[2] * m[9];
-    var c5 = m[0] * m[10] - m[2] * m[8];
-    var c6 = m[0] * m[9] - m[1] * m[8];
-    var c8 = m[1] * m[6] - m[2] * m[5];
-    var c9 = m[0] * m[6] - m[2] * m[4];
-    var c10 = m[0] * m[5] - m[1] * m[4];
-    var detM = m[0] * c0 - m[1] * c1 + m[2] * c2;
-    var invD = 1 / detM;
-    var result = [
-        invD * c0, -invD * c4, invD * c8, 0,
-        -invD * c1, invD * c5, -invD * c9, 0,
-        invD * c2, -invD * c6, invD * c10, 0,
-        0, 0, 0, 1
-    ];
-    result[12] = -m[12] * result[0] - m[13] * result[4] - m[14] * result[8];
-    result[13] = -m[12] * result[1] - m[13] * result[5] - m[14] * result[9];
-    result[14] = -m[12] * result[2] - m[13] * result[6] - m[14] * result[10];
-    return result;
-};
+Transform.inverse = function inverse(m) {};
 
 /**
  * Returns the transpose of a 4x4 matrix
@@ -3649,19 +2231,11 @@ Transform.inverse = function inverse(m) {
  * @param {Transform} m matrix
  * @return {Transform} the resulting transposed matrix
  */
-Transform.transpose = function transpose(m) {
-    return [m[0], m[4], m[8], m[12], m[1], m[5], m[9], m[13], m[2], m[6], m[10], m[14], m[3], m[7], m[11], m[15]];
-};
+Transform.transpose = function transpose(m) {};
 
-function _normSquared(v) {
-    return (v.length === 2) ? v[0] * v[0] + v[1] * v[1] : v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
-}
-function _norm(v) {
-    return Math.sqrt(_normSquared(v));
-}
-function _sign(n) {
-    return (n < 0) ? -1 : 1;
-}
+function _normSquared(v) {}
+function _norm(v) {}
+function _sign(n) {}
 
 /**
  * Decompose Transform into separate .translate, .rotate, .scale,
@@ -3673,95 +2247,7 @@ function _sign(n) {
  * @return {Object} matrix spec object with component matrices .translate,
  *    .rotate, .scale, .skew
  */
-Transform.interpret = function interpret(M) {
-
-    // QR decomposition via Householder reflections
-    //FIRST ITERATION
-
-    //default Q1 to the identity matrix;
-    var x = [M[0], M[1], M[2]];                // first column vector
-    var sgn = _sign(x[0]);                     // sign of first component of x (for stability)
-    var xNorm = _norm(x);                      // norm of first column vector
-    var v = [x[0] + sgn * xNorm, x[1], x[2]];  // v = x + sign(x[0])|x|e1
-    var mult = 2 / _normSquared(v);            // mult = 2/v'v
-
-    //bail out if our Matrix is singular
-    if (mult >= Infinity) {
-        return {translate: Transform.getTranslate(M), rotate: [0, 0, 0], scale: [0, 0, 0], skew: [0, 0, 0]};
-    }
-
-    //evaluate Q1 = I - 2vv'/v'v
-    var Q1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
-
-    //diagonals
-    Q1[0]  = 1 - mult * v[0] * v[0];    // 0,0 entry
-    Q1[5]  = 1 - mult * v[1] * v[1];    // 1,1 entry
-    Q1[10] = 1 - mult * v[2] * v[2];    // 2,2 entry
-
-    //upper diagonal
-    Q1[1] = -mult * v[0] * v[1];        // 0,1 entry
-    Q1[2] = -mult * v[0] * v[2];        // 0,2 entry
-    Q1[6] = -mult * v[1] * v[2];        // 1,2 entry
-
-    //lower diagonal
-    Q1[4] = Q1[1];                      // 1,0 entry
-    Q1[8] = Q1[2];                      // 2,0 entry
-    Q1[9] = Q1[6];                      // 2,1 entry
-
-    //reduce first column of M
-    var MQ1 = Transform.multiply(Q1, M);
-
-    //SECOND ITERATION on (1,1) minor
-    var x2 = [MQ1[5], MQ1[6]];
-    var sgn2 = _sign(x2[0]);                    // sign of first component of x (for stability)
-    var x2Norm = _norm(x2);                     // norm of first column vector
-    var v2 = [x2[0] + sgn2 * x2Norm, x2[1]];    // v = x + sign(x[0])|x|e1
-    var mult2 = 2 / _normSquared(v2);           // mult = 2/v'v
-
-    //evaluate Q2 = I - 2vv'/v'v
-    var Q2 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
-
-    //diagonal
-    Q2[5]  = 1 - mult2 * v2[0] * v2[0]; // 1,1 entry
-    Q2[10] = 1 - mult2 * v2[1] * v2[1]; // 2,2 entry
-
-    //off diagonals
-    Q2[6] = -mult2 * v2[0] * v2[1];     // 2,1 entry
-    Q2[9] = Q2[6];                      // 1,2 entry
-
-    //calc QR decomposition. Q = Q1*Q2, R = Q'*M
-    var Q = Transform.multiply(Q2, Q1);      //note: really Q transpose
-    var R = Transform.multiply(Q, M);
-
-    //remove negative scaling
-    var remover = Transform.scale(R[0] < 0 ? -1 : 1, R[5] < 0 ? -1 : 1, R[10] < 0 ? -1 : 1);
-    R = Transform.multiply(R, remover);
-    Q = Transform.multiply(remover, Q);
-
-    //decompose into rotate/scale/skew matrices
-    var result = {};
-    result.translate = Transform.getTranslate(M);
-    result.rotate = [Math.atan2(-Q[6], Q[10]), Math.asin(Q[2]), Math.atan2(-Q[1], Q[0])];
-    if (!result.rotate[0]) {
-        result.rotate[0] = 0;
-        result.rotate[2] = Math.atan2(Q[4], Q[5]);
-    }
-    result.scale = [R[0], R[5], R[10]];
-    result.skew = [Math.atan2(R[9], result.scale[2]), Math.atan2(R[8], result.scale[2]), Math.atan2(R[4], result.scale[0])];
-
-    //double rotation workaround
-    if (Math.abs(result.rotate[0]) + Math.abs(result.rotate[2]) > 1.5 * Math.PI) {
-        result.rotate[1] = Math.PI - result.rotate[1];
-        if (result.rotate[1] > Math.PI) result.rotate[1] -= 2 * Math.PI;
-        if (result.rotate[1] < -Math.PI) result.rotate[1] += 2 * Math.PI;
-        if (result.rotate[0] < 0) result.rotate[0] += Math.PI;
-        else result.rotate[0] -= Math.PI;
-        if (result.rotate[2] < 0) result.rotate[2] += Math.PI;
-        else result.rotate[2] -= Math.PI;
-    }
-
-    return result;
-};
+Transform.interpret = function interpret(M) {};
 
 /**
  * Weighted average between two matrices by averaging their
@@ -3775,26 +2261,7 @@ Transform.interpret = function interpret(M) {
  * @param {Number} t
  * @return {Transform}
  */
-Transform.average = function average(M1, M2, t) {
-    t = (t === undefined) ? 0.5 : t;
-    var specM1 = Transform.interpret(M1);
-    var specM2 = Transform.interpret(M2);
-
-    var specAvg = {
-        translate: [0, 0, 0],
-        rotate: [0, 0, 0],
-        scale: [0, 0, 0],
-        skew: [0, 0, 0]
-    };
-
-    for (var i = 0; i < 3; i++) {
-        specAvg.translate[i] = (1 - t) * specM1.translate[i] + t * specM2.translate[i];
-        specAvg.rotate[i] = (1 - t) * specM1.rotate[i] + t * specM2.rotate[i];
-        specAvg.scale[i] = (1 - t) * specM1.scale[i] + t * specM2.scale[i];
-        specAvg.skew[i] = (1 - t) * specM1.skew[i] + t * specM2.skew[i];
-    }
-    return Transform.build(specAvg);
-};
+Transform.average = function average(M1, M2, t) {};
 
 /**
  * Compose .translate, .rotate, .scale, .skew components into
@@ -3806,12 +2273,7 @@ Transform.average = function average(M1, M2, t) {
  *    .rotate, .scale, .skew
  * @return {Transform} composed transform
  */
-Transform.build = function build(spec) {
-    var scaleMatrix = Transform.scale(spec.scale[0], spec.scale[1], spec.scale[2]);
-    var skewMatrix = Transform.skew(spec.skew[0], spec.skew[1], spec.skew[2]);
-    var rotateMatrix = Transform.rotate(spec.rotate[0], spec.rotate[1], spec.rotate[2]);
-    return Transform.thenMove(Transform.multiply(Transform.multiply(rotateMatrix, skewMatrix), scaleMatrix), spec.translate);
-};
+Transform.build = function build(spec) {};
 
 /**
  * Determine if two Transforms are component-wise equal
@@ -3823,9 +2285,7 @@ Transform.build = function build(spec) {
  * @param {Transform} b matrix
  * @return {boolean}
  */
-Transform.equals = function equals(a, b) {
-    return !Transform.notEquals(a, b);
-};
+Transform.equals = function equals(a, b) {};
 
 /**
  * Determine if two Transforms are component-wise unequal
@@ -3837,16 +2297,7 @@ Transform.equals = function equals(a, b) {
  * @param {Transform} b matrix
  * @return {boolean}
  */
-Transform.notEquals = function notEquals(a, b) {
-    if (a === b) return false;
-
-    // shortci
-    return !(a && b) ||
-        a[12] !== b[12] || a[13] !== b[13] || a[14] !== b[14] ||
-        a[0] !== b[0] || a[1] !== b[1] || a[2] !== b[2] ||
-        a[4] !== b[4] || a[5] !== b[5] || a[6] !== b[6] ||
-        a[8] !== b[8] || a[9] !== b[9] || a[10] !== b[10];
-};
+Transform.notEquals = function notEquals(a, b) {};
 
 /**
  * Constrain angle-trio components to range of [-pi, pi).
@@ -3858,29 +2309,7 @@ Transform.notEquals = function notEquals(a, b) {
  * @return {Array.Number} new phi, theta, psi triplet
  *    (array of floats && array.length == 3)
  */
-Transform.normalizeRotation = function normalizeRotation(rotation) {
-    var result = rotation.slice(0);
-    if (result[0] === Math.PI * 0.5 || result[0] === -Math.PI * 0.5) {
-        result[0] = -result[0];
-        result[1] = Math.PI - result[1];
-        result[2] -= Math.PI;
-    }
-    if (result[0] > Math.PI * 0.5) {
-        result[0] = result[0] - Math.PI;
-        result[1] = Math.PI - result[1];
-        result[2] -= Math.PI;
-    }
-    if (result[0] < -Math.PI * 0.5) {
-        result[0] = result[0] + Math.PI;
-        result[1] = -Math.PI - result[1];
-        result[2] -= Math.PI;
-    }
-    while (result[1] < -Math.PI) result[1] += 2 * Math.PI;
-    while (result[1] >= Math.PI) result[1] -= 2 * Math.PI;
-    while (result[2] < -Math.PI) result[2] += 2 * Math.PI;
-    while (result[2] >= Math.PI) result[2] -= 2 * Math.PI;
-    return result;
-};
+Transform.normalizeRotation = function normalizeRotation(rotation) {};
 
 /**
  * (Property) Array defining a translation forward in z by 1
@@ -3928,19 +2357,7 @@ var Utility = _dereq_('../utilities/Utility');
  * @uses RenderNode
  * @constructor
  */
-function View(options) {
-    this._node = new RenderNode();
-
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this.options = Utility.clone(this.constructor.DEFAULT_OPTIONS || View.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-
-    if (options) this.setOptions(options);
-}
+function View(options) {}
 
 View.DEFAULT_OPTIONS = {}; // no defaults
 
@@ -3951,9 +2368,7 @@ View.DEFAULT_OPTIONS = {}; // no defaults
  * @param {string} key key
  * @return {Object} associated object
  */
-View.prototype.getOptions = function getOptions(key) {
-    return this._optionsManager.getOptions(key);
-};
+View.prototype.getOptions = function getOptions(key) {};
 
 /*
  *  Set internal options.
@@ -3962,9 +2377,7 @@ View.prototype.getOptions = function getOptions(key) {
  *  @method setOptions
  *  @param {Object} options
  */
-View.prototype.setOptions = function setOptions(options) {
-    this._optionsManager.patch(options);
-};
+View.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Add a child renderable to the view.
@@ -3975,9 +2388,7 @@ View.prototype.setOptions = function setOptions(options) {
  * @return {RenderNode}
  * @protected
  */
-View.prototype.add = function add() {
-    return this._node.add.apply(this._node, arguments);
-};
+View.prototype.add = function add() {};
 
 /**
  * Alias for add
@@ -3992,9 +2403,7 @@ View.prototype._add = View.prototype.add;
  * @method render
  * @return {number} Render spec for this component
  */
-View.prototype.render = function render() {
-    return this._node.render();
-};
+View.prototype.render = function render() {};
 
 /**
  * Return size of contained element.
@@ -4002,12 +2411,7 @@ View.prototype.render = function render() {
  * @method getSize
  * @return {Array.Number} [width, height]
  */
-View.prototype.getSize = function getSize() {
-    if (this._node && this._node.getSize) {
-        return this._node.getSize.apply(this._node, arguments) || this.options.size;
-    }
-    else return this.options.size;
-};
+View.prototype.getSize = function getSize() {};
 
 module.exports = View;
 },{"../utilities/Utility":95,"./EventHandler":7,"./OptionsManager":10,"./RenderNode":11}],17:[function(_dereq_,module,exports){
@@ -4038,122 +2442,27 @@ module.exports = View;
  * @param {Boolean} [options.loop] Whether to wrap when accessing elements just past the end
  *   (or beginning) of the sequence.
  */
-function ViewSequence(options) {
-    if (!options) options = [];
-    if (options instanceof Array) options = {array: options};
-
-    this._ = null;
-    this.index = options.index || 0;
-
-    if (options.array) this._ = new (this.constructor.Backing)(options.array);
-    else if (options._) this._ = options._;
-
-    if (this.index === this._.firstIndex) this._.firstNode = this;
-    if (this.index === this._.firstIndex + this._.array.length - 1) this._.lastNode = this;
-
-    if (options.loop !== undefined) this._.loop = options.loop;
-
-    if (options.trackSize !== undefined) this._.trackSize = options.trackSize;
-
-    this._previousNode = null;
-    this._nextNode = null;
-}
+function ViewSequence(options) {}
 
 // constructor for internal storage
-ViewSequence.Backing = function Backing(array) {
-    this.array = array;
-    this.firstIndex = 0;
-    this.loop = false;
-    this.firstNode = null;
-    this.lastNode = null;
-    this.cumulativeSizes = [[0, 0]];
-    this.sizeDirty = true;
-    this.trackSize = false;
-};
+ViewSequence.Backing = function Backing(array) {};
 
 // Get value "i" slots away from the first index.
-ViewSequence.Backing.prototype.getValue = function getValue(i) {
-    var _i = i - this.firstIndex;
-    if (_i < 0 || _i >= this.array.length) return null;
-    return this.array[_i];
-};
+ViewSequence.Backing.prototype.getValue = function getValue(i) {};
 
 // Set value "i" slots away from the first index.
-ViewSequence.Backing.prototype.setValue = function setValue(i, value) {
-    this.array[i - this.firstIndex] = value;
-};
+ViewSequence.Backing.prototype.setValue = function setValue(i, value) {};
 
 // Get sequence size from backing up to index
 // TODO: remove from viewSequence with proper abstraction
-ViewSequence.Backing.prototype.getSize = function getSize(index) {
-    return this.cumulativeSizes[index];
-};
+ViewSequence.Backing.prototype.getSize = function getSize(index) {};
 
 // Calculates cumulative size
 // TODO: remove from viewSequence with proper abstraction
-ViewSequence.Backing.prototype.calculateSize = function calculateSize(index) {
-    index = index || this.array.length;
-    var size = [0, 0];
-    for (var i = 0; i < index; i++) {
-        var nodeSize = this.array[i].getSize();
-        if (!nodeSize) return undefined;
-        if (size[0] !== undefined) {
-            if (nodeSize[0] === undefined) size[0] = undefined;
-            else size[0] += nodeSize[0];
-        }
-        if (size[1] !== undefined) {
-            if (nodeSize[1] === undefined) size[1] = undefined;
-            else size[1] += nodeSize[1];
-        }
-        this.cumulativeSizes[i + 1] = size.slice();
-    }
-    this.sizeDirty = false;
-    return size;
-};
+ViewSequence.Backing.prototype.calculateSize = function calculateSize(index) {};
 
 // After splicing into the backing store, restore the indexes of each node correctly.
-ViewSequence.Backing.prototype.reindex = function reindex(start, removeCount, insertCount) {
-    if (!this.array[0]) return;
-
-    var i = 0;
-    var index = this.firstIndex;
-    var indexShiftAmount = insertCount - removeCount;
-    var node = this.firstNode;
-
-    // find node to begin
-    while (index < start - 1) {
-        node = node.getNext();
-        index++;
-    }
-    // skip removed nodes
-    var spliceStartNode = node;
-    for (i = 0; i < removeCount; i++) {
-        node = node.getNext();
-        if (node) node._previousNode = spliceStartNode;
-    }
-    var spliceResumeNode = node ? node.getNext() : null;
-    // generate nodes for inserted items
-    spliceStartNode._nextNode = null;
-    node = spliceStartNode;
-    for (i = 0; i < insertCount; i++) node = node.getNext();
-    index += insertCount;
-    // resume the chain
-    if (node !== spliceResumeNode) {
-        node._nextNode = spliceResumeNode;
-        if (spliceResumeNode) spliceResumeNode._previousNode = node;
-    }
-    if (spliceResumeNode) {
-        node = spliceResumeNode;
-        index++;
-        while (node && index < this.array.length + this.firstIndex) {
-            if (node._nextNode) node.index += indexShiftAmount;
-            else node.index = index;
-            node = node.getNext();
-            index++;
-        }
-    }
-    if (this.trackSize) this.sizeDirty = true;
-};
+ViewSequence.Backing.prototype.reindex = function reindex(start, removeCount, insertCount) {};
 
 /**
  * Return ViewSequence node previous to this node in the list, respecting looping if applied.
@@ -4161,26 +2470,7 @@ ViewSequence.Backing.prototype.reindex = function reindex(start, removeCount, in
  * @method getPrevious
  * @return {ViewSequence} previous node.
  */
-ViewSequence.prototype.getPrevious = function getPrevious() {
-    var len = this._.array.length;
-    if (!len) {
-        this._previousNode = null;
-    }
-    else if (this.index === this._.firstIndex) {
-        if (this._.loop) {
-            this._previousNode = this._.lastNode || new (this.constructor)({_: this._, index: this._.firstIndex + len - 1});
-            this._previousNode._nextNode = this;
-        }
-        else {
-            this._previousNode = null;
-        }
-    }
-    else if (!this._previousNode) {
-        this._previousNode = new (this.constructor)({_: this._, index: this.index - 1});
-        this._previousNode._nextNode = this;
-    }
-    return this._previousNode;
-};
+ViewSequence.prototype.getPrevious = function getPrevious() {};
 
 /**
  * Return ViewSequence node next after this node in the list, respecting looping if applied.
@@ -4188,26 +2478,7 @@ ViewSequence.prototype.getPrevious = function getPrevious() {
  * @method getNext
  * @return {ViewSequence} previous node.
  */
-ViewSequence.prototype.getNext = function getNext() {
-    var len = this._.array.length;
-    if (!len) {
-        this._nextNode = null;
-    }
-    else if (this.index === this._.firstIndex + len - 1) {
-        if (this._.loop) {
-            this._nextNode = this._.firstNode || new (this.constructor)({_: this._, index: this._.firstIndex});
-            this._nextNode._previousNode = this;
-        }
-        else {
-            this._nextNode = null;
-        }
-    }
-    else if (!this._nextNode) {
-        this._nextNode = new (this.constructor)({_: this._, index: this.index + 1});
-        this._nextNode._previousNode = this;
-    }
-    return this._nextNode;
-};
+ViewSequence.prototype.getNext = function getNext() {};
 
 /**
  * Return index of the provided item in the backing array
@@ -4215,9 +2486,7 @@ ViewSequence.prototype.getNext = function getNext() {
  * @method indexOf
  * @return {Number} index or -1 if not found
  */
-ViewSequence.prototype.indexOf = function indexOf(item) {
-    return this._.array.indexOf(item);
-};
+ViewSequence.prototype.indexOf = function indexOf(item) {};
 
 /**
  * Return index of this ViewSequence node.
@@ -4225,9 +2494,7 @@ ViewSequence.prototype.indexOf = function indexOf(item) {
  * @method getIndex
  * @return {Number} index
  */
-ViewSequence.prototype.getIndex = function getIndex() {
-    return this.index;
-};
+ViewSequence.prototype.getIndex = function getIndex() {};
 
 /**
  * Return printable version of this ViewSequence node.
@@ -4235,9 +2502,7 @@ ViewSequence.prototype.getIndex = function getIndex() {
  * @method toString
  * @return {string} this index as a string
  */
-ViewSequence.prototype.toString = function toString() {
-    return '' + this.index;
-};
+ViewSequence.prototype.toString = function toString() {};
 
 /**
  * Add one or more objects to the beginning of the sequence.
@@ -4245,11 +2510,7 @@ ViewSequence.prototype.toString = function toString() {
  * @method unshift
  * @param {...Object} value arguments array of objects
  */
-ViewSequence.prototype.unshift = function unshift(value) {
-    this._.array.unshift.apply(this._.array, arguments);
-    this._.firstIndex -= arguments.length;
-    if (this._.trackSize) this._.sizeDirty = true;
-};
+ViewSequence.prototype.unshift = function unshift(value) {};
 
 /**
  * Add one or more objects to the end of the sequence.
@@ -4257,10 +2518,7 @@ ViewSequence.prototype.unshift = function unshift(value) {
  * @method push
  * @param {...Object} value arguments array of objects
  */
-ViewSequence.prototype.push = function push(value) {
-    this._.array.push.apply(this._.array, arguments);
-    if (this._.trackSize) this._.sizeDirty = true;
-};
+ViewSequence.prototype.push = function push(value) {};
 
 /**
  * Remove objects from the sequence
@@ -4270,11 +2528,7 @@ ViewSequence.prototype.push = function push(value) {
  * @param {Number} howMany how many elements to remove
  * @param {...Object} value arguments array of objects
  */
-ViewSequence.prototype.splice = function splice(index, howMany) {
-    var values = Array.prototype.slice.call(arguments, 2);
-    this._.array.splice.apply(this._.array, [index - this._.firstIndex, howMany].concat(values));
-    this._.reindex(index, howMany, values.length);
-};
+ViewSequence.prototype.splice = function splice(index, howMany) {};
 
 /**
  * Exchange this element's sequence position with another's.
@@ -4282,37 +2536,7 @@ ViewSequence.prototype.splice = function splice(index, howMany) {
  * @method swap
  * @param {ViewSequence} other element to swap with.
  */
-ViewSequence.prototype.swap = function swap(other) {
-    var otherValue = other.get();
-    var myValue = this.get();
-    this._.setValue(this.index, otherValue);
-    this._.setValue(other.index, myValue);
-
-    var myPrevious = this._previousNode;
-    var myNext = this._nextNode;
-    var myIndex = this.index;
-    var otherPrevious = other._previousNode;
-    var otherNext = other._nextNode;
-    var otherIndex = other.index;
-
-    this.index = otherIndex;
-    this._previousNode = (otherPrevious === this) ? other : otherPrevious;
-    if (this._previousNode) this._previousNode._nextNode = this;
-    this._nextNode = (otherNext === this) ? other : otherNext;
-    if (this._nextNode) this._nextNode._previousNode = this;
-
-    other.index = myIndex;
-    other._previousNode = (myPrevious === other) ? this : myPrevious;
-    if (other._previousNode) other._previousNode._nextNode = other;
-    other._nextNode = (myNext === other) ? this : myNext;
-    if (other._nextNode) other._nextNode._previousNode = other;
-
-    if (this.index === this._.firstIndex) this._.firstNode = this;
-    else if (this.index === this._.firstIndex + this._.array.length - 1) this._.lastNode = this;
-    if (other.index === this._.firstIndex) this._.firstNode = other;
-    else if (other.index === this._.firstIndex + this._.array.length - 1) this._.lastNode = other;
-    if (this._.trackSize) this._.sizeDirty = true;
-};
+ViewSequence.prototype.swap = function swap(other) {};
 
    /**
  * Return value of this ViewSequence node.
@@ -4320,9 +2544,7 @@ ViewSequence.prototype.swap = function swap(other) {
  * @method get
  * @return {Object} value of thiss
  */
-ViewSequence.prototype.get = function get() {
-    return this._.getValue(this.index);
-};
+ViewSequence.prototype.get = function get() {};
 
    /**
  * Call getSize() on the contained View.
@@ -4330,10 +2552,7 @@ ViewSequence.prototype.get = function get() {
  * @method getSize
  * @return {Array.Number} [width, height]
  */
-ViewSequence.prototype.getSize = function getSize() {
-    var target = this.get();
-    return target ? target.getSize() : null;
-};
+ViewSequence.prototype.getSize = function getSize() {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -4342,11 +2561,7 @@ ViewSequence.prototype.getSize = function getSize() {
  * @method render
  * @return {number} Render spec for this component
  */
-ViewSequence.prototype.render = function render() {
-    if (this._.trackSize && this._.sizeDirty) this._.calculateSize();
-    var target = this.get();
-    return target ? target.render.apply(target, arguments) : null;
-};
+ViewSequence.prototype.render = function render() {};
 
 module.exports = ViewSequence;
 },{}],18:[function(_dereq_,module,exports){
@@ -4393,11 +2608,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  *
  * @param {Number | string} startMode initial setting of switch,
  */
-function EventArbiter(startMode) {
-    this.dispatchers = {};
-    this.currMode = undefined;
-    this.setMode(startMode);
-}
+function EventArbiter(startMode) {}
 
 /**
  * Set switch to this mode, passing events to the corresponding
@@ -4409,16 +2620,7 @@ function EventArbiter(startMode) {
  *
  * @param {string | number} mode indicating which event handler to send to.
  */
-EventArbiter.prototype.setMode = function setMode(mode) {
-    if (mode !== this.currMode) {
-        var startMode = this.currMode;
-
-        if (this.dispatchers[this.currMode]) this.dispatchers[this.currMode].trigger('unpipe');
-        this.currMode = mode;
-        if (this.dispatchers[mode]) this.dispatchers[mode].emit('pipe');
-        this.emit('change', {from: startMode, to: mode});
-    }
-};
+EventArbiter.prototype.setMode = function setMode(mode) {};
 
 /**
  * Return the existing EventHandler corresponding to this
@@ -4430,10 +2632,7 @@ EventArbiter.prototype.setMode = function setMode(mode) {
  *
  * @return {EventHandler} eventHandler corresponding to this mode
  */
-EventArbiter.prototype.forMode = function forMode(mode) {
-    if (!this.dispatchers[mode]) this.dispatchers[mode] = new EventHandler();
-    return this.dispatchers[mode];
-};
+EventArbiter.prototype.forMode = function forMode(mode) {};
 
 /**
  * Trigger an event, sending to currently selected handler, if
@@ -4445,12 +2644,7 @@ EventArbiter.prototype.forMode = function forMode(mode) {
  * @param {Object} event event data
  * @return {EventHandler} this
  */
-EventArbiter.prototype.emit = function emit(eventType, event) {
-    if (this.currMode === undefined) return false;
-    if (!event) event = {};
-    var dispatcher = this.dispatchers[this.currMode];
-    if (dispatcher) return dispatcher.trigger(eventType, event);
-};
+EventArbiter.prototype.emit = function emit(eventType, event) {};
 
 module.exports = EventArbiter;
 },{"../core/EventHandler":7}],20:[function(_dereq_,module,exports){
@@ -4475,10 +2669,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @param {function} condition function to determine whether or not
  *    events are emitted.
  */
-function EventFilter(condition) {
-    EventHandler.call(this);
-    this._condition = condition;
-}
+function EventFilter(condition) {}
 EventFilter.prototype = Object.create(EventHandler.prototype);
 EventFilter.prototype.constructor = EventFilter;
 
@@ -4492,10 +2683,7 @@ EventFilter.prototype.constructor = EventFilter;
  * @param {Object} data event data
  * @return {EventHandler} this
  */
-EventFilter.prototype.emit = function emit(type, data) {
-    if (this._condition(type, data))
-        return EventHandler.prototype.emit.apply(this, arguments);
-};
+EventFilter.prototype.emit = function emit(type, data) {};
 
 /**
  * An alias of emit. Trigger determines whether to send
@@ -4531,10 +2719,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @param {function} mappingFunction function to determine where
  *  events are routed to.
  */
-function EventMapper(mappingFunction) {
-    EventHandler.call(this);
-    this._mappingFunction = mappingFunction;
-}
+function EventMapper(mappingFunction) {}
 EventMapper.prototype = Object.create(EventHandler.prototype);
 EventMapper.prototype.constructor = EventMapper;
 
@@ -4551,10 +2736,7 @@ EventMapper.prototype.unsubscribe = null;
  * @param {Object} data event data
  * @return {EventHandler} this
  */
-EventMapper.prototype.emit = function emit(type, data) {
-    var target = this._mappingFunction.apply(this, arguments);
-    if (target && (target.emit instanceof Function)) target.emit(type, data);
-};
+EventMapper.prototype.emit = function emit(type, data) {};
 
 /**
  * Alias of emit.
@@ -4599,30 +2781,9 @@ var Transitionable = _dereq_('../transitions/Transitionable');
  * @param value {Number|Array|Transitionable}   Initializing value
  * @param [eventName='update'] {String}         Name of update event
  */
-function Accumulator(value, eventName) {
-    if (eventName === undefined) eventName = 'update';
+function Accumulator(value, eventName) {}
 
-    this._state = (value && value.get && value.set)
-        ? value
-        : new Transitionable(value || 0);
-
-    this._eventInput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-
-    this._eventInput.on(eventName, _handleUpdate.bind(this));
-}
-
-function _handleUpdate(data) {
-    var delta = data.delta;
-    var state = this.get();
-
-    if (delta.constructor === state.constructor){
-        var newState = (delta instanceof Array)
-            ? [state[0] + delta[0], state[1] + delta[1]]
-            : state + delta;
-        this.set(newState);
-    }
-}
+function _handleUpdate(data) {}
 
 /**
  * Basic getter
@@ -4648,12 +2809,7 @@ module.exports = Accumulator;
 },{"../core/EventHandler":7,"../transitions/Transitionable":88}],25:[function(_dereq_,module,exports){
 var hasTouch = 'ontouchstart' in window;
 
-function kill(type) {
-    window.addEventListener(type, function(event) {
-        event.stopPropagation();
-        return false;
-    }, true);
-}
+function kill(type) {}
 
 if (hasTouch) {
     kill('mousedown');
@@ -4757,17 +2913,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  *    or an array of registered sync keys
  * @param [options] {Object|Array} options object to set on all syncs
  */
-function GenericSync(syncs, options) {
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this._syncs = {};
-    if (syncs) this.addSync(syncs);
-    if (options) this.setOptions(options);
-}
+function GenericSync(syncs, options) {}
 
 GenericSync.DIRECTION_X = 0;
 GenericSync.DIRECTION_Y = 1;
@@ -4784,15 +2930,7 @@ var registry = {};
  *
  * @param syncObject {Object} an object of {sync key : sync options} fields
  */
-GenericSync.register = function register(syncObject) {
-    for (var key in syncObject){
-        if (registry[key]){ // skip redundant registration
-            if (registry[key] !== syncObject[key]) // only if same registered class
-                throw new Error('Conflicting sync classes for key: ' + key);
-        }
-        else registry[key] = syncObject[key];
-    }
-};
+GenericSync.register = function register(syncObject) {};
 
 /**
  * Helper to set options on all sync instances
@@ -4800,11 +2938,7 @@ GenericSync.register = function register(syncObject) {
  * @method setOptions
  * @param options {Object} options object
  */
-GenericSync.prototype.setOptions = function(options) {
-    for (var key in this._syncs){
-        this._syncs[key].setOptions(options);
-    }
-};
+GenericSync.prototype.setOptions = function(options) {};
 
 /**
  * Pipe events to a sync class
@@ -4812,11 +2946,7 @@ GenericSync.prototype.setOptions = function(options) {
  * @method pipeSync
  * @param key {String} identifier for sync class
  */
-GenericSync.prototype.pipeSync = function pipeToSync(key) {
-    var sync = this._syncs[key];
-    this._eventInput.pipe(sync);
-    sync.pipe(this._eventOutput);
-};
+GenericSync.prototype.pipeSync = function pipeToSync(key) {};
 
 /**
  * Unpipe events from a sync class
@@ -4824,17 +2954,9 @@ GenericSync.prototype.pipeSync = function pipeToSync(key) {
  * @method unpipeSync
  * @param key {String} identifier for sync class
  */
-GenericSync.prototype.unpipeSync = function unpipeFromSync(key) {
-    var sync = this._syncs[key];
-    this._eventInput.unpipe(sync);
-    sync.unpipe(this._eventOutput);
-};
+GenericSync.prototype.unpipeSync = function unpipeFromSync(key) {};
 
-function _addSingleSync(key, options) {
-    if (!registry[key]) return;
-    this._syncs[key] = new (registry[key])(options);
-    this.pipeSync(key);
-}
+function _addSingleSync(key, options) {}
 
 /**
  * Add a sync class to from the registered classes
@@ -4843,14 +2965,7 @@ function _addSingleSync(key, options) {
  * @param syncs {Object|Array.String} an array of registered sync keys
  *    or an object with fields {sync key : sync options}
  */
-GenericSync.prototype.addSync = function addSync(syncs) {
-    if (syncs instanceof Array)
-        for (var i = 0; i < syncs.length; i++)
-            _addSingleSync.call(this, syncs[i]);
-    else if (syncs instanceof Object)
-        for (var key in syncs)
-            _addSingleSync.call(this, key, syncs[key]);
-};
+GenericSync.prototype.addSync = function addSync(syncs) {};
 
 module.exports = GenericSync;
 },{"../core/EventHandler":7}],28:[function(_dereq_,module,exports){
@@ -4894,62 +3009,9 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param [options.velocitySampleLength] {Number}  Number of previous frames to check velocity against.
  * @param [options.propogate] {Boolean}     Add a listener to document on mouseleave. This allows drag events to continue across the entire page.
  */
-function MouseSync(options) {
-    this.options =  Object.create(MouseSync.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
+function MouseSync(options) {}
 
-    if (options) this.setOptions(options);
-
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this._eventInput.on('mousedown', _handleStart.bind(this));
-    this._eventInput.on('mousemove', _handleMove.bind(this));
-    this._eventInput.on('mouseup', _handleEnd.bind(this));
-
-    if (this.options.propogate) this._eventInput.on('mouseleave', _handleLeave.bind(this));
-    else this._eventInput.on('mouseleave', _handleEnd.bind(this));
-
-    if (this.options.clickThreshold) {
-        window.addEventListener('click', function(event) {
-            if (Math.sqrt(Math.pow(this._displacement[0], 2) + Math.pow(this._displacement[1], 2)) > this.options.clickThreshold) {
-                event.stopPropagation();
-            }
-        }.bind(this), true);
-    }
-
-    this._payload = {
-        delta    : null,
-        position : null,
-        velocity : null,
-        clientX  : 0,
-        clientY  : 0,
-        offsetX  : 0,
-        offsetY  : 0
-    };
-
-    this._positionHistory = [];
-    this._position = null;      // to be deprecated
-    this._prevCoord = undefined;
-    this._prevTime = undefined;
-    this._down = false;
-    this._moved = false;
-    this._displacement = [0,0];
-    this._documentActive = false;
-}
-
-MouseSync.DEFAULT_OPTIONS = {
-    clickThreshold: undefined,
-    direction: undefined,
-    rails: false,
-    scale: 1,
-    propogate: true,  // events piped to document on mouseleave
-    velocitySampleLength: 10,
-    preventDefault: true
-};
+MouseSync.DEFAULT_OPTIONS = {};
 
 MouseSync.DIRECTION_X = 0;
 MouseSync.DIRECTION_Y = 1;
@@ -4962,51 +3024,7 @@ var MINIMUM_TICK_TIME = 8;
  *  @method _handleStart
  *  @private
  */
-function _handleStart(event) {
-    var delta;
-    var velocity;
-    if (this.options.preventDefault) event.preventDefault(); // prevent drag
-
-    var x = event.clientX;
-    var y = event.clientY;
-
-    this._prevCoord = [x, y];
-    this._prevTime = Date.now();
-    this._down = true;
-    this._move = false;
-
-    if (this.options.direction !== undefined) {
-        this._position = 0;
-        delta = 0;
-        velocity = 0;
-    }
-    else {
-        this._position = [0, 0];
-        delta = [0, 0];
-        velocity = [0, 0];
-    }
-
-    if (this.options.clickThreshold) {
-        this._displacement = [0,0];
-    }
-
-    var payload = this._payload;
-    payload.delta = delta;
-    payload.position = this._position;
-    payload.velocity = velocity;
-    payload.clientX = x;
-    payload.clientY = y;
-    payload.offsetX = event.offsetX;
-    payload.offsetY = event.offsetY;
-
-    this._positionHistory.push({
-        position: payload.position.slice ? payload.position.slice(0) : payload.position,
-        time: this._prevTime
-    });
-
-    this._eventOutput.emit('start', payload);
-    this._documentActive = false;
-}
+function _handleStart(event) {}
 
 /**
  *  Triggered by mousemove.
@@ -5014,80 +3032,7 @@ function _handleStart(event) {
  *  @method _handleMove
  *  @private
  */
-function _handleMove(event) {
-    if (!this._prevCoord) return;
-
-    var prevCoord = this._prevCoord;
-    var prevTime = this._prevTime;
-
-    var x = event.clientX;
-    var y = event.clientY;
-
-    var currTime = Date.now();
-
-    var diffX = x - prevCoord[0];
-    var diffY = y - prevCoord[1];
-
-    if (this.options.rails) {
-        if (Math.abs(diffX) > Math.abs(diffY)) diffY = 0;
-        else diffX = 0;
-    }
-
-    var diffTime = Math.max(currTime - this._positionHistory[0].time, MINIMUM_TICK_TIME); // minimum tick time
-
-    var scale = this.options.scale;
-    var nextVel;
-    var nextDelta;
-
-    if (this.options.direction === MouseSync.DIRECTION_X) {
-        nextDelta = scale * diffX;
-        this._position += nextDelta;
-        nextVel = scale * (this._position - this._positionHistory[0].position) / diffTime;
-    }
-    else if (this.options.direction === MouseSync.DIRECTION_Y) {
-        nextDelta = scale * diffY;
-        this._position += nextDelta;
-        nextVel = scale * (this._position - this._positionHistory[0].position) / diffTime;
-    }
-    else {
-        nextDelta = [scale * diffX, scale * diffY];
-        nextVel = [
-            scale * (this._position[0] - this._positionHistory[0].position[0]) / diffTime,
-            scale * (this._position[1] - this._positionHistory[0].position[1]) / diffTime
-        ];
-        this._position[0] += nextDelta[0];
-        this._position[1] += nextDelta[1];
-    }
-
-    if (this.options.clickThreshold !== false) {
-        this._displacement[0] += diffX;
-        this._displacement[1] += diffY;
-    }
-
-    var payload = this._payload;
-    payload.delta    = nextDelta;
-    payload.position = this._position;
-    payload.velocity = nextVel;
-    payload.clientX  = x;
-    payload.clientY  = y;
-    payload.offsetX  = event.offsetX;
-    payload.offsetY  = event.offsetY;
-
-    if (this._positionHistory.length === this.options.velocitySampleLength) {
-      this._positionHistory.shift();
-    }
-
-    this._positionHistory.push({
-      position: payload.position.slice ? payload.position.slice(0) : payload.position,
-      time: currTime
-    });
-
-    this._eventOutput.emit('update', payload);
-
-    this._prevCoord = [x, y];
-    this._prevTime = currTime;
-    this._move = true;
-}
+function _handleMove(event) {}
 
 /**
  *  Triggered by mouseup on the element or document body if propagation is enabled, or
@@ -5096,37 +3041,14 @@ function _handleMove(event) {
  *  @method _handleEnd
  *  @private
  */
-function _handleEnd(event) {
-    if (!this._down) return;
-
-    this._eventOutput.emit('end', this._payload);
-    this._prevCoord = undefined;
-    this._prevTime = undefined;
-    this._down = false;
-    this._move = false;
-    this._positionHistory = [];
-}
+function _handleEnd(event) {}
 
 /**
  *  Switches the mousemove listener to the document body, if propagation is enabled.
  *  @method _handleLeave
  *  @private
  */
-function _handleLeave(event) {
-    if (!this._down || !this._move) return;
-
-    if (!this._documentActive) {
-      var boundMove = _handleMove.bind(this);
-      var boundEnd = function(event) {
-          _handleEnd.call(this, event);
-          document.removeEventListener('mousemove', boundMove);
-          document.removeEventListener('mouseup', boundEnd);
-      }.bind(this, event);
-      document.addEventListener('mousemove', boundMove);
-      document.addEventListener('mouseup', boundEnd);
-      this._documentActive = true;
-    }
-}
+function _handleLeave(event) {}
 
 /**
  * Return entire options dictionary, including defaults.
@@ -5134,9 +3056,7 @@ function _handleLeave(event) {
  * @method getOptions
  * @return {Object} configuration options
  */
-MouseSync.prototype.getOptions = function getOptions() {
-    return this.options;
-};
+MouseSync.prototype.getOptions = function getOptions() {};
 
 /**
  * Set internal options, overriding any default options
@@ -5148,9 +3068,7 @@ MouseSync.prototype.getOptions = function getOptions() {
  * @param [options.rails] {Boolean}      read from axis with greatest differential
  * @param [options.propogate] {Boolean}  add listened to document on mouseleave
  */
-MouseSync.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+MouseSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = MouseSync;
 },{"../core/EventHandler":7,"../core/OptionsManager":10}],29:[function(_dereq_,module,exports){
@@ -5176,56 +3094,16 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Object} options default options overrides
  * @param {Number} [options.scale] scale velocity by this factor
  */
-function PinchSync(options) {
-    TwoFingerSync.call(this);
-
-    this.options = Object.create(PinchSync.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._displacement = 0;
-    this._previousDistance = 0;
-}
+function PinchSync(options) {}
 
 PinchSync.prototype = Object.create(TwoFingerSync.prototype);
 PinchSync.prototype.constructor = PinchSync;
 
-PinchSync.DEFAULT_OPTIONS = {
-    scale : 1
-};
+PinchSync.DEFAULT_OPTIONS = {};
 
-PinchSync.prototype._startUpdate = function _startUpdate(event) {
-    this._previousDistance = TwoFingerSync.calculateDistance(this.posA, this.posB);
-    this._displacement = 0;
+PinchSync.prototype._startUpdate = function _startUpdate(event) {};
 
-    this._eventOutput.emit('start', {
-        count: event.touches.length,
-        touches: [this.touchAId, this.touchBId],
-        distance: this._dist,
-        center: TwoFingerSync.calculateCenter(this.posA, this.posB)
-    });
-};
-
-PinchSync.prototype._moveUpdate = function _moveUpdate(diffTime) {
-    var currDist = TwoFingerSync.calculateDistance(this.posA, this.posB);
-    var center = TwoFingerSync.calculateCenter(this.posA, this.posB);
-
-    var scale = this.options.scale;
-    var delta = scale * (currDist - this._previousDistance);
-    var velocity = delta / diffTime;
-
-    this._previousDistance = currDist;
-    this._displacement += delta;
-
-    this._eventOutput.emit('update', {
-        delta : delta,
-        velocity: velocity,
-        distance: currDist,
-        displacement: this._displacement,
-        center: center,
-        touches: [this.touchAId, this.touchBId]
-    });
-};
+PinchSync.prototype._moveUpdate = function _moveUpdate(diffTime) {};
 
 /**
  * Return entire options dictionary, including defaults.
@@ -5273,16 +3151,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Object} options default options overrides
  * @param {Number} [options.scale] scale velocity by this factor
  */
-function RotateSync(options) {
-    TwoFingerSync.call(this);
-
-    this.options = Object.create(RotateSync.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._angle = 0;
-    this._previousAngle = 0;
-}
+function RotateSync(options) {}
 
 RotateSync.prototype = Object.create(TwoFingerSync.prototype);
 RotateSync.prototype.constructor = RotateSync;
@@ -5291,39 +3160,9 @@ RotateSync.DEFAULT_OPTIONS = {
     scale : 1
 };
 
-RotateSync.prototype._startUpdate = function _startUpdate(event) {
-    this._angle = 0;
-    this._previousAngle = TwoFingerSync.calculateAngle(this.posA, this.posB);
-    var center = TwoFingerSync.calculateCenter(this.posA, this.posB);
-    this._eventOutput.emit('start', {
-        count: event.touches.length,
-        angle: this._angle,
-        center: center,
-        touches: [this.touchAId, this.touchBId]
-    });
-};
+RotateSync.prototype._startUpdate = function _startUpdate(event) {};
 
-RotateSync.prototype._moveUpdate = function _moveUpdate(diffTime) {
-    var scale = this.options.scale;
-
-    var currAngle = TwoFingerSync.calculateAngle(this.posA, this.posB);
-    var center = TwoFingerSync.calculateCenter(this.posA, this.posB);
-
-    var diffTheta = scale * (currAngle - this._previousAngle);
-    var velTheta = diffTheta / diffTime;
-
-    this._angle += diffTheta;
-
-    this._eventOutput.emit('update', {
-        delta : diffTheta,
-        velocity: velTheta,
-        angle: this._angle,
-        center: center,
-        touches: [this.touchAId, this.touchBId]
-    });
-
-    this._previousAngle = currAngle;
-};
+RotateSync.prototype._moveUpdate = function _moveUpdate(diffTime) {};
 
 /**
  * Return entire options dictionary, including defaults.
@@ -5371,17 +3210,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Object} options default options overrides
  * @param {Number} [options.scale] scale velocity by this factor
  */
-function ScaleSync(options) {
-    TwoFingerSync.call(this);
-
-    this.options = Object.create(ScaleSync.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._scaleFactor = 1;
-    this._startDist = 0;
-    this._eventInput.on('pipe', _reset.bind(this));
-}
+function ScaleSync(options) {}
 
 ScaleSync.prototype = Object.create(TwoFingerSync.prototype);
 ScaleSync.prototype.constructor = ScaleSync;
@@ -5396,39 +3225,10 @@ function _reset() {
 }
 
 // handles initial touch of two fingers
-ScaleSync.prototype._startUpdate = function _startUpdate(event) {
-    this._scaleFactor = 1;
-    this._startDist = TwoFingerSync.calculateDistance(this.posA, this.posB);
-    this._eventOutput.emit('start', {
-        count: event.touches.length,
-        touches: [this.touchAId, this.touchBId],
-        distance: this._startDist,
-        center: TwoFingerSync.calculateCenter(this.posA, this.posB)
-    });
-};
+ScaleSync.prototype._startUpdate = function _startUpdate(event) {};
 
 // handles movement of two fingers
-ScaleSync.prototype._moveUpdate = function _moveUpdate(diffTime) {
-    var scale = this.options.scale;
-
-    var currDist = TwoFingerSync.calculateDistance(this.posA, this.posB);
-    var center = TwoFingerSync.calculateCenter(this.posA, this.posB);
-
-    var delta = (currDist - this._startDist) / this._startDist;
-    var newScaleFactor = Math.max(1 + scale * delta, 0);
-    var veloScale = (newScaleFactor - this._scaleFactor) / diffTime;
-
-    this._eventOutput.emit('update', {
-        delta : delta,
-        scale: newScaleFactor,
-        velocity: veloScale,
-        distance: currDist,
-        center : center,
-        touches: [this.touchAId, this.touchBId]
-    });
-
-    this._scaleFactor = newScaleFactor;
-};
+ScaleSync.prototype._moveUpdate = function _moveUpdate(diffTime) {};
 
 /**
  * Return entire options dictionary, including defaults.
@@ -5486,32 +3286,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Number | Array.Number} [options.scale] scale outputs in by scalar or pair of scalars
  * @param {Number} [options.stallTime] reset time for velocity calculation in ms
  */
-function ScrollSync(options) {
-    this.options = Object.create(ScrollSync.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._payload = {
-        delta    : null,
-        position : null,
-        velocity : null,
-        slip     : true
-    };
-
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this._position = (this.options.direction === undefined) ? [0,0] : 0;
-    this._prevTime = undefined;
-    this._prevVel = undefined;
-    this._eventInput.on('mousewheel', _handleMove.bind(this));
-    this._eventInput.on('wheel', _handleMove.bind(this));
-    this._inProgress = false;
-    this._loopBound = false;
-}
+function ScrollSync(options) {}
 
 ScrollSync.DEFAULT_OPTIONS = {
     direction: undefined,
@@ -5530,96 +3305,9 @@ var MINIMUM_TICK_TIME = 8;
 
 var _now = Date.now;
 
-function _newFrame() {
-    if (this._inProgress && (_now() - this._prevTime) > this.options.stallTime) {
-        this._inProgress = false;
+function _newFrame() {}
 
-        var finalVel = (Math.abs(this._prevVel) >= this.options.minimumEndSpeed)
-            ? this._prevVel
-            : 0;
-
-        var payload = this._payload;
-        payload.position = this._position;
-        payload.velocity = finalVel;
-        payload.slip = true;
-
-        this._eventOutput.emit('end', payload);
-    }
-}
-
-function _handleMove(event) {
-    if (this.options.preventDefault) event.preventDefault();
-
-    if (!this._inProgress) {
-        this._inProgress = true;
-        this._position = (this.options.direction === undefined) ? [0,0] : 0;
-        payload = this._payload;
-        payload.slip = true;
-        payload.position = this._position;
-        payload.clientX = event.clientX;
-        payload.clientY = event.clientY;
-        payload.offsetX = event.offsetX;
-        payload.offsetY = event.offsetY;
-        this._eventOutput.emit('start', payload);
-        if (!this._loopBound) {
-            Engine.on('prerender', _newFrame.bind(this));
-            this._loopBound = true;
-        }
-    }
-
-    var currTime = _now();
-    var prevTime = this._prevTime || currTime;
-
-    var diffX = (event.wheelDeltaX !== undefined) ? event.wheelDeltaX : -event.deltaX;
-    var diffY = (event.wheelDeltaY !== undefined) ? event.wheelDeltaY : -event.deltaY;
-
-    if (event.deltaMode === 1) { // units in lines, not pixels
-        diffX *= this.options.lineHeight;
-        diffY *= this.options.lineHeight;
-    }
-
-    if (this.options.rails) {
-        if (Math.abs(diffX) > Math.abs(diffY)) diffY = 0;
-        else diffX = 0;
-    }
-
-    var diffTime = Math.max(currTime - prevTime, MINIMUM_TICK_TIME); // minimum tick time
-
-    var velX = diffX / diffTime;
-    var velY = diffY / diffTime;
-
-    var scale = this.options.scale;
-    var nextVel;
-    var nextDelta;
-
-    if (this.options.direction === ScrollSync.DIRECTION_X) {
-        nextDelta = scale * diffX;
-        nextVel = scale * velX;
-        this._position += nextDelta;
-    }
-    else if (this.options.direction === ScrollSync.DIRECTION_Y) {
-        nextDelta = scale * diffY;
-        nextVel = scale * velY;
-        this._position += nextDelta;
-    }
-    else {
-        nextDelta = [scale * diffX, scale * diffY];
-        nextVel = [scale * velX, scale * velY];
-        this._position[0] += nextDelta[0];
-        this._position[1] += nextDelta[1];
-    }
-
-    var payload = this._payload;
-    payload.delta    = nextDelta;
-    payload.velocity = nextVel;
-    payload.position = this._position;
-    payload.slip     = true;
-
-    this._eventOutput.emit('update', payload);
-
-    this._prevTime = currTime;
-    this._prevVel = nextVel;
-}
+function _handleMove(event) {}
 
 /**
  * Return entire options dictionary, including defaults.
@@ -5690,35 +3378,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param [options.scale] {Number}       constant factor to scale velocity output
  * @param [options.touchLimit] {Number}  touchLimit upper bound for emitting events based on number of touches
  */
-function TouchSync(options) {
-    this.options =  Object.create(TouchSync.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._eventOutput = new EventHandler();
-    this._touchTracker = new TouchTracker({
-        touchLimit: this.options.touchLimit
-    });
-
-    EventHandler.setOutputHandler(this, this._eventOutput);
-    EventHandler.setInputHandler(this, this._touchTracker);
-
-    this._touchTracker.on('trackstart', _handleStart.bind(this));
-    this._touchTracker.on('trackmove', _handleMove.bind(this));
-    this._touchTracker.on('trackend', _handleEnd.bind(this));
-
-    this._payload = {
-        delta    : null,
-        position : null,
-        velocity : null,
-        clientX  : undefined,
-        clientY  : undefined,
-        count    : 0,
-        touch    : undefined
-    };
-
-    this._position = null; // to be deprecated
-}
+function TouchSync(options) {}
 
 TouchSync.DEFAULT_OPTIONS = {
     direction: undefined,
@@ -5738,111 +3398,21 @@ var MINIMUM_TICK_TIME = 8;
  *  @method _handleStart
  *  @private
  */
-function _handleStart(data) {
-    var velocity;
-    var delta;
-    if (this.options.direction !== undefined){
-        this._position = 0;
-        velocity = 0;
-        delta = 0;
-    }
-    else {
-        this._position = [0, 0];
-        velocity = [0, 0];
-        delta = [0, 0];
-    }
-
-    var payload = this._payload;
-    payload.delta = delta;
-    payload.position = this._position;
-    payload.velocity = velocity;
-    payload.clientX = data.x;
-    payload.clientY = data.y;
-    payload.count = data.count;
-    payload.touch = data.identifier;
-
-    this._eventOutput.emit('start', payload);
-}
+function _handleStart(data) {}
 
 /**
  *  Triggered by trackmove.
  *  @method _handleMove
  *  @private
  */
-function _handleMove(data) {
-    var history = data.history;
-
-    var currHistory = history[history.length - 1];
-    var prevHistory = history[history.length - 2];
-
-    var distantHistory = history[history.length - this.options.velocitySampleLength] ?
-      history[history.length - this.options.velocitySampleLength] :
-      history[history.length - 2];
-
-    var distantTime = distantHistory.timestamp;
-    var currTime = currHistory.timestamp;
-
-    var diffX = currHistory.x - prevHistory.x;
-    var diffY = currHistory.y - prevHistory.y;
-
-    var velDiffX = currHistory.x - distantHistory.x;
-    var velDiffY = currHistory.y - distantHistory.y;
-
-    if (this.options.rails) {
-        if (Math.abs(diffX) > Math.abs(diffY)) diffY = 0;
-        else diffX = 0;
-
-        if (Math.abs(velDiffX) > Math.abs(velDiffY)) velDiffY = 0;
-        else velDiffX = 0;
-    }
-
-    var diffTime = Math.max(currTime - distantTime, MINIMUM_TICK_TIME);
-
-    var velX = velDiffX / diffTime;
-    var velY = velDiffY / diffTime;
-
-    var scale = this.options.scale;
-    var nextVel;
-    var nextDelta;
-
-    if (this.options.direction === TouchSync.DIRECTION_X) {
-        nextDelta = scale * diffX;
-        nextVel = scale * velX;
-        this._position += nextDelta;
-    }
-    else if (this.options.direction === TouchSync.DIRECTION_Y) {
-        nextDelta = scale * diffY;
-        nextVel = scale * velY;
-        this._position += nextDelta;
-    }
-    else {
-        nextDelta = [scale * diffX, scale * diffY];
-        nextVel = [scale * velX, scale * velY];
-        this._position[0] += nextDelta[0];
-        this._position[1] += nextDelta[1];
-    }
-
-    var payload = this._payload;
-    payload.delta    = nextDelta;
-    payload.velocity = nextVel;
-    payload.position = this._position;
-    payload.clientX  = data.x;
-    payload.clientY  = data.y;
-    payload.count    = data.count;
-    payload.touch    = data.identifier;
-
-    this._eventOutput.emit('update', payload);
-}
+function _handleMove(data) {}
 
 /**
  *  Triggered by trackend.
  *  @method _handleEnd
  *  @private
  */
-function _handleEnd(data) {
-    this._payload.count = data.count;
-    this._eventOutput.emit('end', this._payload);
-}
+function _handleEnd(data) {}
 
 /**
  * Set internal options, overriding any default options
@@ -5854,9 +3424,7 @@ function _handleEnd(data) {
  * @param [options.rails] {Boolean}      read from axis with greatest differential
  * @param [options.scale] {Number}       constant factor to scale velocity output
  */
-TouchSync.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+TouchSync.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Return entire options dictionary, including defaults.
@@ -5882,72 +3450,15 @@ var EventHandler = _dereq_('../core/EventHandler');
 
 var _now = Date.now;
 
-function _timestampTouch(touch, event, history) {
-    return {
-        x: touch.clientX,
-        y: touch.clientY,
-        identifier : touch.identifier,
-        origin: event.origin,
-        timestamp: _now(),
-        count: event.touches.length,
-        history: history
-    };
-}
+function _timestampTouch(touch, event, history) {}
 
-function _handleStart(event) {
-    if (event.touches.length > this.touchLimit) return;
-    this.isTouched = true;
+function _handleStart(event) {}
 
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        var data = _timestampTouch(touch, event, null);
-        this.eventOutput.emit('trackstart', data);
-        if (!this.selective && !this.touchHistory[touch.identifier]) this.track(data);
-    }
-}
+function _handleMove(event) {}
 
-function _handleMove(event) {
-    if (event.touches.length > this.touchLimit) return;
+function _handleEnd(event) {}
 
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        var history = this.touchHistory[touch.identifier];
-        if (history) {
-            var data = _timestampTouch(touch, event, history);
-            this.touchHistory[touch.identifier].push(data);
-            this.eventOutput.emit('trackmove', data);
-        }
-    }
-}
-
-function _handleEnd(event) {
-    if (!this.isTouched) return;
-
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        var history = this.touchHistory[touch.identifier];
-        if (history) {
-            var data = _timestampTouch(touch, event, history);
-            this.eventOutput.emit('trackend', data);
-            delete this.touchHistory[touch.identifier];
-        }
-    }
-
-    this.isTouched = false;
-}
-
-function _handleUnpipe() {
-    for (var i in this.touchHistory) {
-        var history = this.touchHistory[i];
-        this.eventOutput.emit('trackend', {
-            touch: history[history.length - 1].touch,
-            timestamp: Date.now(),
-            count: 0,
-            history: history
-        });
-        delete this.touchHistory[i];
-    }
-}
+function _handleUnpipe() {}
 
 /**
  * Helper to TouchSync – tracks piped in touch events, organizes touch
@@ -5960,26 +3471,7 @@ function _handleUnpipe() {
  * @param [options.selective] {Boolean} selective if false, saves state for each touch
  * @param [options.touchLimit] {Number} touchLimit upper bound for emitting events based on number of touches
  */
-function TouchTracker(options) {
-    this.selective = options.selective;
-    this.touchLimit = options.touchLimit || 1;
-
-    this.touchHistory = {};
-
-    this.eventInput = new EventHandler();
-    this.eventOutput = new EventHandler();
-
-    EventHandler.setInputHandler(this, this.eventInput);
-    EventHandler.setOutputHandler(this, this.eventOutput);
-
-    this.eventInput.on('touchstart', _handleStart.bind(this));
-    this.eventInput.on('touchmove', _handleMove.bind(this));
-    this.eventInput.on('touchend', _handleEnd.bind(this));
-    this.eventInput.on('touchcancel', _handleEnd.bind(this));
-    this.eventInput.on('unpipe', _handleUnpipe.bind(this));
-
-    this.isTouched = false;
-}
+function TouchTracker(options) {}
 
 /**
  * Record touch data, if selective is false.
@@ -6011,27 +3503,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @class TwoFingerSync
  * @constructor
  */
-function TwoFingerSync() {
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this.touchAEnabled = false;
-    this.touchAId = 0;
-    this.posA = null;
-    this.timestampA = 0;
-    this.touchBEnabled = false;
-    this.touchBId = 0;
-    this.posB = null;
-    this.timestampB = 0;
-
-    this._eventInput.on('touchstart', this.handleStart.bind(this));
-    this._eventInput.on('touchmove', this.handleMove.bind(this));
-    this._eventInput.on('touchend', this.handleEnd.bind(this));
-    this._eventInput.on('touchcancel', this.handleEnd.bind(this));
-}
+function TwoFingerSync() {}
 
 TwoFingerSync.calculateAngle = function(posA, posB) {
     var diffX = posB[0] - posA[0];
@@ -6052,65 +3524,13 @@ TwoFingerSync.calculateCenter = function(posA, posB) {
 var _now = Date.now;
 
 // private
-TwoFingerSync.prototype.handleStart = function handleStart(event) {
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        if (!this.touchAEnabled) {
-            this.touchAId = touch.identifier;
-            this.touchAEnabled = true;
-            this.posA = [touch.pageX, touch.pageY];
-            this.timestampA = _now();
-        }
-        else if (!this.touchBEnabled) {
-            this.touchBId = touch.identifier;
-            this.touchBEnabled = true;
-            this.posB = [touch.pageX, touch.pageY];
-            this.timestampB = _now();
-            this._startUpdate(event);
-        }
-    }
-};
+TwoFingerSync.prototype.handleStart = function handleStart(event) {};
 
 // private
-TwoFingerSync.prototype.handleMove = function handleMove(event) {
-    if (!(this.touchAEnabled && this.touchBEnabled)) return;
-    var prevTimeA = this.timestampA;
-    var prevTimeB = this.timestampB;
-    var diffTime;
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        if (touch.identifier === this.touchAId) {
-            this.posA = [touch.pageX, touch.pageY];
-            this.timestampA = _now();
-            diffTime = this.timestampA - prevTimeA;
-        }
-        else if (touch.identifier === this.touchBId) {
-            this.posB = [touch.pageX, touch.pageY];
-            this.timestampB = _now();
-            diffTime = this.timestampB - prevTimeB;
-        }
-    }
-    if (diffTime) this._moveUpdate(diffTime);
-};
+TwoFingerSync.prototype.handleMove = function handleMove(event) {};
 
 // private
-TwoFingerSync.prototype.handleEnd = function handleEnd(event) {
-    for (var i = 0; i < event.changedTouches.length; i++) {
-        var touch = event.changedTouches[i];
-        if (touch.identifier === this.touchAId || touch.identifier === this.touchBId) {
-            if (this.touchAEnabled && this.touchBEnabled) {
-                this._eventOutput.emit('end', {
-                    touches : [this.touchAId, this.touchBId],
-                    angle   : this._angle
-                });
-            }
-            this.touchAEnabled = false;
-            this.touchAId = 0;
-            this.touchBEnabled = false;
-            this.touchBId = 0;
-        }
-    }
-};
+TwoFingerSync.prototype.handleEnd = function handleEnd(event) {};
 
 module.exports = TwoFingerSync;
 },{"../core/EventHandler":7}],36:[function(_dereq_,module,exports){
@@ -6195,32 +3615,7 @@ Matrix.prototype.set = function set(values) {
  * @param {Vector} v input vector V
  * @return {Vector} result of multiplication, as a handle to the internal vector register
  */
-Matrix.prototype.vectorMultiply = function vectorMultiply(v) {
-    var M = this.get();
-    var v0 = v.x;
-    var v1 = v.y;
-    var v2 = v.z;
-
-    var M0 = M[0];
-    var M1 = M[1];
-    var M2 = M[2];
-
-    var M00 = M0[0];
-    var M01 = M0[1];
-    var M02 = M0[2];
-    var M10 = M1[0];
-    var M11 = M1[1];
-    var M12 = M1[2];
-    var M20 = M2[0];
-    var M21 = M2[1];
-    var M22 = M2[2];
-
-    return _vectorRegister.setXYZ(
-        M00*v0 + M01*v1 + M02*v2,
-        M10*v0 + M11*v1 + M12*v2,
-        M20*v0 + M21*v1 + M22*v2
-    );
-};
+Matrix.prototype.vectorMultiply = function vectorMultiply(v) {};
 
 /**
  * Multiply the provided matrix M2 with this matrix.  Result is (this) * (M2).
@@ -6232,21 +3627,7 @@ Matrix.prototype.vectorMultiply = function vectorMultiply(v) {
  * @param {Matrix} M2 input matrix to multiply on the right
  * @return {Matrix} result of multiplication, as a handle to the internal register
  */
-Matrix.prototype.multiply = function multiply(M2) {
-    var M1 = this.get();
-    var result = [[]];
-    for (var i = 0; i < 3; i++) {
-        result[i] = [];
-        for (var j = 0; j < 3; j++) {
-            var sum = 0;
-            for (var k = 0; k < 3; k++) {
-                sum += M1[i][k] * M2[k][j];
-            }
-            result[i][j] = sum;
-        }
-    }
-    return _register.set(result);
-};
+Matrix.prototype.multiply = function multiply(M2) {};
 
 /**
  * Creates a Matrix which is the transpose of this matrix.
@@ -6257,16 +3638,7 @@ Matrix.prototype.multiply = function multiply(M2) {
  *
  * @return {Matrix} result of transpose, as a handle to the internal register
  */
-Matrix.prototype.transpose = function transpose() {
-    var result = [];
-    var M = this.get();
-    for (var row = 0; row < 3; row++) {
-        for (var col = 0; col < 3; col++) {
-            result[row][col] = M[col][row];
-        }
-    }
-    return _register.set(result);
-};
+Matrix.prototype.transpose = function transpose() {};
 
 /**
  * Clones the matrix
@@ -6274,13 +3646,7 @@ Matrix.prototype.transpose = function transpose() {
  * @method clone
  * @return {Matrix} New copy of the original matrix
  */
-Matrix.prototype.clone = function clone() {
-    var values = this.get();
-    var M = [];
-    for (var row = 0; row < 3; row++)
-        M[row] = values[row].slice();
-    return new Matrix(M);
-};
+Matrix.prototype.clone = function clone() {};
 
 module.exports = Matrix;
 },{"./Vector":41}],38:[function(_dereq_,module,exports){
@@ -6304,16 +3670,7 @@ var Matrix = _dereq_('./Matrix');
  * @param {Number} y
  * @param {Number} z
  */
-function Quaternion(w,x,y,z) {
-    if (arguments.length === 1) this.set(w);
-    else {
-        this.w = (w !== undefined) ? w : 1;  //Angle
-        this.x = (x !== undefined) ? x : 0;  //Axis.x
-        this.y = (y !== undefined) ? y : 0;  //Axis.y
-        this.z = (z !== undefined) ? z : 0;  //Axis.z
-    }
-    return this;
-}
+function Quaternion(w,x,y,z) {}
 
 var register = new Quaternion(1,0,0,0);
 
@@ -6323,14 +3680,7 @@ var register = new Quaternion(1,0,0,0);
  * @param {Quaternion} q
  * @return {Quaternion}
  */
-Quaternion.prototype.add = function add(q) {
-    return register.setWXYZ(
-        this.w + q.w,
-        this.x + q.x,
-        this.y + q.y,
-        this.z + q.z
-    );
-};
+Quaternion.prototype.add = function add(q) {};
 
 /*
  * Docs: TODO
@@ -6339,14 +3689,7 @@ Quaternion.prototype.add = function add(q) {
  * @param {Quaternion} q
  * @return {Quaternion}
  */
-Quaternion.prototype.sub = function sub(q) {
-    return register.setWXYZ(
-        this.w - q.w,
-        this.x - q.x,
-        this.y - q.y,
-        this.z - q.z
-    );
-};
+Quaternion.prototype.sub = function sub(q) {};
 
 /**
  * Doc: TODO
@@ -6355,9 +3698,7 @@ Quaternion.prototype.sub = function sub(q) {
  * @param {Number} s
  * @return {Quaternion}
  */
-Quaternion.prototype.scalarDivide = function scalarDivide(s) {
-    return this.scalarMultiply(1/s);
-};
+Quaternion.prototype.scalarDivide = function scalarDivide(s) {};
 
 /*
  * Docs: TODO
@@ -6366,14 +3707,7 @@ Quaternion.prototype.scalarDivide = function scalarDivide(s) {
  * @param {Number} s
  * @return {Quaternion}
  */
-Quaternion.prototype.scalarMultiply = function scalarMultiply(s) {
-    return register.setWXYZ(
-        this.w * s,
-        this.x * s,
-        this.y * s,
-        this.z * s
-    );
-};
+Quaternion.prototype.scalarMultiply = function scalarMultiply(s) {};
 
 /*
  * Docs: TODO
@@ -6382,24 +3716,7 @@ Quaternion.prototype.scalarMultiply = function scalarMultiply(s) {
  * @param {Quaternion} q
  * @return {Quaternion}
  */
-Quaternion.prototype.multiply = function multiply(q) {
-    //left-handed coordinate system multiplication
-    var x1 = this.x;
-    var y1 = this.y;
-    var z1 = this.z;
-    var w1 = this.w;
-    var x2 = q.x;
-    var y2 = q.y;
-    var z2 = q.z;
-    var w2 = q.w || 0;
-
-    return register.setWXYZ(
-        w1*w2 - x1*x2 - y1*y2 - z1*z2,
-        x1*w2 + x2*w1 + y2*z1 - y1*z2,
-        y1*w2 + y2*w1 + x1*z2 - x2*z1,
-        z1*w2 + z2*w1 + x2*y1 - x1*y2
-    );
-};
+Quaternion.prototype.multiply = function multiply(q) {};
 
 var conj = new Quaternion(1,0,0,0);
 
@@ -6410,10 +3727,7 @@ var conj = new Quaternion(1,0,0,0);
  * @param {Vector} v
  * @return {Quaternion}
  */
-Quaternion.prototype.rotateVector = function rotateVector(v) {
-    conj.set(this.conj());
-    return register.set(this.multiply(v).multiply(conj));
-};
+Quaternion.prototype.rotateVector = function rotateVector(v) {};
 
 /*
  * Docs: TODO
@@ -6421,9 +3735,7 @@ Quaternion.prototype.rotateVector = function rotateVector(v) {
  * @method inverse
  * @return {Quaternion}
  */
-Quaternion.prototype.inverse = function inverse() {
-    return register.set(this.conj().scalarDivide(this.normSquared()));
-};
+Quaternion.prototype.inverse = function inverse() {};
 
 /*
  * Docs: TODO
@@ -6431,9 +3743,7 @@ Quaternion.prototype.inverse = function inverse() {
  * @method negate
  * @return {Quaternion}
  */
-Quaternion.prototype.negate = function negate() {
-    return this.scalarMultiply(-1);
-};
+Quaternion.prototype.negate = function negate() {};
 
 /*
  * Docs: TODO
@@ -6441,14 +3751,7 @@ Quaternion.prototype.negate = function negate() {
  * @method conj
  * @return {Quaternion}
  */
-Quaternion.prototype.conj = function conj() {
-    return register.setWXYZ(
-         this.w,
-        -this.x,
-        -this.y,
-        -this.z
-    );
-};
+Quaternion.prototype.conj = function conj() {};
 
 /*
  * Docs: TODO
@@ -6457,10 +3760,7 @@ Quaternion.prototype.conj = function conj() {
  * @param {Number} length
  * @return {Quaternion}
  */
-Quaternion.prototype.normalize = function normalize(length) {
-    length = (length === undefined) ? 1 : length;
-    return this.scalarDivide(length * this.norm());
-};
+Quaternion.prototype.normalize = function normalize(length) {};
 
 /*
  * Docs: TODO
@@ -6470,17 +3770,7 @@ Quaternion.prototype.normalize = function normalize(length) {
  * @param {Vector} v
  * @return {Quaternion}
  */
-Quaternion.prototype.makeFromAngleAndAxis = function makeFromAngleAndAxis(angle, v) {
-    //left handed quaternion creation: theta -> -theta
-    var n  = v.normalize();
-    var ha = angle*0.5;
-    var s  = -Math.sin(ha);
-    this.x = s*n.x;
-    this.y = s*n.y;
-    this.z = s*n.z;
-    this.w = Math.cos(ha);
-    return this;
-};
+Quaternion.prototype.makeFromAngleAndAxis = function makeFromAngleAndAxis(angle, v) {};
 
 /*
  * Docs: TODO
@@ -6492,14 +3782,7 @@ Quaternion.prototype.makeFromAngleAndAxis = function makeFromAngleAndAxis(angle,
  * @param {Number} z
  * @return {Quaternion}
  */
-Quaternion.prototype.setWXYZ = function setWXYZ(w,x,y,z) {
-    register.clear();
-    this.w = w;
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    return this;
-};
+Quaternion.prototype.setWXYZ = function setWXYZ(w,x,y,z) {};
 
 /*
  * Docs: TODO
@@ -6508,22 +3791,7 @@ Quaternion.prototype.setWXYZ = function setWXYZ(w,x,y,z) {
  * @param {Array|Quaternion} v
  * @return {Quaternion}
  */
-Quaternion.prototype.set = function set(v) {
-    if (v instanceof Array) {
-        this.w = 0;
-        this.x = v[0];
-        this.y = v[1];
-        this.z = v[2];
-    }
-    else {
-        this.w = v.w;
-        this.x = v.x;
-        this.y = v.y;
-        this.z = v.z;
-    }
-    if (this !== register) register.clear();
-    return this;
-};
+Quaternion.prototype.set = function set(v) {};
 
 /**
  * Docs: TODO
@@ -6552,13 +3820,7 @@ Quaternion.prototype.clone = function clone() {
  * @method clear
  * @return {Quaternion}
  */
-Quaternion.prototype.clear = function clear() {
-    this.w = 1;
-    this.x = 0;
-    this.y = 0;
-    this.z = 0;
-    return this;
-};
+Quaternion.prototype.clear = function clear() {};
 
 /**
  * Doc: TODO
@@ -6618,33 +3880,7 @@ Quaternion.prototype.isZero = function isZero() {
  * @method getTransform
  * @return {Transform}
  */
-Quaternion.prototype.getTransform = function getTransform() {
-    var temp = this.normalize(1);
-    var x = temp.x;
-    var y = temp.y;
-    var z = temp.z;
-    var w = temp.w;
-
-    //LHC system flattened to column major = RHC flattened to row major
-    return [
-        1 - 2*y*y - 2*z*z,
-            2*x*y - 2*z*w,
-            2*x*z + 2*y*w,
-        0,
-            2*x*y + 2*z*w,
-        1 - 2*x*x - 2*z*z,
-            2*y*z - 2*x*w,
-        0,
-            2*x*z - 2*y*w,
-            2*y*z + 2*x*w,
-        1 - 2*x*x - 2*y*y,
-        0,
-        0,
-        0,
-        0,
-        1
-    ];
-};
+Quaternion.prototype.getTransform = function getTransform() {};
 
 var matrixRegister = new Matrix();
 
@@ -6654,32 +3890,7 @@ var matrixRegister = new Matrix();
  * @method getMatrix
  * @return {Transform}
  */
-Quaternion.prototype.getMatrix = function getMatrix() {
-    var temp = this.normalize(1);
-    var x = temp.x;
-    var y = temp.y;
-    var z = temp.z;
-    var w = temp.w;
-
-    //LHC system flattened to row major
-    return matrixRegister.set([
-        [
-            1 - 2*y*y - 2*z*z,
-                2*x*y + 2*z*w,
-                2*x*z - 2*y*w
-        ],
-        [
-                2*x*y - 2*z*w,
-            1 - 2*x*x - 2*z*z,
-                2*y*z + 2*x*w
-        ],
-        [
-                2*x*z + 2*y*w,
-                2*y*z - 2*x*w,
-            1 - 2*x*x - 2*y*y
-        ]
-    ]);
-};
+Quaternion.prototype.getMatrix = function getMatrix() {};
 
 var epsilon = 1e-5;
 
@@ -6691,26 +3902,7 @@ var epsilon = 1e-5;
  * @param {Number} t
  * @return {Transform}
  */
-Quaternion.prototype.slerp = function slerp(q, t) {
-    var omega;
-    var cosomega;
-    var sinomega;
-    var scaleFrom;
-    var scaleTo;
-
-    cosomega = this.dot(q);
-    if ((1.0 - cosomega) > epsilon) {
-        omega       = Math.acos(cosomega);
-        sinomega    = Math.sin(omega);
-        scaleFrom   = Math.sin((1.0 - t) * omega) / sinomega;
-        scaleTo     = Math.sin(t * omega) / sinomega;
-    }
-    else {
-        scaleFrom   = 1.0 - t;
-        scaleTo     = t;
-    }
-    return register.set(this.scalarMultiply(scaleFrom/scaleTo).add(q).multiply(scaleTo));
-};
+Quaternion.prototype.slerp = function slerp(q, t) {};
 
 module.exports = Quaternion;
 },{"./Matrix":37}],39:[function(_dereq_,module,exports){
@@ -6755,16 +3947,7 @@ var Random = {};
  * @param {Number} dim (optional) dimension of output array, if specified
  * @return {number | array<number>} random integer, or optionally, an array of random integers
  */
-Random.integer = function integer(min,max,dim) {
-    min = (min !== undefined) ? min : 0;
-    max = (max !== undefined) ? max : 1;
-    if (dim !== undefined) {
-        var result = [];
-        for (var i = 0; i < dim; i++) result.push(_randomInteger(min,max));
-        return result;
-    }
-    else return _randomInteger(min,max);
-};
+Random.integer = function integer(min,max,dim) {};
 
 /**
  * Get single random float between min and max (inclusive), or array
@@ -6777,16 +3960,7 @@ Random.integer = function integer(min,max,dim) {
  * @param {Number} [dim] dimension of output array, if specified
  * @return {Number} random float, or optionally an array
  */
-Random.range = function range(min,max,dim) {
-    min = (min !== undefined) ? min : 0;
-    max = (max !== undefined) ? max : 1;
-    if (dim !== undefined) {
-        var result = [];
-        for (var i = 0; i < dim; i++) result.push(_randomFloat(min,max));
-        return result;
-    }
-    else return _randomFloat(min,max);
-};
+Random.range = function range(min,max,dim) {};
 
 /**
  * Return random number among the set {-1 ,1}
@@ -6854,13 +4028,7 @@ Utilities.clamp = function clamp(value, range) {
  * @param {Array.Number} array array of numbers
  * @static
  */
-Utilities.length = function length(array) {
-    var distanceSquared = 0;
-    for (var i = 0; i < array.length; i++) {
-        distanceSquared += array[i] * array[i];
-    }
-    return Math.sqrt(distanceSquared);
-};
+Utilities.length = function length(array) {};
 
 module.exports = Utilities;
 },{}],41:[function(_dereq_,module,exports){
@@ -6886,15 +4054,7 @@ module.exports = Utilities;
  * @param {number} y y element value
  * @param {number} z z element value
  */
-function Vector(x,y,z) {
-    if (arguments.length === 1 && x !== undefined) this.set(x);
-    else {
-        this.x = x || 0;
-        this.y = y || 0;
-        this.z = z || 0;
-    }
-    return this;
-}
+function Vector(x,y,z) {}
 
 var _register = new Vector(0,0,0);
 
@@ -6906,13 +4066,7 @@ var _register = new Vector(0,0,0);
  * @param {Vector} v addend
  * @return {Vector} vector sum
  */
-Vector.prototype.add = function add(v) {
-    return _setXYZ.call(_register,
-        this.x + v.x,
-        this.y + v.y,
-        this.z + v.z
-    );
-};
+Vector.prototype.add = function add(v) {};
 
 /**
  * Subtract another vector from this vector, element-wise.
@@ -6922,13 +4076,7 @@ Vector.prototype.add = function add(v) {
  * @param {Vector} v subtrahend
  * @return {Vector} vector difference
  */
-Vector.prototype.sub = function sub(v) {
-    return _setXYZ.call(_register,
-        this.x - v.x,
-        this.y - v.y,
-        this.z - v.z
-    );
-};
+Vector.prototype.sub = function sub(v) {};
 
 /**
  * Scale Vector by floating point r.
@@ -6939,13 +4087,7 @@ Vector.prototype.sub = function sub(v) {
  * @param {number} r scalar
  * @return {Vector} vector result
  */
-Vector.prototype.mult = function mult(r) {
-    return _setXYZ.call(_register,
-        r * this.x,
-        r * this.y,
-        r * this.z
-    );
-};
+Vector.prototype.mult = function mult(r) {};
 
 /**
  * Scale Vector by floating point 1/r.
@@ -6968,20 +4110,7 @@ Vector.prototype.div = function div(r) {
  * @param {Vector} v Left Hand Vector
  * @return {Vector} vector result
  */
-Vector.prototype.cross = function cross(v) {
-    var x = this.x;
-    var y = this.y;
-    var z = this.z;
-    var vx = v.x;
-    var vy = v.y;
-    var vz = v.z;
-
-    return _setXYZ.call(_register,
-        z * vy - y * vz,
-        x * vz - z * vx,
-        y * vx - x * vy
-    );
-};
+Vector.prototype.cross = function cross(v) {};
 
 /**
  * Component-wise equality test between this and Vector v.
@@ -7000,20 +4129,7 @@ Vector.prototype.equals = function equals(v) {
  * @param {number} theta radians
  * @return {Vector} rotated vector
  */
-Vector.prototype.rotateX = function rotateX(theta) {
-    var x = this.x;
-    var y = this.y;
-    var z = this.z;
-
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-
-    return _setXYZ.call(_register,
-        x,
-        y * cosTheta - z * sinTheta,
-        y * sinTheta + z * cosTheta
-    );
-};
+Vector.prototype.rotateX = function rotateX(theta) {};
 
 /**
  * Rotate clockwise around y-axis by theta radians.
@@ -7022,20 +4138,7 @@ Vector.prototype.rotateX = function rotateX(theta) {
  * @param {number} theta radians
  * @return {Vector} rotated vector
  */
-Vector.prototype.rotateY = function rotateY(theta) {
-    var x = this.x;
-    var y = this.y;
-    var z = this.z;
-
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-
-    return _setXYZ.call(_register,
-        z * sinTheta + x * cosTheta,
-        y,
-        z * cosTheta - x * sinTheta
-    );
-};
+Vector.prototype.rotateY = function rotateY(theta) {};
 
 /**
  * Rotate clockwise around z-axis by theta radians.
@@ -7044,20 +4147,7 @@ Vector.prototype.rotateY = function rotateY(theta) {
  * @param {number} theta radians
  * @return {Vector} rotated vector
  */
-Vector.prototype.rotateZ = function rotateZ(theta) {
-    var x = this.x;
-    var y = this.y;
-    var z = this.z;
-
-    var cosTheta = Math.cos(theta);
-    var sinTheta = Math.sin(theta);
-
-    return _setXYZ.call(_register,
-        x * cosTheta - y * sinTheta,
-        x * sinTheta + y * cosTheta,
-        z
-    );
-};
+Vector.prototype.rotateZ = function rotateZ(theta) {};
 
 /**
  * Return dot product of this with a second Vector
@@ -7065,27 +4155,21 @@ Vector.prototype.rotateZ = function rotateZ(theta) {
  * @param {Vector} v second vector
  * @return {number} dot product
  */
-Vector.prototype.dot = function dot(v) {
-    return this.x * v.x + this.y * v.y + this.z * v.z;
-};
+Vector.prototype.dot = function dot(v) {};
 
 /**
  * Return squared length of this vector
  * @method normSquared
  * @return {number} squared length
  */
-Vector.prototype.normSquared = function normSquared() {
-    return this.dot(this);
-};
+Vector.prototype.normSquared = function normSquared() {};
 
 /**
  * Return length of this vector
  * @method norm
  * @return {number} length
  */
-Vector.prototype.norm = function norm() {
-    return Math.sqrt(this.normSquared());
-};
+Vector.prototype.norm = function norm() {};
 
 /**
  * Scale Vector to specified length.
@@ -7096,13 +4180,7 @@ Vector.prototype.norm = function norm() {
  * @param {number} length target length, default 1.0
  * @return {Vector}
  */
-Vector.prototype.normalize = function normalize(length) {
-    if (arguments.length === 0) length = 1;
-    var norm = this.norm();
-
-    if (norm > 1e-7) return _setFromVector.call(_register, this.mult(length / norm));
-    else return _setXYZ.call(_register, length, 0, 0);
-};
+Vector.prototype.normalize = function normalize(length) {};
 
 /**
  * Make a separate copy of the Vector.
@@ -7286,21 +4364,7 @@ GenericSync.register({'mouse': MouseSync, 'touch': TouchSync});
  *    Draggable._direction.y to constrain to one axis.
  *
  */
-function Draggable(options) {
-    this.options = Object.create(Draggable.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    this._positionState = new Transitionable([0,0]);
-    this._differential  = [0,0];
-    this._active = true;
-
-    this.sync = new GenericSync(['mouse', 'touch'], {scale : this.options.scale});
-    this.eventOutput = new EventHandler();
-    EventHandler.setInputHandler(this,  this.sync);
-    EventHandler.setOutputHandler(this, this.eventOutput);
-
-    _bindEvents.call(this);
-}
+function Draggable(options) {}
 
 //binary representation of directions for bitwise operations
 var _direction = {
@@ -7323,22 +4387,7 @@ Draggable.DEFAULT_OPTIONS = {
     transition  : {duration : 0}
 };
 
-function _mapDifferential(differential) {
-    var opts        = this.options;
-    var projection  = opts.projection;
-    var snapX       = opts.snapX;
-    var snapY       = opts.snapY;
-
-    //axes
-    var tx = (projection & _direction.x) ? differential[0] : 0;
-    var ty = (projection & _direction.y) ? differential[1] : 0;
-
-    //snapping
-    if (snapX > 0) tx -= tx % snapX;
-    if (snapY > 0) ty -= ty % snapY;
-
-    return [tx, ty];
-}
+function _mapDifferential(differential) {}
 
 function _handleStart() {
     if (!this._active) return;
@@ -7346,36 +4395,7 @@ function _handleStart() {
     this.eventOutput.emit('start', {position : this.getPosition()});
 }
 
-function _handleMove(event) {
-    if (!this._active) return;
-
-    var options = this.options;
-    this._differential = event.position;
-    var newDifferential = _mapDifferential.call(this, this._differential);
-
-    //buffer the differential if snapping is set
-    this._differential[0] -= newDifferential[0];
-    this._differential[1] -= newDifferential[1];
-
-    var pos = this.getPosition();
-
-    //modify position, retain reference
-    pos[0] += newDifferential[0];
-    pos[1] += newDifferential[1];
-
-    //handle bounding box
-    if (options.xRange){
-        var xRange = [options.xRange[0] + 0.5 * options.snapX, options.xRange[1] - 0.5 * options.snapX];
-        pos[0] = _clamp(pos[0], xRange);
-    }
-
-    if (options.yRange){
-        var yRange = [options.yRange[0] + 0.5 * options.snapY, options.yRange[1] - 0.5 * options.snapY];
-        pos[1] = _clamp(pos[1], yRange);
-    }
-
-    this.eventOutput.emit('update', {position : pos});
-}
+function _handleMove(event) {}
 
 function _handleEnd() {
     if (!this._active) return;
@@ -7395,26 +4415,7 @@ function _bindEvents() {
  *
  * @param {Object} [options] overrides of default options.  See constructor.
  */
-Draggable.prototype.setOptions = function setOptions(options) {
-    var currentOptions = this.options;
-    if (options.projection !== undefined) {
-        var proj = options.projection;
-        this.options.projection = 0;
-        ['x', 'y'].forEach(function(val) {
-            if (proj.indexOf(val) !== -1) currentOptions.projection |= _direction[val];
-        });
-    }
-    if (options.scale  !== undefined) {
-        currentOptions.scale  = options.scale;
-        this.sync.setOptions({
-            scale: options.scale
-        });
-    }
-    if (options.xRange !== undefined) currentOptions.xRange = options.xRange;
-    if (options.yRange !== undefined) currentOptions.yRange = options.yRange;
-    if (options.snapX  !== undefined) currentOptions.snapX  = options.snapX;
-    if (options.snapY  !== undefined) currentOptions.snapY  = options.snapY;
-};
+Draggable.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Get current delta in position from where this draggable started.
@@ -7438,11 +4439,7 @@ Draggable.prototype.getPosition = function getPosition() {
  * @param {transition} transition transition object specifying how object moves to new position
  * @param {function} callback zero-argument function to call on observed completion
  */
-Draggable.prototype.setRelativePosition = function setRelativePosition(position, transition, callback) {
-    var currPos = this.getPosition();
-    var relativePosition = [currPos[0] + position[0], currPos[1] + position[1]];
-    this.setPosition(relativePosition, transition, callback);
-};
+Draggable.prototype.setRelativePosition = function setRelativePosition(position, transition, callback) {};
 
 /**
  * Transition the element to the desired absolute position via provided transition.
@@ -7454,10 +4451,7 @@ Draggable.prototype.setRelativePosition = function setRelativePosition(position,
  * @param {transition} transition transition object specifying how object moves to new position
  * @param {function} callback zero-argument function to call on observed completion
  */
-Draggable.prototype.setPosition = function setPosition(position, transition, callback) {
-    if (this._positionState.isActive()) this._positionState.halt();
-    this._positionState.set(position, transition, callback);
-};
+Draggable.prototype.setPosition = function setPosition(position, transition, callback) {};
 
 /**
  * Set this draggable to respond to user input.
@@ -7527,15 +4521,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * method is called.
  *
  */
-function Fader(options, startState) {
-    this.options = Object.create(Fader.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-
-    if (options) this.setOptions(options);
-
-    if (!startState) startState = 0;
-    this.transitionHelper = new Transitionable(startState);
-}
+function Fader(options, startState) {}
 
 Fader.DEFAULT_OPTIONS = {
     cull: false,
@@ -7551,9 +4537,7 @@ Fader.DEFAULT_OPTIONS = {
  *
  * @param {Object} [options] overrides of default options.  See constructor.
  */
-Fader.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+Fader.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Fully displays the Fader instance's associated renderables.
@@ -7562,10 +4546,7 @@ Fader.prototype.setOptions = function setOptions(options) {
  * @param {Transition} [transition] The transition that coordinates setting to the new state.
  * @param {Function} [callback] A callback that executes once you've transitioned to the fully shown state.
  */
-Fader.prototype.show = function show(transition, callback) {
-    transition = transition || this.options.transition;
-    this.set(1, transition, callback);
-};
+Fader.prototype.show = function show(transition, callback) {};
 
 /**
  * Fully fades the Fader instance's associated renderables.
@@ -7574,10 +4555,7 @@ Fader.prototype.show = function show(transition, callback) {
  * @param {Transition} [transition] The transition that coordinates setting to the new state.
  * @param {Function} [callback] A callback that executes once you've transitioned to the fully faded state.
  */
-Fader.prototype.hide = function hide(transition, callback) {
-    transition = transition || this.options.transition;
-    this.set(0, transition, callback);
-};
+Fader.prototype.hide = function hide(transition, callback) {};
 
 /**
  * Manually sets the opacity state of the fader to the passed-in one. Executes with an optional
@@ -7736,37 +4714,7 @@ var TransitionableTransform = _dereq_('../transitions/TransitionableTransform');
  * @param {Array.Number} [options.size] size to apply to descendants
  * @param {Array.Number} [options.propportions] proportions to apply to descendants
  */
-function StateModifier(options) {
-    this._transformState = new TransitionableTransform(Transform.identity);
-    this._opacityState = new Transitionable(1);
-    this._originState = new Transitionable([0, 0]);
-    this._alignState = new Transitionable([0, 0]);
-    this._sizeState = new Transitionable([0, 0]);
-    this._proportionsState = new Transitionable([0, 0]);
-
-    this._modifier = new Modifier({
-        transform: this._transformState,
-        opacity: this._opacityState,
-        origin: null,
-        align: null,
-        size: null,
-        proportions: null
-    });
-
-    this._hasOrigin = false;
-    this._hasAlign = false;
-    this._hasSize = false;
-    this._hasProportions = false;
-
-    if (options) {
-        if (options.transform) this.setTransform(options.transform);
-        if (options.opacity !== undefined) this.setOpacity(options.opacity);
-        if (options.origin) this.setOrigin(options.origin);
-        if (options.align) this.setAlign(options.align);
-        if (options.size) this.setSize(options.size);
-        if (options.proportions) this.setProportions(options.proportions);
-    }
-}
+function StateModifier(options) {}
 
 /**
  * Set the transform matrix of this modifier, either statically or
@@ -7781,10 +4729,7 @@ function StateModifier(options) {
  * @param {Function} [callback] callback to call after transition completes
  * @return {StateModifier} this
  */
-StateModifier.prototype.setTransform = function setTransform(transform, transition, callback) {
-    this._transformState.set(transform, transition, callback);
-    return this;
-};
+StateModifier.prototype.setTransform = function setTransform(transform, transition, callback) {};
 
 /**
  * Set the opacity of this modifier, either statically or
@@ -16169,38 +13114,7 @@ Flipper.prototype.setBack = function setBack(node) {
  * @method render
  * @return {Number} Render spec for this component
  */
-Flipper.prototype.render = function render() {
-    var angle = this.angle.get();
-
-    var frontTransform;
-    var backTransform;
-
-    if (this.options.direction === Flipper.DIRECTION_X) {
-        frontTransform = Transform.rotateY(angle);
-        backTransform = Transform.rotateY(angle + Math.PI);
-    }
-    else {
-        frontTransform = Transform.rotateX(angle);
-        backTransform = Transform.rotateX(angle + Math.PI);
-    }
-
-    var result = [];
-    if (this.frontNode){
-        result.push({
-            transform: frontTransform,
-            target: this.frontNode.render()
-        });
-    }
-
-    if (this.backNode){
-        result.push({
-            transform: Transform.moveThen([0, 0, SEPERATION_LENGTH], backTransform),
-            target: this.backNode.render()
-        });
-    }
-
-    return result;
-};
+Flipper.prototype.render = function render() {};
 
 module.exports = Flipper;
 },{"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../transitions/Transitionable":88}],103:[function(_dereq_,module,exports){
@@ -16237,102 +13151,15 @@ var TransitionableTransform = _dereq_('../transitions/TransitionableTransform');
  * horizontal and vertical gutters between items in the grid layout.
  * @param {Transition} [options.transition=false] The transiton that controls the Gridlayout instance's reflow.
  */
-function GridLayout(options) {
-    this.options = Object.create(GridLayout.DEFAULT_OPTIONS);
-    this.optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
+function GridLayout(options) {}
 
-    this.id = Entity.register(this);
+function _reflow(size, cols, rows) {}
 
-    this._modifiers = [];
-    this._states = [];
-    this._contextSizeCache = [0, 0];
-    this._dimensionsCache = [0, 0];
-    this._activeCount = 0;
+function _createModifier(index, size, position, opacity) {}
 
-    this._eventOutput = new EventHandler();
-    EventHandler.setOutputHandler(this, this._eventOutput);
-}
+function _animateModifier(index, size, position, opacity) {}
 
-function _reflow(size, cols, rows) {
-    var usableSize = [size[0], size[1]];
-    usableSize[0] -= this.options.gutterSize[0] * (cols - 1);
-    usableSize[1] -= this.options.gutterSize[1] * (rows - 1);
-
-    var rowSize = Math.round(usableSize[1] / rows);
-    var colSize = Math.round(usableSize[0] / cols);
-
-    var currY = 0;
-    var currX;
-    var currIndex = 0;
-    for (var i = 0; i < rows; i++) {
-        currX = 0;
-        for (var j = 0; j < cols; j++) {
-            if (this._modifiers[currIndex] === undefined) {
-                _createModifier.call(this, currIndex, [colSize, rowSize], [currX, currY, 0], 1);
-            }
-            else {
-                _animateModifier.call(this, currIndex, [colSize, rowSize], [currX, currY, 0], 1);
-            }
-
-            currIndex++;
-            currX += colSize + this.options.gutterSize[0];
-        }
-
-        currY += rowSize + this.options.gutterSize[1];
-    }
-
-    this._dimensionsCache = [this.options.dimensions[0], this.options.dimensions[1]];
-    this._contextSizeCache = [size[0], size[1]];
-
-    this._activeCount = rows * cols;
-
-    for (i = this._activeCount ; i < this._modifiers.length; i++) _animateModifier.call(this, i, [Math.round(colSize), Math.round(rowSize)], [0, 0], 0);
-
-    this._eventOutput.emit('reflow');
-}
-
-function _createModifier(index, size, position, opacity) {
-    var transitionItem = {
-        transform: new TransitionableTransform(Transform.translate.apply(null, position)),
-        opacity: new Transitionable(opacity),
-        size: new Transitionable(size)
-    };
-
-    var modifier = new Modifier({
-        transform: transitionItem.transform,
-        opacity: transitionItem.opacity,
-        size: transitionItem.size
-    });
-
-    this._states[index] = transitionItem;
-    this._modifiers[index] = modifier;
-
-}
-
-function _animateModifier(index, size, position, opacity) {
-    var currState = this._states[index];
-
-    var currSize = currState.size;
-    var currOpacity = currState.opacity;
-    var currTransform = currState.transform;
-
-    var transition = this.options.transition;
-
-    currTransform.halt();
-    currOpacity.halt();
-    currSize.halt();
-
-    currTransform.setTranslate(position, transition);
-    currSize.set(size, transition);
-    currOpacity.set(opacity, transition);
-}
-
-GridLayout.DEFAULT_OPTIONS = {
-    dimensions: [1, 1],
-    transition: false,
-    gutterSize: [0, 0]
-};
+GridLayout.DEFAULT_OPTIONS = {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -16341,9 +13168,7 @@ GridLayout.DEFAULT_OPTIONS = {
  * @method render
  * @return {Object} Render spec for this component
  */
-GridLayout.prototype.render = function render() {
-    return this.id;
-};
+GridLayout.prototype.render = function render() {};
 
 /**
  * Patches the GridLayout instance's options with the passed-in ones.
@@ -16351,9 +13176,7 @@ GridLayout.prototype.render = function render() {
  * @method setOptions
  * @param {Options} options An object of configurable options for the GridLayout instance.
  */
-GridLayout.prototype.setOptions = function setOptions(options) {
-    return this.optionsManager.setOptions(options);
-};
+GridLayout.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Sets the collection of renderables under the Gridlayout instance's control.
@@ -16361,10 +13184,7 @@ GridLayout.prototype.setOptions = function setOptions(options) {
  * @method sequenceFrom
  * @param {Array|ViewSequence} sequence Either an array of renderables or a Famous viewSequence.
  */
-GridLayout.prototype.sequenceFrom = function sequenceFrom(sequence) {
-    if (sequence instanceof Array) sequence = new ViewSequence(sequence);
-    this.sequence = sequence;
-};
+GridLayout.prototype.sequenceFrom = function sequenceFrom(sequence) {};
 
 /**
  * Returns the size of the grid layout.
@@ -16372,9 +13192,7 @@ GridLayout.prototype.sequenceFrom = function sequenceFrom(sequence) {
  * @method getSize
  * @return {Array} Total size of the grid layout.
  */
-GridLayout.prototype.getSize = function getSize() {
-  return this._contextSizeCache;
-};
+GridLayout.prototype.getSize = function getSize() {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -16385,49 +13203,7 @@ GridLayout.prototype.getSize = function getSize() {
  * @method commit
  * @param {Context} context commit context
  */
-GridLayout.prototype.commit = function commit(context) {
-    var transform = context.transform;
-    var opacity = context.opacity;
-    var origin = context.origin;
-    var size = context.size;
-
-    var cols = this.options.dimensions[0];
-    var rows = this.options.dimensions[1];
-
-    if (size[0] !== this._contextSizeCache[0] || size[1] !== this._contextSizeCache[1] || cols !== this._dimensionsCache[0] || rows !== this._dimensionsCache[1]) {
-        _reflow.call(this, size, cols, rows);
-    }
-
-    var sequence = this.sequence;
-    var result = [];
-    var currIndex = 0;
-    while (sequence && (currIndex < this._modifiers.length)) {
-        var item = sequence.get();
-        var modifier = this._modifiers[currIndex];
-        if (currIndex >= this._activeCount && this._states[currIndex].opacity.isActive()) {
-            this._modifiers.splice(currIndex, 1);
-            this._states.splice(currIndex, 1);
-        }
-        if (item) {
-            result.push(
-                modifier.modify({
-                    origin: origin,
-                    target: item.render()
-                })
-            );
-        }
-        sequence = sequence.getNext();
-        currIndex++;
-    }
-
-    if (size) transform = Transform.moveThen([-size[0]*origin[0], -size[1]*origin[1], 0], transform);
-    return {
-        transform: transform,
-        opacity: opacity,
-        size: size,
-        target: result
-    };
-};
+GridLayout.prototype.commit = function commit(context) {};
 
 module.exports = GridLayout;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Modifier":9,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../core/ViewSequence":17,"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89}],104:[function(_dereq_,module,exports){
@@ -16459,17 +13235,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Number} [options.footerSize=undefined] The amount of pixels allocated to the footer node
  * in the HeaderFooterLayout instance's direction.
  */
-function HeaderFooterLayout(options) {
-    this.options = Object.create(HeaderFooterLayout.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._entityId = Entity.register(this);
-
-    this.header = new RenderNode();
-    this.footer = new RenderNode();
-    this.content = new RenderNode();
-}
+function HeaderFooterLayout(options) {}
 
 /**
  *  When used as a value for your HeaderFooterLayout's direction option, causes it to lay out horizontally.
@@ -16493,13 +13259,7 @@ HeaderFooterLayout.DIRECTION_X = 0;
  */
 HeaderFooterLayout.DIRECTION_Y = 1;
 
-HeaderFooterLayout.DEFAULT_OPTIONS = {
-    direction: HeaderFooterLayout.DIRECTION_Y,
-    headerSize: undefined,
-    footerSize: undefined,
-    defaultHeaderSize: 0,
-    defaultFooterSize: 0
-};
+HeaderFooterLayout.DEFAULT_OPTIONS = {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -16508,9 +13268,7 @@ HeaderFooterLayout.DEFAULT_OPTIONS = {
  * @method render
  * @return {Object} Render spec for this component
  */
-HeaderFooterLayout.prototype.render = function render() {
-    return this._entityId;
-};
+HeaderFooterLayout.prototype.render = function render() {};
 
 /**
  * Patches the HeaderFooterLayout instance's options with the passed-in ones.
@@ -16518,24 +13276,13 @@ HeaderFooterLayout.prototype.render = function render() {
  * @method setOptions
  * @param {Options} options An object of configurable options for the HeaderFooterLayout instance.
  */
-HeaderFooterLayout.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+HeaderFooterLayout.prototype.setOptions = function setOptions(options) {};
 
-function _resolveNodeSize(node, defaultSize) {
-    var nodeSize = node.getSize();
-    return nodeSize ? nodeSize[this.options.direction] : defaultSize;
-}
+function _resolveNodeSize(node, defaultSize) {}
 
-function _outputTransform(offset) {
-    if (this.options.direction === HeaderFooterLayout.DIRECTION_X) return Transform.translate(offset, 0, 0);
-    else return Transform.translate(0, offset, 0);
-}
+function _outputTransform(offset) {}
 
-function _finalSize(directionSize, size) {
-    if (this.options.direction === HeaderFooterLayout.DIRECTION_X) return [directionSize, size[1]];
-    else return [size[0], directionSize];
-}
+function _finalSize(directionSize, size) {}
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -16546,42 +13293,7 @@ function _finalSize(directionSize, size) {
  * @method commit
  * @param {Context} context commit context
  */
-HeaderFooterLayout.prototype.commit = function commit(context) {
-    var transform = context.transform;
-    var origin = context.origin;
-    var size = context.size;
-    var opacity = context.opacity;
-
-    var headerSize = (this.options.headerSize !== undefined) ? this.options.headerSize : _resolveNodeSize.call(this, this.header, this.options.defaultHeaderSize);
-    var footerSize = (this.options.footerSize !== undefined) ? this.options.footerSize : _resolveNodeSize.call(this, this.footer, this.options.defaultFooterSize);
-    var contentSize = size[this.options.direction] - headerSize - footerSize;
-
-    if (size) transform = Transform.moveThen([-size[0]*origin[0], -size[1]*origin[1], 0], transform);
-
-    var result = [
-        {
-            size: _finalSize.call(this, headerSize, size),
-            target: this.header.render()
-        },
-        {
-            transform: _outputTransform.call(this, headerSize),
-            size: _finalSize.call(this, contentSize, size),
-            target: this.content.render()
-        },
-        {
-            transform: _outputTransform.call(this, headerSize + contentSize),
-            size: _finalSize.call(this, footerSize, size),
-            target: this.footer.render()
-        }
-    ];
-
-    return {
-        transform: transform,
-        opacity: opacity,
-        size: size,
-        target: result
-    };
-};
+HeaderFooterLayout.prototype.commit = function commit(context) {};
 
 module.exports = HeaderFooterLayout;
 },{"../core/Entity":5,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15}],105:[function(_dereq_,module,exports){
@@ -16628,35 +13340,9 @@ var TransitionableTransform = _dereq_('../transitions/TransitionableTransform');
  *   out transition of the old one executes concurrently with the in transition of the new one,
   *  or synchronously beforehand.
  */
-function Lightbox(options) {
-    this.options = Object.create(Lightbox.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
+function Lightbox(options) {}
 
-    if (options) this.setOptions(options);
-
-    this._showing = false;
-    this.nodes = [];
-    this.transforms = [];
-    this.states = [];
-}
-
-Lightbox.DEFAULT_OPTIONS = {
-    inTransform: Transform.scale(0.001, 0.001, 0.001),
-    inOpacity: 0,
-    inOrigin: [0.5, 0.5],
-    inAlign: [0.5, 0.5],
-    outTransform: Transform.scale(0.001, 0.001, 0.001),
-    outOpacity: 0,
-    outOrigin: [0.5, 0.5],
-    outAlign: [0.5, 0.5],
-    showTransform: Transform.identity,
-    showOpacity: 1,
-    showOrigin: [0.5, 0.5],
-    showAlign: [0.5, 0.5],
-    inTransition: true,
-    outTransition: true,
-    overlap: false
-};
+Lightbox.DEFAULT_OPTIONS = {};
 
 /**
  * Patches the Lightbox instance's options with the passed-in ones.
@@ -16664,9 +13350,7 @@ Lightbox.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param {Options} options An object of configurable options for the Lightbox instance.
  */
-Lightbox.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+Lightbox.prototype.setOptions = function setOptions(options) {};
 
    /**
  * Show displays the targeted renderable with a transition and an optional callback to
@@ -16677,51 +13361,7 @@ Lightbox.prototype.setOptions = function setOptions(options) {
  * passed-in renderable.
  * @param {function} [callback] Executes after transitioning in the renderable.
  */
-Lightbox.prototype.show = function show(renderable, transition, callback) {
-    if (!renderable) {
-        return this.hide(callback);
-    }
-
-    if (transition instanceof Function) {
-        callback = transition;
-        transition = undefined;
-    }
-
-    if (this._showing) {
-        if (this.options.overlap) this.hide();
-        else {
-            return this.hide(this.show.bind(this, renderable, transition, callback));
-        }
-    }
-    this._showing = true;
-
-    var stateItem = {
-        transform: new TransitionableTransform(this.options.inTransform),
-        origin: new Transitionable(this.options.inOrigin),
-        align: new Transitionable(this.options.inAlign),
-        opacity: new Transitionable(this.options.inOpacity)
-    };
-
-    var transform = new Modifier({
-        transform: stateItem.transform,
-        opacity: stateItem.opacity,
-        origin: stateItem.origin,
-        align: stateItem.align
-    });
-    var node = new RenderNode();
-    node.add(transform).add(renderable);
-    this.nodes.push(node);
-    this.states.push(stateItem);
-    this.transforms.push(transform);
-
-    var _cb = callback ? Utility.after(3, callback) : undefined;
-
-    if (!transition) transition = this.options.inTransition;
-    stateItem.transform.set(this.options.showTransform, transition, _cb);
-    stateItem.opacity.set(this.options.showOpacity, transition, _cb);
-    stateItem.origin.set(this.options.showOrigin, transition, _cb);
-    stateItem.align.set(this.options.showAlign, transition, _cb);
-};
+Lightbox.prototype.show = function show(renderable, transition, callback) {};
 
 /**
  * Hide hides the currently displayed renderable with an out transition.
@@ -16730,31 +13370,7 @@ Lightbox.prototype.show = function show(renderable, transition, callback) {
  * currently controlled renderable.
  * @param {function} [callback] Executes after transitioning out the renderable.
  */
-Lightbox.prototype.hide = function hide(transition, callback) {
-    if (!this._showing) return;
-    this._showing = false;
-
-    if (transition instanceof Function) {
-        callback = transition;
-        transition = undefined;
-    }
-
-    var node = this.nodes[this.nodes.length - 1];
-    var transform = this.transforms[this.transforms.length - 1];
-    var stateItem = this.states[this.states.length - 1];
-    var _cb = Utility.after(3, function() {
-        this.nodes.splice(this.nodes.indexOf(node), 1);
-        this.states.splice(this.states.indexOf(stateItem), 1);
-        this.transforms.splice(this.transforms.indexOf(transform), 1);
-        if (callback) callback.call(this);
-    }.bind(this));
-
-    if (!transition) transition = this.options.outTransition;
-    stateItem.transform.set(this.options.outTransform, transition, _cb);
-    stateItem.opacity.set(this.options.outOpacity, transition, _cb);
-    stateItem.origin.set(this.options.outOrigin, transition, _cb);
-    stateItem.align.set(this.options.outAlign, transition, _cb);
-};
+Lightbox.prototype.hide = function hide(transition, callback) {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -16763,13 +13379,7 @@ Lightbox.prototype.hide = function hide(transition, callback) {
  * @method render
  * @return {number} Render spec for this component
  */
-Lightbox.prototype.render = function render() {
-    var result = [];
-    for (var i = 0; i < this.nodes.length; i++) {
-        result.push(this.nodes[i].render());
-    }
-    return result;
-};
+Lightbox.prototype.render = function render() {};
 
 module.exports = Lightbox;
 },{"../core/Modifier":9,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89,"../utilities/Utility":95}],106:[function(_dereq_,module,exports){
@@ -16800,37 +13410,11 @@ var View = _dereq_('../core/View');
   out transition of the old one executes concurrently with the in transition of the new one,
    or synchronously beforehand.
  */
-function RenderController(options) {
-    View.apply(this, arguments);
-
-    this._showing = -1;
-    this._outgoingRenderables = [];
-    this._nextRenderable = null;
-
-    this._renderables = [];
-    this._nodes = [];
-    this._modifiers = [];
-    this._states = [];
-
-    this.inTransformMap = RenderController.DefaultMap.transform;
-    this.inOpacityMap = RenderController.DefaultMap.opacity;
-    this.inOriginMap = RenderController.DefaultMap.origin;
-    this.inAlignMap = RenderController.DefaultMap.align;
-    this.outTransformMap = RenderController.DefaultMap.transform;
-    this.outOpacityMap = RenderController.DefaultMap.opacity;
-    this.outOriginMap = RenderController.DefaultMap.origin;
-    this.outAlignMap = RenderController.DefaultMap.align;
-
-    this._output = [];
-}
+function RenderController(options) {}
 RenderController.prototype = Object.create(View.prototype);
 RenderController.prototype.constructor = RenderController;
 
-RenderController.DEFAULT_OPTIONS = {
-    inTransition: true,
-    outTransition: true,
-    overlap: true
-};
+RenderController.DEFAULT_OPTIONS = {};
 
 RenderController.DefaultMap = {
     transform: function() {
@@ -16843,9 +13427,7 @@ RenderController.DefaultMap = {
     align: null
 };
 
-function _mappedState(map, state) {
-    return map(state.get());
-}
+function _mappedState(map, state) {}
 
 /**
  * As your RenderController shows a new renderable, it executes a transition in. This transition in
@@ -16859,13 +13441,7 @@ function _mappedState(map, state) {
  * a transitionable that manages a full transform (a sixteen value array).
  * @chainable
  */
-RenderController.prototype.inTransformFrom = function inTransformFrom(transform) {
-    if (transform instanceof Function) this.inTransformMap = transform;
-    else if (transform && transform.get) this.inTransformMap = transform.get.bind(transform);
-    else throw new Error('inTransformFrom takes only function or getter object');
-    //TODO: tween transition
-    return this;
-};
+RenderController.prototype.inTransformFrom = function inTransformFrom(transform) {};
 
 /**
  * inOpacityFrom sets the accessor for the state of the opacity used in transitioning in renderables.
@@ -16874,13 +13450,7 @@ RenderController.prototype.inTransformFrom = function inTransformFrom(transform)
  * a transitionable that manages opacity (a number between zero and one).
  * @chainable
  */
-RenderController.prototype.inOpacityFrom = function inOpacityFrom(opacity) {
-    if (opacity instanceof Function) this.inOpacityMap = opacity;
-    else if (opacity && opacity.get) this.inOpacityMap = opacity.get.bind(opacity);
-    else throw new Error('inOpacityFrom takes only function or getter object');
-    //TODO: tween opacity
-    return this;
-};
+RenderController.prototype.inOpacityFrom = function inOpacityFrom(opacity) {};
 
 /**
  * inOriginFrom sets the accessor for the state of the origin used in transitioning in renderables.
@@ -16889,13 +13459,7 @@ RenderController.prototype.inOpacityFrom = function inOpacityFrom(opacity) {
  * a transitionable that manages origin (a two value array of numbers between zero and one).
  * @chainable
  */
-RenderController.prototype.inOriginFrom = function inOriginFrom(origin) {
-    if (origin instanceof Function) this.inOriginMap = origin;
-    else if (origin && origin.get) this.inOriginMap = origin.get.bind(origin);
-    else throw new Error('inOriginFrom takes only function or getter object');
-    //TODO: tween origin
-    return this;
-};
+RenderController.prototype.inOriginFrom = function inOriginFrom(origin) {};
 
 /**
  * inAlignFrom sets the accessor for the state of the align used in transitioning in renderables.
@@ -16904,13 +13468,7 @@ RenderController.prototype.inOriginFrom = function inOriginFrom(origin) {
  * a transitionable that manages align (a two value array of numbers between zero and one).
  * @chainable
  */
-RenderController.prototype.inAlignFrom = function inAlignFrom(align) {
-    if (align instanceof Function) this.inAlignMap = align;
-    else if (align && align.get) this.inAlignMap = align.get.bind(align);
-    else throw new Error('inAlignFrom takes only function or getter object');
-    //TODO: tween align
-    return this;
-};
+RenderController.prototype.inAlignFrom = function inAlignFrom(align) {};
 
 /**
  * outTransformFrom sets the accessor for the state of the transform used in transitioning out renderables.
@@ -16919,13 +13477,7 @@ RenderController.prototype.inAlignFrom = function inAlignFrom(align) {
  * a transitionable that manages a full transform (a sixteen value array).
  * @chainable
  */
-RenderController.prototype.outTransformFrom = function outTransformFrom(transform) {
-    if (transform instanceof Function) this.outTransformMap = transform;
-    else if (transform && transform.get) this.outTransformMap = transform.get.bind(transform);
-    else throw new Error('outTransformFrom takes only function or getter object');
-    //TODO: tween transition
-    return this;
-};
+RenderController.prototype.outTransformFrom = function outTransformFrom(transform) {};
 
 /**
  * outOpacityFrom sets the accessor for the state of the opacity used in transitioning out renderables.
@@ -16934,13 +13486,7 @@ RenderController.prototype.outTransformFrom = function outTransformFrom(transfor
  * a transitionable that manages opacity (a number between zero and one).
  * @chainable
  */
-RenderController.prototype.outOpacityFrom = function outOpacityFrom(opacity) {
-    if (opacity instanceof Function) this.outOpacityMap = opacity;
-    else if (opacity && opacity.get) this.outOpacityMap = opacity.get.bind(opacity);
-    else throw new Error('outOpacityFrom takes only function or getter object');
-    //TODO: tween opacity
-    return this;
-};
+RenderController.prototype.outOpacityFrom = function outOpacityFrom(opacity) {};
 
 /**
  * outOriginFrom sets the accessor for the state of the origin used in transitioning out renderables.
@@ -16949,13 +13495,7 @@ RenderController.prototype.outOpacityFrom = function outOpacityFrom(opacity) {
  * a transitionable that manages origin (a two value array of numbers between zero and one).
  * @chainable
  */
-RenderController.prototype.outOriginFrom = function outOriginFrom(origin) {
-    if (origin instanceof Function) this.outOriginMap = origin;
-    else if (origin && origin.get) this.outOriginMap = origin.get.bind(origin);
-    else throw new Error('outOriginFrom takes only function or getter object');
-    //TODO: tween origin
-    return this;
-};
+RenderController.prototype.outOriginFrom = function outOriginFrom(origin) {};
 
 /**
  * outAlignFrom sets the accessor for the state of the align used in transitioning out renderables.
@@ -16964,13 +13504,7 @@ RenderController.prototype.outOriginFrom = function outOriginFrom(origin) {
  * a transitionable that manages align (a two value array of numbers between zero and one).
  * @chainable
  */
-RenderController.prototype.outAlignFrom = function outAlignFrom(align) {
-    if (align instanceof Function) this.outAlignMap = align;
-    else if (align && align.get) this.outAlignMap = align.get.bind(align);
-    else throw new Error('outAlignFrom takes only function or getter object');
-    //TODO: tween align
-    return this;
-};
+RenderController.prototype.outAlignFrom = function outAlignFrom(align) {};
 
 /**
  * Show displays the targeted renderable with a transition and an optional callback to
@@ -16982,68 +13516,7 @@ RenderController.prototype.outAlignFrom = function outAlignFrom(align) {
  * @param {function} [callback] Executes after transitioning in the renderable.
  * @chainable
  */
-RenderController.prototype.show = function show(renderable, transition, callback) {
-    if (!renderable) {
-        return this.hide(callback);
-    }
-
-    if (transition instanceof Function) {
-        callback = transition;
-        transition = null;
-    }
-
-    if (this._showing >= 0) {
-        if (this.options.overlap) this.hide();
-        else {
-            if (this._nextRenderable) {
-                this._nextRenderable = renderable;
-            }
-            else {
-                this._nextRenderable = renderable;
-                this.hide(function() {
-                    if (this._nextRenderable === renderable) this.show(this._nextRenderable, callback);
-                    this._nextRenderable = null;
-                });
-            }
-            return undefined;
-        }
-    }
-
-    var state = null;
-
-    // check to see if we should restore
-    var renderableIndex = this._renderables.indexOf(renderable);
-    if (renderableIndex >= 0) {
-        this._showing = renderableIndex;
-        state = this._states[renderableIndex];
-        state.halt();
-
-        var outgoingIndex = this._outgoingRenderables.indexOf(renderable);
-        if (outgoingIndex >= 0) this._outgoingRenderables.splice(outgoingIndex, 1);
-    }
-    else {
-        state = new Transitionable(0);
-
-        var modifier = new Modifier({
-            transform: this.inTransformMap ? _mappedState.bind(this, this.inTransformMap, state) : null,
-            opacity: this.inOpacityMap ? _mappedState.bind(this, this.inOpacityMap, state) : null,
-            origin: this.inOriginMap ? _mappedState.bind(this, this.inOriginMap, state) : null,
-            align: this.inAlignMap ? _mappedState.bind(this, this.inAlignMap, state) : null
-        });
-
-        var node = new RenderNode();
-        node.add(modifier).add(renderable);
-
-        this._showing = this._nodes.length;
-        this._nodes.push(node);
-        this._modifiers.push(modifier);
-        this._states.push(state);
-        this._renderables.push(renderable);
-    }
-
-    if (!transition) transition = this.options.inTransition;
-    state.set(1, transition, callback);
-};
+RenderController.prototype.show = function show(renderable, transition, callback) {};
 
 /**
  * Hide hides the currently displayed renderable with an out transition.
@@ -17053,44 +13526,7 @@ RenderController.prototype.show = function show(renderable, transition, callback
  * @param {function} [callback] Executes after transitioning out the renderable.
  * @chainable
  */
-RenderController.prototype.hide = function hide(transition, callback) {
-    if (this._showing < 0) return;
-    var index = this._showing;
-    this._showing = -1;
-
-    if (transition instanceof Function) {
-        callback = transition;
-        transition = undefined;
-    }
-
-    var node = this._nodes[index];
-    var modifier = this._modifiers[index];
-    var state = this._states[index];
-    var renderable = this._renderables[index];
-
-    modifier.transformFrom(this.outTransformMap ? _mappedState.bind(this, this.outTransformMap, state) : null);
-    modifier.opacityFrom(this.outOpacityMap ? _mappedState.bind(this, this.outOpacityMap, state) : null);
-    modifier.originFrom(this.outOriginMap ? _mappedState.bind(this, this.outOriginMap, state) : null);
-    modifier.alignFrom(this.outAlignMap ? _mappedState.bind(this, this.outAlignMap, state) : null);
-
-    if (this._outgoingRenderables.indexOf(renderable) < 0) this._outgoingRenderables.push(renderable);
-
-    if (!transition) transition = this.options.outTransition;
-    state.halt();
-    state.set(0, transition, function(node, modifier, state, renderable) {
-        if (this._outgoingRenderables.indexOf(renderable) >= 0) {
-            var index = this._nodes.indexOf(node);
-            this._nodes.splice(index, 1);
-            this._modifiers.splice(index, 1);
-            this._states.splice(index, 1);
-            this._renderables.splice(index, 1);
-            this._outgoingRenderables.splice(this._outgoingRenderables.indexOf(renderable), 1);
-
-            if (this._showing >= index) this._showing--;
-        }
-        if (callback) callback.call(this);
-    }.bind(this, node, modifier, state, renderable));
-};
+RenderController.prototype.hide = function hide(transition, callback) {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -17099,14 +13535,7 @@ RenderController.prototype.hide = function hide(transition, callback) {
  * @method render
  * @return {number} Render spec for this component
  */
-RenderController.prototype.render = function render() {
-    var result = this._output;
-    if (result.length > this._nodes.length) result.splice(this._nodes.length);
-    for (var i = 0; i < this._nodes.length; i++) {
-        result[i] = this._nodes[i].render();
-    }
-    return result;
-};
+RenderController.prototype.render = function render() {};
 
 module.exports = RenderController;
 },{"../core/Modifier":9,"../core/RenderNode":11,"../core/Transform":15,"../core/View":16,"../transitions/Transitionable":88}],107:[function(_dereq_,module,exports){
@@ -17136,35 +13565,9 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Options} [options.container=undefined] Options for the ScrollContainer instance's surface.
  * @param {Options} [options.scrollview={direction:Utility.Direction.X}]  Options for the ScrollContainer instance's scrollview.
  */
-function ScrollContainer(options) {
-    this.options = Object.create(ScrollContainer.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
+function ScrollContainer(options) {}
 
-    if (options) this.setOptions(options);
-
-    this.container = new ContainerSurface(this.options.container);
-    this.scrollview = new Scrollview(this.options.scrollview);
-
-    this.container.add(this.scrollview);
-
-    this._eventInput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-
-    this._eventInput.pipe(this.scrollview);
-
-    this._eventOutput = new EventHandler();
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this.container.pipe(this._eventOutput);
-    this.scrollview.pipe(this._eventOutput);
-}
-
-ScrollContainer.DEFAULT_OPTIONS = {
-    container: {
-        properties: {overflow : 'hidden'}
-    },
-    scrollview: {}
-};
+ScrollContainer.DEFAULT_OPTIONS = {};
 
 /**
  * Patches the ScrollContainer instance's options with the passed-in ones.
@@ -17172,9 +13575,7 @@ ScrollContainer.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param {Options} options An object of configurable options for the ScrollContainer instance.
  */
-ScrollContainer.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+ScrollContainer.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Sets the collection of renderables under the ScrollContainer instance scrollview's control.
@@ -17182,9 +13583,7 @@ ScrollContainer.prototype.setOptions = function setOptions(options) {
  * @method sequenceFrom
  * @param {Array|ViewSequence} sequence Either an array of renderables or a Famous ViewSequence.
  */
-ScrollContainer.prototype.sequenceFrom = function sequenceFrom() {
-    return this.scrollview.sequenceFrom.apply(this.scrollview, arguments);
-};
+ScrollContainer.prototype.sequenceFrom = function sequenceFrom() {};
 
 /**
  * Returns the width and the height of the ScrollContainer instance.
@@ -17192,9 +13591,7 @@ ScrollContainer.prototype.sequenceFrom = function sequenceFrom() {
  * @method getSize
  * @return {Array} A two value array of the ScrollContainer instance's current width and height (in that order).
  */
-ScrollContainer.prototype.getSize = function getSize() {
-    return this.container.getSize.apply(this.container, arguments);
-};
+ScrollContainer.prototype.getSize = function getSize() {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -17232,37 +13629,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @param {Number} [clipSize=undefined] The size of the area (in pixels) that Scroller will display content in.
  * @param {Number} [margin=undefined] The size of the area (in pixels) that Scroller will process renderables' associated calculations in.
  */
-function Scroller(options) {
-    this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this._optionsManager.setOptions(options);
-
-    this._node = null;
-    this._position = 0;
-
-    // used for shifting nodes
-    this._positionOffset = 0;
-
-    this._positionGetter = null;
-    this._outputFunction = null;
-    this._masterOutputFunction = null;
-    this.outputFrom();
-
-    this._onEdge = 0; // -1 for top, 1 for bottom
-
-    this.group = new Group();
-    this.group.add({render: _innerRender.bind(this)});
-
-    this._entityId = Entity.register(this);
-    this._size = [undefined, undefined];
-    this._contextSize = [undefined, undefined];
-
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-}
+function Scroller(options) {}
 
 Scroller.DEFAULT_OPTIONS = {
     direction: Utility.Direction.Y,
@@ -17273,61 +13640,32 @@ Scroller.DEFAULT_OPTIONS = {
 
 var EDGE_TOLERANCE = 0; //slop for detecting passing the edge
 
-function _sizeForDir(size) {
-    if (!size) size = this._contextSize;
-    var dimension = this.options.direction;
-    return (size[dimension] === undefined) ? this._contextSize[dimension] : size[dimension];
-}
+function _sizeForDir(size) {}
 
-function _output(node, offset, target) {
-    var size = node.getSize ? node.getSize() : this._contextSize;
-    var transform = this._outputFunction(offset);
-    target.push({transform: transform, target: node.render()});
-    return _sizeForDir.call(this, size);
-}
+function _output(node, offset, target) {}
 
-function _getClipSize() {
-    if (this.options.clipSize !== undefined) return this.options.clipSize;
-    if (this._contextSize[this.options.direction] > this.getCumulativeSize()[this.options.direction]) {
-        return _sizeForDir.call(this, this.getCumulativeSize());
-    } else {
-        return _sizeForDir.call(this, this._contextSize);
-    }
-}
+function _getClipSize() {}
 
 /**
 * Returns the cumulative size of the renderables in the view sequence
 * @method getCumulativeSize
 * @return {array} a two value array of the view sequence's cumulative size up to the index.
 */
-Scroller.prototype.getCumulativeSize = function(index) {
-    if (index === undefined) index = this._node._.cumulativeSizes.length - 1;
-    return this._node._.getSize(index);
-};
+Scroller.prototype.getCumulativeSize = function(index) {};
 
 /**
  * Patches the Scroller instance's options with the passed-in ones.
  * @method setOptions
  * @param {Options} options An object of configurable options for the Scroller instance.
  */
-Scroller.prototype.setOptions = function setOptions(options) {
-    if (options.groupScroll !== this.options.groupScroll) {
-        if (options.groupScroll)
-            this.group.pipe(this._eventOutput);
-        else
-            this.group.unpipe(this._eventOutput);
-    }
-    this._optionsManager.setOptions(options);
-};
+Scroller.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Tells you if the Scroller instance is on an edge.
  * @method onEdge
  * @return {Boolean} Whether the Scroller instance is on an edge or not.
  */
-Scroller.prototype.onEdge = function onEdge() {
-    return this._onEdge;
-};
+Scroller.prototype.onEdge = function onEdge() {};
 
 /**
  * Allows you to overwrite the way Scroller lays out it's renderables. Scroller will
@@ -17338,18 +13676,7 @@ Scroller.prototype.onEdge = function onEdge() {
  * @param {Function} fn A function that takes an offset and returns a transform.
  * @param {Function} [masterFn]
  */
-Scroller.prototype.outputFrom = function outputFrom(fn, masterFn) {
-    if (!fn) {
-        fn = function(offset) {
-            return (this.options.direction === Utility.Direction.X) ? Transform.translate(offset, 0) : Transform.translate(0, offset);
-        }.bind(this);
-        if (!masterFn) masterFn = fn;
-    }
-    this._outputFunction = fn;
-    this._masterOutputFunction = masterFn ? masterFn : function(offset) {
-        return Transform.inverse(fn(-offset));
-    };
-};
+Scroller.prototype.outputFrom = function outputFrom(fn, masterFn) {};
 
 /**
  * The Scroller instance's method for reading from an external position. Scroller uses
@@ -17358,15 +13685,7 @@ Scroller.prototype.outputFrom = function outputFrom(fn, masterFn) {
  * @param {Getter} position Can be either a function that returns a position,
  * or an object with a get method that returns a position.
  */
-Scroller.prototype.positionFrom = function positionFrom(position) {
-    if (position instanceof Function) this._positionGetter = position;
-    else if (position && position.get) this._positionGetter = position.get.bind(position);
-    else {
-        this._positionGetter = null;
-        this._position = position;
-    }
-    if (this._positionGetter) this._position = this._positionGetter.call(this);
-};
+Scroller.prototype.positionFrom = function positionFrom(position) {};
 
 /**
  * Sets the collection of renderables under the Scroller instance's control.
@@ -17375,11 +13694,7 @@ Scroller.prototype.positionFrom = function positionFrom(position) {
  * @param node {Array|ViewSequence} Either an array of renderables or a Famous viewSequence.
  * @chainable
  */
-Scroller.prototype.sequenceFrom = function sequenceFrom(node) {
-    if (node instanceof Array) node = new ViewSequence({array: node});
-    this._node = node;
-    this._positionOffset = 0;
-};
+Scroller.prototype.sequenceFrom = function sequenceFrom(node) {};
 
 /**
  * Returns the width and the height of the Scroller instance.
@@ -17387,9 +13702,7 @@ Scroller.prototype.sequenceFrom = function sequenceFrom(node) {
  * @method getSize
  * @return {Array} A two value array of the Scroller instance's current width and height (in that order).
  */
-Scroller.prototype.getSize = function getSize(actual) {
-    return actual ? this._contextSize : this._size;
-};
+Scroller.prototype.getSize = function getSize(actual) {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -17398,11 +13711,7 @@ Scroller.prototype.getSize = function getSize(actual) {
  * @method render
  * @return {number} Render spec for this component
  */
-Scroller.prototype.render = function render() {
-    if (!this._node) return null;
-    if (this._positionGetter) this._position = this._positionGetter.call(this);
-    return this._entityId;
-};
+Scroller.prototype.render = function render() {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -17413,108 +13722,9 @@ Scroller.prototype.render = function render() {
  * @method commit
  * @param {Context} context commit context
  */
-Scroller.prototype.commit = function commit(context) {
-    var transform = context.transform;
-    var opacity = context.opacity;
-    var origin = context.origin;
-    var size = context.size;
+Scroller.prototype.commit = function commit(context) {};
 
-    // reset edge detection on size change
-    if (!this.options.clipSize && (size[0] !== this._contextSize[0] || size[1] !== this._contextSize[1])) {
-        this._onEdge = 0;
-        this._contextSize[0] = size[0];
-        this._contextSize[1] = size[1];
-
-        if (this.options.direction === Utility.Direction.X) {
-            this._size[0] = _getClipSize.call(this);
-            this._size[1] = undefined;
-        }
-        else {
-            this._size[0] = undefined;
-            this._size[1] = _getClipSize.call(this);
-        }
-    }
-
-    var scrollTransform = this._masterOutputFunction(-this._position);
-
-    return {
-        transform: Transform.multiply(transform, scrollTransform),
-        size: size,
-        opacity: opacity,
-        origin: origin,
-        target: this.group.render()
-    };
-};
-
-function _innerRender() {
-    var size = null;
-    var position = this._position;
-    var result = [];
-
-    var offset = -this._positionOffset;
-    var clipSize = _getClipSize.call(this);
-    var currNode = this._node;
-    while (currNode && offset - position < clipSize + this.options.margin) {
-        offset += _output.call(this, currNode, offset, result);
-        currNode = currNode.getNext ? currNode.getNext() : null;
-    }
-
-    var sizeNode = this._node;
-    var nodesSize = _sizeForDir.call(this, sizeNode.getSize());
-    if (offset < clipSize) {
-        while (sizeNode && nodesSize < clipSize) {
-            sizeNode = sizeNode.getPrevious();
-            if (sizeNode) nodesSize += _sizeForDir.call(this, sizeNode.getSize());
-        }
-        sizeNode = this._node;
-        while (sizeNode && nodesSize < clipSize) {
-            sizeNode = sizeNode.getNext();
-            if (sizeNode) nodesSize += _sizeForDir.call(this, sizeNode.getSize());
-        }
-    }
-
-    if (!currNode && offset - position < clipSize - EDGE_TOLERANCE) {
-        if (this._onEdge !== 1){
-            this._onEdge = 1;
-            this._eventOutput.emit('onEdge', {
-                position: offset - clipSize
-            });
-        }
-    }
-    else if (!this._node.getPrevious() && position < -EDGE_TOLERANCE) {
-        if (this._onEdge !== -1) {
-            this._onEdge = -1;
-            this._eventOutput.emit('onEdge', {
-                position: 0
-            });
-        }
-    }
-    else {
-        if (this._onEdge !== 0){
-            this._onEdge = 0;
-            this._eventOutput.emit('offEdge');
-        }
-    }
-
-    // backwards
-    currNode = (this._node && this._node.getPrevious) ? this._node.getPrevious() : null;
-    offset = -this._positionOffset;
-    if (currNode) {
-        size = currNode.getSize ? currNode.getSize() : this._contextSize;
-        offset -= _sizeForDir.call(this, size);
-    }
-
-    while (currNode && ((offset - position) > -(clipSize + this.options.margin))) {
-        _output.call(this, currNode, offset, result);
-        currNode = currNode.getPrevious ? currNode.getPrevious() : null;
-        if (currNode) {
-            size = currNode.getSize ? currNode.getSize() : this._contextSize;
-            offset -= _sizeForDir.call(this, size);
-        }
-    }
-
-    return result;
-}
+function _innerRender() {}
 
 module.exports = Scroller;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Group":8,"../core/OptionsManager":10,"../core/Transform":15,"../core/ViewSequence":17,"../utilities/Utility":95}],109:[function(_dereq_,module,exports){
@@ -17545,18 +13755,10 @@ GenericSync.register({scroll : ScrollSync, touch : TouchSync});
 var TOLERANCE = 0.5;
 
 /** @enum */
-var SpringStates = {
-    NONE: 0,
-    EDGE: 1,
-    PAGE: 2
-};
+var SpringStates = {};
 
 /** @enum */
-var EdgeStates = {
-    TOP:   -1,
-    NONE:   0,
-    BOTTOM: 1
-};
+var EdgeStates = {};
 
 /**
  * Scrollview will lay out a collection of renderables sequentially in the specified direction, and will
@@ -17591,76 +13793,7 @@ var EdgeStates = {
  * @param {Number} [pageSwitchSpeed=1] The threshold for momentum-based velocity pagination.
  * @param {Number} [speedLimit=10] The highest scrolling speed you can reach.
  */
-function Scrollview(options) {
-    // patch options with defaults
-    this.options = Object.create(Scrollview.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-
-    // create sub-components
-    this._scroller = new Scroller(this.options);
-
-    this.sync = new GenericSync(
-        ['scroll', 'touch'],
-        {
-            direction : this.options.direction,
-            scale : this.options.syncScale,
-            rails: this.options.rails,
-            preventDefault: this.options.preventDefault !== undefined
-                ? this.options.preventDefault
-                : this.options.direction !== Utility.Direction.Y
-        }
-    );
-
-    this._physicsEngine = new PhysicsEngine();
-    this._particle = new Particle();
-    this._physicsEngine.addBody(this._particle);
-
-    this.spring = new Spring({
-        anchor: [0, 0, 0],
-        period: this.options.edgePeriod,
-        dampingRatio: this.options.edgeDamp
-    });
-    this.drag = new Drag({
-        forceFunction: Drag.FORCE_FUNCTIONS.QUADRATIC,
-        strength: this.options.drag
-    });
-    this.friction = new Drag({
-        forceFunction: Drag.FORCE_FUNCTIONS.LINEAR,
-        strength: this.options.friction
-    });
-
-    // state
-    this._node = null;
-    this._touchCount = 0;
-    this._springState = SpringStates.NONE;
-    this._onEdge = EdgeStates.NONE;
-    this._pageSpringPosition = 0;
-    this._edgeSpringPosition = 0;
-    this._touchVelocity = 0;
-    this._earlyEnd = false;
-    this._needsPaginationCheck = false;
-    this._displacement = 0;
-    this._totalShift = 0;
-    this._cachedIndex = 0;
-
-    // subcomponent logic
-    this._scroller.positionFrom(this.getPosition.bind(this));
-
-    // eventing
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-
-    this._eventInput.pipe(this.sync);
-    this.sync.pipe(this._eventInput);
-
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    _bindEvents.call(this);
-
-    // override default options with passed-in custom options
-    if (options) this.setOptions(options);
-}
+function Scrollview(options) {}
 
 Scrollview.DEFAULT_OPTIONS = {
     direction: Utility.Direction.Y,
@@ -17681,249 +13814,29 @@ Scrollview.DEFAULT_OPTIONS = {
     syncScale: 1
 };
 
-function _handleStart(event) {
-    this._touchCount = event.count;
-    if (event.count === undefined) this._touchCount = 1;
+function _handleStart(event) {}
 
-    _detachAgents.call(this);
+function _handleMove(event) {}
 
-    this.setVelocity(0);
-    this._touchVelocity = 0;
-    this._earlyEnd = false;
-}
+function _handleEnd(event) {}
 
-function _handleMove(event) {
-    var velocity = -event.velocity;
-    var delta = -event.delta;
+function _bindEvents() {}
 
-    if (this._onEdge !== EdgeStates.NONE && event.slip) {
-        if ((velocity < 0 && this._onEdge === EdgeStates.TOP) || (velocity > 0 && this._onEdge === EdgeStates.BOTTOM)) {
-            if (!this._earlyEnd) {
-                _handleEnd.call(this, event);
-                this._earlyEnd = true;
-            }
-        }
-        else if (this._earlyEnd && (Math.abs(velocity) > Math.abs(this.getVelocity()))) {
-            _handleStart.call(this, event);
-        }
-    }
-    if (this._earlyEnd) return;
-    this._touchVelocity = velocity;
+function _attachAgents() {}
 
-    if (event.slip) {
-        var speedLimit = this.options.speedLimit;
-        if (velocity < -speedLimit) velocity = -speedLimit;
-        else if (velocity > speedLimit) velocity = speedLimit;
+function _detachAgents() {}
 
-        this.setVelocity(velocity);
+function _nodeSizeForDirection(node) {}
 
-        var deltaLimit = speedLimit * 16;
-        if (delta > deltaLimit) delta = deltaLimit;
-        else if (delta < -deltaLimit) delta = -deltaLimit;
-    }
+function _handleEdge(edge) {}
 
-    this.setPosition(this.getPosition() + delta);
-    this._displacement += delta;
+function _handlePagination() {}
 
-    if (this._springState === SpringStates.NONE) _normalizeState.call(this);
-}
+function _setSpring(position, springState) {}
 
-function _handleEnd(event) {
-    this._touchCount = event.count || 0;
-    if (!this._touchCount) {
-        _detachAgents.call(this);
-        if (this._onEdge !== EdgeStates.NONE) _setSpring.call(this, this._edgeSpringPosition, SpringStates.EDGE);
-        _attachAgents.call(this);
-        var velocity = -event.velocity;
-        var speedLimit = this.options.speedLimit;
-        if (event.slip) speedLimit *= this.options.edgeGrip;
-        if (velocity < -speedLimit) velocity = -speedLimit;
-        else if (velocity > speedLimit) velocity = speedLimit;
-        this.setVelocity(velocity);
-        this._touchVelocity = 0;
-        this._needsPaginationCheck = true;
-    }
-}
+function _normalizeState() {}
 
-function _bindEvents() {
-    this._eventInput.bindThis(this);
-    this._eventInput.on('start', _handleStart);
-    this._eventInput.on('update', _handleMove);
-    this._eventInput.on('end', _handleEnd);
-
-    this._eventInput.on('resize', function() {
-        this._node._.calculateSize();
-    }.bind(this));
-
-    this._scroller.on('onEdge', function(data) {
-        this._edgeSpringPosition = data.position;
-        _handleEdge.call(this, this._scroller.onEdge());
-        this._eventOutput.emit('onEdge');
-    }.bind(this));
-
-    this._scroller.on('offEdge', function() {
-        this.sync.setOptions({scale: this.options.syncScale});
-        this._onEdge = this._scroller.onEdge();
-        this._eventOutput.emit('offEdge');
-    }.bind(this));
-
-    this._particle.on('update', function(particle) {
-        if (this._springState === SpringStates.NONE) _normalizeState.call(this);
-        this._displacement = particle.position.x - this._totalShift;
-    }.bind(this));
-
-    this._particle.on('end', function() {
-        if (!this.options.paginated || (this.options.paginated && this._springState !== SpringStates.NONE))
-            this._eventOutput.emit('settle');
-    }.bind(this));
-}
-
-function _attachAgents() {
-    if (this._springState) this._physicsEngine.attach([this.spring], this._particle);
-    else this._physicsEngine.attach([this.drag, this.friction], this._particle);
-}
-
-function _detachAgents() {
-    this._springState = SpringStates.NONE;
-    this._physicsEngine.detachAll();
-}
-
-function _nodeSizeForDirection(node) {
-    var direction = this.options.direction;
-    var nodeSize = node.getSize();
-    return (!nodeSize) ? this._scroller.getSize()[direction] : nodeSize[direction];
-}
-
-function _handleEdge(edge) {
-    this.sync.setOptions({scale: this.options.edgeGrip});
-    this._onEdge = edge;
-
-    if (!this._touchCount && this._springState !== SpringStates.EDGE) {
-        _setSpring.call(this, this._edgeSpringPosition, SpringStates.EDGE);
-    }
-
-    if (this._springState && Math.abs(this.getVelocity()) < 0.001) {
-        // reset agents, detaching the spring
-        _detachAgents.call(this);
-        _attachAgents.call(this);
-    }
-}
-
-function _handlePagination() {
-    if (this._touchCount) return;
-    if (this._springState === SpringStates.EDGE) return;
-
-    var velocity = this.getVelocity();
-    if (Math.abs(velocity) >= this.options.pageStopSpeed) return;
-
-    var position = this.getPosition();
-    var velocitySwitch = Math.abs(velocity) > this.options.pageSwitchSpeed;
-
-    // parameters to determine when to switch
-    var nodeSize = _nodeSizeForDirection.call(this, this._node);
-    var positionNext = position > 0.5 * nodeSize;
-    var positionPrev = position < 0.5 * nodeSize;
-
-    var velocityNext = velocity > 0;
-    var velocityPrev = velocity < 0;
-
-    this._needsPaginationCheck = false;
-
-    if ((positionNext && !velocitySwitch) || (velocitySwitch && velocityNext)) {
-        this.goToNextPage();
-    }
-    else if (velocitySwitch && velocityPrev) {
-        this.goToPreviousPage();
-    }
-    else _setSpring.call(this, 0, SpringStates.PAGE);
-}
-
-function _setSpring(position, springState) {
-    var springOptions;
-    if (springState === SpringStates.EDGE) {
-        this._edgeSpringPosition = position;
-        springOptions = {
-            anchor: [this._edgeSpringPosition, 0, 0],
-            period: this.options.edgePeriod,
-            dampingRatio: this.options.edgeDamp
-        };
-    }
-    else if (springState === SpringStates.PAGE) {
-        this._pageSpringPosition = position;
-        springOptions = {
-            anchor: [this._pageSpringPosition, 0, 0],
-            period: this.options.pagePeriod,
-            dampingRatio: this.options.pageDamp
-        };
-    }
-
-    this.spring.setOptions(springOptions);
-    if (springState && !this._springState) {
-        _detachAgents.call(this);
-        this._springState = springState;
-        _attachAgents.call(this);
-    }
-    this._springState = springState;
-}
-
-function _normalizeState() {
-    var offset = 0;
-
-    var position = this.getPosition();
-    position += (position < 0 ? -0.5 : 0.5) >> 0;
-
-    var nodeSize = _nodeSizeForDirection.call(this, this._node);
-    var nextNode = this._node.getNext();
-
-    while (offset + position >= nodeSize && nextNode) {
-        offset -= nodeSize;
-        this._scroller.sequenceFrom(nextNode);
-        this._node = nextNode;
-        nextNode = this._node.getNext();
-        nodeSize = _nodeSizeForDirection.call(this, this._node);
-    }
-
-    var previousNode = this._node.getPrevious();
-    var previousNodeSize;
-
-    while (offset + position <= 0 && previousNode) {
-        previousNodeSize = _nodeSizeForDirection.call(this, previousNode);
-        this._scroller.sequenceFrom(previousNode);
-        this._node = previousNode;
-        offset += previousNodeSize;
-        previousNode = this._node.getPrevious();
-    }
-
-    if (offset) _shiftOrigin.call(this, offset);
-
-    if (this._node) {
-        if (this._node.index !== this._cachedIndex) {
-            if (this.getPosition() < 0.5 * nodeSize) {
-                this._cachedIndex = this._node.index;
-                this._eventOutput.emit('pageChange', {direction: -1, index: this._cachedIndex});
-            }
-        } else {
-            if (this.getPosition() > 0.5 * nodeSize) {
-                this._cachedIndex = this._node.index + 1;
-                this._eventOutput.emit('pageChange', {direction: 1, index: this._cachedIndex});
-            }
-        }
-    }
-}
-
-function _shiftOrigin(amount) {
-    this._edgeSpringPosition += amount;
-    this._pageSpringPosition += amount;
-    this.setPosition(this.getPosition() + amount);
-    this._totalShift += amount;
-
-    if (this._springState === SpringStates.EDGE) {
-        this.spring.setOptions({anchor: [this._edgeSpringPosition, 0, 0]});
-    }
-    else if (this._springState === SpringStates.PAGE) {
-        this.spring.setOptions({anchor: [this._pageSpringPosition, 0, 0]});
-    }
-}
+function _shiftOrigin(amount) {}
 
 /**
  * Returns the index of the first visible renderable
@@ -17931,9 +13844,7 @@ function _shiftOrigin(amount) {
  * @method getCurrentIndex
  * @return {Number} The current index of the ViewSequence
  */
-Scrollview.prototype.getCurrentIndex = function getCurrentIndex() {
-    return this._node.index;
-};
+Scrollview.prototype.getCurrentIndex = function getCurrentIndex() {};
 
 /**
  * goToPreviousPage paginates your Scrollview instance backwards by one item.
@@ -17941,26 +13852,7 @@ Scrollview.prototype.getCurrentIndex = function getCurrentIndex() {
  * @method goToPreviousPage
  * @return {ViewSequence} The previous node.
  */
-Scrollview.prototype.goToPreviousPage = function goToPreviousPage() {
-    if (!this._node || this._onEdge === EdgeStates.TOP) return null;
-
-    // if moving back to the current node
-    if (this.getPosition() > 1 && this._springState === SpringStates.NONE) {
-        _setSpring.call(this, 0, SpringStates.PAGE);
-        return this._node;
-    }
-
-    // if moving to the previous node
-    var previousNode = this._node.getPrevious();
-    if (previousNode) {
-        var previousNodeSize = _nodeSizeForDirection.call(this, previousNode);
-        this._scroller.sequenceFrom(previousNode);
-        this._node = previousNode;
-        _shiftOrigin.call(this, previousNodeSize);
-        _setSpring.call(this, 0, SpringStates.PAGE);
-    }
-    return previousNode;
-};
+Scrollview.prototype.goToPreviousPage = function goToPreviousPage() {};
 
 /**
  * goToNextPage paginates your Scrollview instance forwards by one item.
@@ -17968,42 +13860,16 @@ Scrollview.prototype.goToPreviousPage = function goToPreviousPage() {
  * @method goToNextPage
  * @return {ViewSequence} The next node.
  */
-Scrollview.prototype.goToNextPage = function goToNextPage() {
-    if (!this._node || this._onEdge === EdgeStates.BOTTOM) return null;
-    var nextNode = this._node.getNext();
-    if (nextNode) {
-        var currentNodeSize = _nodeSizeForDirection.call(this, this._node);
-        this._scroller.sequenceFrom(nextNode);
-        this._node = nextNode;
-        _shiftOrigin.call(this, -currentNodeSize);
-        _setSpring.call(this, 0, SpringStates.PAGE);
-    }
-    return nextNode;
-};
+Scrollview.prototype.goToNextPage = function goToNextPage() {};
 
 /**
  * Paginates the Scrollview to an absolute page index.
  *
  * @method goToPage
  */
-Scrollview.prototype.goToPage = function goToPage(index) {
-    var currentIndex = this.getCurrentIndex();
-    var i;
+Scrollview.prototype.goToPage = function goToPage(index) {};
 
-    if (currentIndex > index) {
-        for (i = 0; i < currentIndex - index; i++)
-            this.goToPreviousPage();
-    }
-
-    if (currentIndex < index) {
-        for (i = 0; i < index - currentIndex; i++)
-            this.goToNextPage();
-    }
-};
-
-Scrollview.prototype.outputFrom = function outputFrom() {
-    return this._scroller.outputFrom.apply(this._scroller, arguments);
-};
+Scrollview.prototype.outputFrom = function outputFrom() {};
 
 /**
  * Returns the position associated with the Scrollview instance's current node
@@ -18016,9 +13882,7 @@ Scrollview.prototype.outputFrom = function outputFrom() {
  * @return {number} The position of either the specified node, or the Scrollview's current Node,
  * in pixels translated.
  */
-Scrollview.prototype.getPosition = function getPosition() {
-    return this._particle.getPosition1D();
-};
+Scrollview.prototype.getPosition = function getPosition() {};
 
 /**
  * Returns the absolute position associated with the Scrollview instance
@@ -18027,9 +13891,7 @@ Scrollview.prototype.getPosition = function getPosition() {
  * @return {number} The position of the Scrollview's current Node,
  * in pixels translated.
  */
-Scrollview.prototype.getAbsolutePosition = function getAbsolutePosition() {
-    return this._scroller.getCumulativeSize(this.getCurrentIndex())[this.options.direction] + this.getPosition();
-};
+Scrollview.prototype.getAbsolutePosition = function getAbsolutePosition() {};
 
 /**
  * Returns the offset associated with the Scrollview instance's current node
@@ -18050,9 +13912,7 @@ Scrollview.prototype.getOffset = Scrollview.prototype.getPosition;
  * @method setPosition
  * @param {number} x The amount of pixels you want your scrollview to progress by.
  */
-Scrollview.prototype.setPosition = function setPosition(x) {
-    this._particle.setPosition1D(x);
-};
+Scrollview.prototype.setPosition = function setPosition(x) {};
 
 /**
  * Sets the offset of the physics particle that controls Scrollview instance's "position"
@@ -18069,9 +13929,7 @@ Scrollview.prototype.setOffset = Scrollview.prototype.setPosition;
  * @return {Number} The velocity.
  */
 
-Scrollview.prototype.getVelocity = function getVelocity() {
-    return this._touchCount ? this._touchVelocity : this._particle.getVelocity1D();
-};
+Scrollview.prototype.getVelocity = function getVelocity() {};
 
 /**
  * Sets the Scrollview instance's velocity. Until affected by input or another call of setVelocity
@@ -18080,9 +13938,7 @@ Scrollview.prototype.getVelocity = function getVelocity() {
  * @method setVelocity
  * @param {number} v The magnitude of the velocity.
  */
-Scrollview.prototype.setVelocity = function setVelocity(v) {
-    this._particle.setVelocity1D(v);
-};
+Scrollview.prototype.setVelocity = function setVelocity(v) {};
 
 /**
  * Patches the Scrollview instance's options with the passed-in ones.
@@ -18090,48 +13946,7 @@ Scrollview.prototype.setVelocity = function setVelocity(v) {
  * @method setOptions
  * @param {Options} options An object of configurable options for the Scrollview instance.
  */
-Scrollview.prototype.setOptions = function setOptions(options) {
-    // preprocess custom options
-    if (options.direction !== undefined) {
-        if (options.direction === 'x') options.direction = Utility.Direction.X;
-        else if (options.direction === 'y') options.direction = Utility.Direction.Y;
-    }
-
-    if (options.groupScroll !== this.options.groupScroll) {
-        if (options.groupScroll)
-            this.subscribe(this._scroller);
-        else
-            this.unsubscribe(this._scroller);
-    }
-
-    // patch custom options
-    this._optionsManager.setOptions(options);
-
-    // propagate options to sub-components
-
-    // scroller sub-component
-    this._scroller.setOptions(options);
-
-    // physics sub-components
-    if (options.drag !== undefined) this.drag.setOptions({strength: this.options.drag});
-    if (options.friction !== undefined) this.friction.setOptions({strength: this.options.friction});
-    if (options.edgePeriod !== undefined || options.edgeDamp !== undefined) {
-        this.spring.setOptions({
-            period: this.options.edgePeriod,
-            dampingRatio: this.options.edgeDamp
-        });
-    }
-
-    // sync sub-component
-    if (options.rails || options.direction !== undefined || options.syncScale !== undefined || options.preventDefault) {
-        this.sync.setOptions({
-            rails: this.options.rails,
-            direction: (this.options.direction === Utility.Direction.X) ? GenericSync.DIRECTION_X : GenericSync.DIRECTION_Y,
-            scale: this.options.syncScale,
-            preventDefault: this.options.preventDefault
-        });
-    }
-};
+Scrollview.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Sets the collection of renderables under the Scrollview instance's control, by
@@ -18142,11 +13957,7 @@ Scrollview.prototype.setOptions = function setOptions(options) {
  * @method sequenceFrom
  * @param {Array|ViewSequence} node Either an array of renderables or a Famous viewSequence.
  */
-Scrollview.prototype.sequenceFrom = function sequenceFrom(node) {
-    if (node instanceof Array) node = new ViewSequence({array: node, trackSize: true});
-    this._node = node;
-    return this._scroller.sequenceFrom(node);
-};
+Scrollview.prototype.sequenceFrom = function sequenceFrom(node) {};
 
 /**
  * Returns the width and the height of the Scrollview instance.
@@ -18154,9 +13965,7 @@ Scrollview.prototype.sequenceFrom = function sequenceFrom(node) {
  * @method getSize
  * @return {Array} A two value array of the Scrollview instance's current width and height (in that order).
  */
-Scrollview.prototype.getSize = function getSize() {
-    return this._scroller.getSize.apply(this._scroller, arguments);
-};
+Scrollview.prototype.getSize = function getSize() {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -18165,11 +13974,7 @@ Scrollview.prototype.getSize = function getSize() {
  * @method render
  * @return {number} Render spec for this component
  */
-Scrollview.prototype.render = function render() {
-    if (this.options.paginated && this._needsPaginationCheck) _handlePagination.call(this);
-
-    return this._scroller.render();
-};
+Scrollview.prototype.render = function render() {};
 
 module.exports = Scrollview;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"../core/ViewSequence":17,"../inputs/GenericSync":27,"../inputs/ScrollSync":32,"../inputs/TouchSync":33,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/forces/Drag":63,"../physics/forces/Spring":68,"../utilities/Utility":95,"../views/Scroller":108}],110:[function(_dereq_,module,exports){
@@ -18198,33 +14003,11 @@ var Utility = _dereq_('../utilities/Utility');
  * (x) or vertically (y). Utility's direction is essentially either zero (X) or one (Y), so feel free
  * to just use integers as well.
  */
-function SequentialLayout(options) {
-    this._items = null;
-    this._size = null;
-    this._outputFunction = SequentialLayout.DEFAULT_OUTPUT_FUNCTION;
+function SequentialLayout(options) {}
 
-    this.options = Utility.clone(this.constructor.DEFAULT_OPTIONS || SequentialLayout.DEFAULT_OPTIONS);
-    this.optionsManager = new OptionsManager(this.options);
+SequentialLayout.DEFAULT_OPTIONS = {};
 
-    this.id = Entity.register(this);
-    this.cachedSize = [undefined, undefined];
-
-    if (options) this.setOptions(options);
-}
-
-SequentialLayout.DEFAULT_OPTIONS = {
-    direction: Utility.Direction.Y,
-    itemSpacing: 0
-};
-
-SequentialLayout.DEFAULT_OUTPUT_FUNCTION = function DEFAULT_OUTPUT_FUNCTION(input, offset, index) {
-    var transform = (this.options.direction === Utility.Direction.X) ? Transform.translate(offset, 0) : Transform.translate(0, offset);
-    return {
-        size: this.cachedSize,
-        transform: transform,
-        target: input.render()
-    };
-};
+SequentialLayout.DEFAULT_OUTPUT_FUNCTION = function DEFAULT_OUTPUT_FUNCTION(input, offset, index) {};
 
 /**
  * Returns the width and the height of the SequentialLayout instance.
@@ -18232,10 +14015,7 @@ SequentialLayout.DEFAULT_OUTPUT_FUNCTION = function DEFAULT_OUTPUT_FUNCTION(inpu
  * @method getSize
  * @return {Array} A two value array of the SequentialLayout instance's current width and height (in that order).
  */
-SequentialLayout.prototype.getSize = function getSize() {
-    if (!this._size) this.render(); // hack size in
-    return this._size;
-};
+SequentialLayout.prototype.getSize = function getSize() {};
 
 /**
  * Sets the collection of renderables under the SequentialLayout instance's control.
@@ -18244,11 +14024,7 @@ SequentialLayout.prototype.getSize = function getSize() {
  * @param {Array|ViewSequence} items Either an array of renderables or a Famous viewSequence.
  * @chainable
  */
-SequentialLayout.prototype.sequenceFrom = function sequenceFrom(items) {
-    if (items instanceof Array) items = new ViewSequence(items);
-    this._items = items;
-    return this;
-};
+SequentialLayout.prototype.sequenceFrom = function sequenceFrom(items) {};
 
 /**
  * Patches the SequentialLayout instance's options with the passed-in ones.
@@ -18257,10 +14033,7 @@ SequentialLayout.prototype.sequenceFrom = function sequenceFrom(items) {
  * @param {Options} options An object of configurable options for the SequentialLayout instance.
  * @chainable
  */
-SequentialLayout.prototype.setOptions = function setOptions(options) {
-    this.optionsManager.setOptions.apply(this.optionsManager, arguments);
-    return this;
-};
+SequentialLayout.prototype.setOptions = function setOptions(options) {};
 
 /**
  * setOutputFunction is used to apply a user-defined output transform on each processed renderable.
@@ -18271,10 +14044,7 @@ SequentialLayout.prototype.setOptions = function setOptions(options) {
  * instance.
  * @chainable
  */
-SequentialLayout.prototype.setOutputFunction = function setOutputFunction(outputFunction) {
-    this._outputFunction = outputFunction;
-    return this;
-};
+SequentialLayout.prototype.setOutputFunction = function setOutputFunction(outputFunction) {};
 
 /**
  * Return the id of the component
@@ -18283,9 +14053,7 @@ SequentialLayout.prototype.setOutputFunction = function setOutputFunction(output
  * @method render
  * @return {number} id of the SequentialLayout
  */
-SequentialLayout.prototype.render = function render() {
-    return this.id;
-};
+SequentialLayout.prototype.render = function render() {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -18295,48 +14063,7 @@ SequentialLayout.prototype.render = function render() {
  * @param {Object} parentSpec parent render spec
  * @return {Object} Render spec for this component
  */
-SequentialLayout.prototype.commit = function commit(parentSpec) {
-    var length             = 0;
-    var secondaryDirection = this.options.direction ^ 1;
-    var currentNode        = this._items;
-    var item               = null;
-    var itemSize           = [];
-    var output             = {};
-    var result             = [];
-    var i                  = 0;
-
-    this._size = [0, 0];
-    this.cachedSize = parentSpec.size;
-
-    while (currentNode) {
-        item = currentNode.get();
-        if (!item) break;
-
-        if (item.getSize) itemSize = item.getSize();
-
-        output = this._outputFunction.call(this, item, length, i++);
-        result.push(output);
-
-        if (itemSize) {
-            if (itemSize[this.options.direction]) length += itemSize[this.options.direction];
-            if (itemSize[secondaryDirection] > this._size[secondaryDirection]) this._size[secondaryDirection] = itemSize[secondaryDirection];
-            if (itemSize[secondaryDirection] === 0) this._size[secondaryDirection] = undefined;
-        }
-
-        currentNode = currentNode.getNext();
-
-        if (this.options.itemSpacing && currentNode) length += this.options.itemSpacing;
-    }
-
-    this._size[this.options.direction] = length;
-
-    return {
-        transform: parentSpec.transform,
-        origin: parentSpec.origin,
-        size: this.getSize(),
-        target: result
-    };
-};
+SequentialLayout.prototype.commit = function commit(parentSpec) {};
 
 module.exports = SequentialLayout;
 },{"../core/Entity":5,"../core/OptionsManager":10,"../core/Transform":15,"../core/ViewSequence":17,"../utilities/Utility":95}],111:[function(_dereq_,module,exports){
@@ -18390,89 +14117,7 @@ var View = _dereq_('../core/View');
  * @param {Array.string} [options.classes=(more)] CSS Classes attached to the More surface.
  * @param {String} [options.moreContent=(&#x271a;)] Content of the more button.
  */
-function NavigationBar(options) {
-    View.apply(this, arguments);
-
-    this.title = new Surface({
-        classes: this.options.classes,
-        content: this.options.content
-    });
-
-    this.back = new Surface({
-        size: [this.options.size[1], this.options.size[1]],
-        classes: this.options.classes,
-        content: this.options.backContent
-    });
-    this.back.on('click', function() {
-        this._eventOutput.emit('back', {});
-    }.bind(this));
-
-    this.more = new Surface({
-        size: [this.options.size[1], this.options.size[1]],
-        classes: this.options.classes,
-        content: this.options.moreContent
-    });
-    this.more.on('click', function() {
-        this._eventOutput.emit('more', {});
-    }.bind(this));
-
-    this.layout = new Scene({
-        id: 'master',
-        size: this.options.size,
-        target: [
-            {
-                transform: Transform.inFront,
-                origin: [0, 0.5],
-                align: [0, 0.5],
-                target: this.back
-            },
-            {
-                origin: [0.5, 0.5],
-                align: [0.5, 0.5],
-                target: this.title
-            },
-            {
-                transform: Transform.inFront,
-                origin: [1, 0.5],
-                align: [1, 0.5],
-                target: this.more
-            }
-        ]
-    });
-
-    this._add(this.layout);
-
-    this._optionsManager.on('change', function(event) {
-        var key = event.id;
-        var data = event.value;
-        if (key === 'size') {
-            this.layout.id.master.setSize(data);
-            this.title.setSize(data);
-            this.back.setSize([data[1], data[1]]);
-            this.more.setSize([data[1], data[1]]);
-        }
-        else if (key === 'backClasses') {
-            this.back.setOptions({classes: this.options.classes.concat(this.options.backClasses)});
-        }
-        else if (key === 'backContent') {
-            this.back.setContent(this.options.backContent);
-        }
-        else if (key === 'classes') {
-            this.title.setOptions({classes: this.options.classes});
-            this.back.setOptions({classes: this.options.classes.concat(this.options.backClasses)});
-            this.more.setOptions({classes: this.options.classes.concat(this.options.moreClasses)});
-        }
-        else if (key === 'content') {
-            this.setContent(this.options.content);
-        }
-        else if (key === 'moreClasses') {
-            this.more.setOptions({classes: this.options.classes.concat(this.options.moreClasses)});
-        }
-        else if (key === 'moreContent') {
-            this.more.setContent(this.options.content);
-        }
-    }.bind(this));
-}
+function NavigationBar(options) {}
 
 NavigationBar.prototype = Object.create(View.prototype);
 NavigationBar.prototype.constructor = NavigationBar;
@@ -18527,48 +14172,7 @@ GenericSync.register({
 });
 
 /** @constructor */
-function Slider(options) {
-    this.options = Object.create(Slider.DEFAULT_OPTIONS);
-    this.optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this.indicator = new CanvasSurface({
-        size: this.options.indicatorSize,
-        classes : ['slider-back']
-    });
-
-    this.label = new Surface({
-        size: this.options.labelSize,
-        content: this.options.label,
-        properties : {pointerEvents : 'none'},
-        classes: ['slider-label']
-    });
-
-    this.eventOutput = new EventHandler();
-    this.eventInput = new EventHandler();
-    EventHandler.setInputHandler(this, this.eventInput);
-    EventHandler.setOutputHandler(this, this.eventOutput);
-
-    var scale = (this.options.range[1] - this.options.range[0]) / this.options.indicatorSize[0];
-
-    this.sync = new GenericSync(
-        ['mouse', 'touch'],
-        {
-            scale : scale,
-            direction : GenericSync.DIRECTION_X
-        }
-    );
-
-    this.indicator.pipe(this.sync);
-    this.sync.pipe(this);
-
-    this.eventInput.on('update', function(data) {
-        this.set(data.position);
-    }.bind(this));
-
-    this._drawPos = 0;
-    _updateLabel.call(this);
-}
+function Slider(options) {}
 
 Slider.DEFAULT_OPTIONS = {
     size: [200, 60],
@@ -18604,35 +14208,7 @@ Slider.prototype.getSize = function getSize() {
     return this.options.size;
 };
 
-Slider.prototype.render = function render() {
-    var range = this.options.range;
-    var fillSize = Math.floor(((this.get() - range[0]) / (range[1] - range[0])) * this.options.indicatorSize[0]);
-
-    if (fillSize < this._drawPos) {
-        this.indicator.getContext('2d').clearRect(fillSize, 0, this._drawPos - fillSize + 1, this.options.indicatorSize[1]);
-    }
-    else if (fillSize > this._drawPos) {
-        var ctx = this.indicator.getContext('2d');
-        ctx.fillStyle = this.options.fillColor;
-        ctx.fillRect(this._drawPos-1, 0, fillSize - this._drawPos+1, this.options.indicatorSize[1]);
-    }
-    this._drawPos = fillSize;
-
-    return {
-        size: this.options.size,
-        target: [
-            {
-                origin: [0, 0],
-                target: this.indicator.render()
-            },
-            {
-                transform: Transform.translate(0, 0, 1),
-                origin: [0, 0],
-                target: this.label.render()
-            }
-        ]
-    };
-};
+Slider.prototype.render = function render() {};
 
 module.exports = Slider;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"../core/Surface":14,"../core/Transform":15,"../inputs/GenericSync":27,"../inputs/MouseSync":28,"../inputs/TouchSync":33,"../math/Utilities":40,"../surfaces/CanvasSurface":74}],114:[function(_dereq_,module,exports){
@@ -18660,19 +14236,7 @@ var ToggleButton = _dereq_('./ToggleButton');
  *
  * @param {object} options overrides of default options
  */
-function TabBar(options) {
-    View.apply(this, arguments);
-
-    this.layout = new GridLayout();
-    this.buttons = [];
-    this._buttonIds = {};
-    this._buttonCallbacks = {};
-
-    this.layout.sequenceFrom(this.buttons);
-    this._add(this.layout);
-
-    this._optionsManager.on('change', _updateOptions.bind(this));
-}
+function TabBar(options) {}
 
 TabBar.prototype = Object.create(View.prototype);
 TabBar.prototype.constructor = TabBar;
@@ -18694,24 +14258,7 @@ TabBar.DEFAULT_OPTIONS = {
  *
  * @param {object} data component options
  */
-function _updateOptions(data) {
-    var id = data.id;
-    var value = data.value;
-
-    if (id === 'direction') {
-        this.layout.setOptions({dimensions: _resolveGridDimensions.call(this.buttons.length, this.options.direction)});
-    }
-    else if (id === 'buttons') {
-        for (var i in this.buttons) {
-            this.buttons[i].setOptions(value);
-        }
-    }
-    else if (id === 'sections') {
-        for (var sectionId in this.options.sections) {
-            this.defineSection(sectionId, this.options.sections[sectionId]);
-        }
-    }
-}
+function _updateOptions(data) {}
 
 /**
  * Return an array of the proper dimensions for the tabs
@@ -18737,29 +14284,7 @@ function _resolveGridDimensions(count, direction) {
  * @param {string} id name of the button
  * @param {object} content data for the creation of a new ToggleButton
  */
-TabBar.prototype.defineSection = function defineSection(id, content) {
-    var button;
-    var i = this._buttonIds[id];
-
-    if (i === undefined) {
-        i = this.buttons.length;
-        this._buttonIds[id] = i;
-        var widget = this.options.widget;
-        button = new widget();
-        this.buttons[i] = button;
-        this.layout.setOptions({dimensions: _resolveGridDimensions(this.buttons.length, this.options.direction)});
-    }
-    else {
-        button = this.buttons[i];
-        button.unbind('select', this._buttonCallbacks[id]);
-    }
-
-    if (this.options.buttons) button.setOptions(this.options.buttons);
-    button.setOptions(content);
-
-    this._buttonCallbacks[id] = this.select.bind(this, id);
-    button.on('select', this._buttonCallbacks[id]);
-};
+TabBar.prototype.defineSection = function defineSection(id, content) {};
 
 /**
  * Select a particular button and dispatch the id of the selection
@@ -18769,20 +14294,7 @@ TabBar.prototype.defineSection = function defineSection(id, content) {
  *
  * @param {string} id button id
  */
-TabBar.prototype.select = function select(id) {
-    var btn = this._buttonIds[id];
-    // this prevents event loop
-    if (this.buttons[btn] && this.buttons[btn].isSelected()) {
-        this._eventOutput.emit('select', {id: id});
-    }
-    else if (this.buttons[btn]) {
-        this.buttons[btn].select();
-    }
-
-    for (var i = 0; i < this.buttons.length; i++) {
-        if (i !== btn) this.buttons[i].deselect();
-    }
-};
+TabBar.prototype.select = function select(id) {};
 
 module.exports = TabBar;
 },{"../core/View":16,"../utilities/Utility":95,"../views/GridLayout":103,"./ToggleButton":115}],115:[function(_dereq_,module,exports){
@@ -18809,41 +14321,7 @@ var RenderController = _dereq_('../views/RenderController');
  *
  * @param {object} options overrides of default options
  */
-function ToggleButton(options) {
-    this.options = {
-        content: ['', ''],
-        offClasses: ['off'],
-        onClasses: ['on'],
-        size: undefined,
-        outTransition: {curve: 'easeInOut', duration: 300},
-        inTransition: {curve: 'easeInOut', duration: 300},
-        toggleMode: ToggleButton.TOGGLE,
-        crossfade: true
-    };
-
-    this._eventOutput = new EventHandler();
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this.offSurface = new Surface();
-    this.offSurface.on('click', function() {
-        if (this.options.toggleMode !== ToggleButton.OFF) this.select();
-    }.bind(this));
-    this.offSurface.pipe(this._eventOutput);
-
-    this.onSurface = new Surface();
-    this.onSurface.on('click', function() {
-        if (this.options.toggleMode !== ToggleButton.ON) this.deselect();
-    }.bind(this));
-    this.onSurface.pipe(this._eventOutput);
-
-    this.arbiter = new RenderController({
-        overlap : this.options.crossfade
-    });
-
-    this.deselect();
-
-    if (options) this.setOptions(options);
-}
+function ToggleButton(options) {}
 
 ToggleButton.OFF = 0;
 ToggleButton.ON = 1;
@@ -18904,35 +14382,7 @@ ToggleButton.prototype.isSelected = function isSelected() {
  *
  * @param {object} options JSON
  */
-ToggleButton.prototype.setOptions = function setOptions(options) {
-    if (options.content !== undefined) {
-        if (!(options.content instanceof Array))
-            options.content = [options.content, options.content];
-        this.options.content = options.content;
-        this.offSurface.setContent(this.options.content[0]);
-        this.onSurface.setContent(this.options.content[1]);
-    }
-    if (options.offClasses) {
-        this.options.offClasses = options.offClasses;
-        this.offSurface.setClasses(this.options.offClasses);
-    }
-    if (options.onClasses) {
-        this.options.onClasses = options.onClasses;
-        this.onSurface.setClasses(this.options.onClasses);
-    }
-    if (options.size !== undefined) {
-        this.options.size = options.size;
-        this.onSurface.setSize(this.options.size);
-        this.offSurface.setSize(this.options.size);
-    }
-    if (options.toggleMode !== undefined) this.options.toggleMode = options.toggleMode;
-    if (options.outTransition !== undefined) this.options.outTransition = options.outTransition;
-    if (options.inTransition !== undefined) this.options.inTransition = options.inTransition;
-    if (options.crossfade !== undefined) {
-        this.options.crossfade = options.crossfade;
-        this.arbiter.setOptions({overlap: this.options.crossfade});
-    }
-};
+ToggleButton.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Return the size defined in the options object
