@@ -1,5 +1,7 @@
-/target
-/classes
+/target/
+/classes/
+/lib/
+/out/
 /checkouts
 pom.xml
 pom.xml.asc
@@ -7,3 +9,9 @@ pom.xml.asc
 *.class
 /.lein-*
 /.nrepl-port
+.lein-deps-sum
+.lein-repl-history
+.lein-plugins/
+.repl
+examples/resources/public/js/compiled/**
+examples/figwheel_server.log

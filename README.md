@@ -1,13 +1,6 @@
 ![](https://clojars.org/famous-cljs/latest-version.svg)
 
 
-http://code.famo.us/famous/0.3/famous-global.js
-
-
-http://code.famo.us/famous/0.3/famous-global.min.js
-
-
-
 ## Use
 
 In your project.clj dependencies
@@ -21,6 +14,12 @@ In your namespaces
     (:require [com.famous.Famous]))
 
 ```
+
+You also need to include the famous.css stylesheet. I do not think this can be utilized from a Jar so you can use the copy included in /examples/resources/public/css or add a link in your markup
+ ```
+ <link href="http://code.famo.us/famous/0.3/famous.css" rel="stylesheet" type="text/css">
+ ```
+
 
 
 
@@ -38,3 +37,9 @@ Before running your code through advanced compilation, be sure to set
 or your terminal will go berserk on you.
 
 see http://swannodette.github.io/2014/03/14/externs-got-you-down/
+
+
+## sources
+http://code.famo.us/famous/0.3/famous-global.js
+
+http://code.famo.us/famous/0.3/famous-global.min.js
