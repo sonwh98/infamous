@@ -9948,13 +9948,7 @@ MultipleTransition.prototype.get = function get() {
  * @param {Object} transition Transition definition, shared among all instances
  * @param {Function} callback called when all endStates have been reached.
  */
-MultipleTransition.prototype.set = function set(endState, transition, callback) {
-    var _allCallback = Utility.after(endState.length, callback);
-    for (var i = 0; i < endState.length; i++) {
-        if (!this._instances[i]) this._instances[i] = new (this.method)();
-        this._instances[i].set(endState[i], transition, _allCallback);
-    }
-};
+MultipleTransition.prototype.set = function set(endState, transition, callback) {};
 
 /**
  * Reset all transitions to start state.
@@ -9963,12 +9957,7 @@ MultipleTransition.prototype.set = function set(endState, transition, callback) 
  *
  * @param  {Number|Array} startState Start state
  */
-MultipleTransition.prototype.reset = function reset(startState) {
-    for (var i = 0; i < startState.length; i++) {
-        if (!this._instances[i]) this._instances[i] = new (this.method)();
-        this._instances[i].reset(startState[i]);
-    }
-};
+MultipleTransition.prototype.reset = function reset(startState) {};
 
 module.exports = MultipleTransition;
 },{"../utilities/Utility":95}],86:[function(_dereq_,module,exports){
@@ -9996,24 +9985,7 @@ var Vector = _dereq_('../math/Vector');
  *
  * @param [state=0] {Number|Array} Initial state
  */
-function SnapTransition(state) {
-    state = state || 0;
-
-    this.endState  = new Vector(state);
-    this.initState = new Vector();
-
-    this._dimensions       = 1;
-    this._restTolerance    = 1e-10;
-    this._absRestTolerance = this._restTolerance;
-    this._callback         = undefined;
-
-    this.PE       = new PE();
-    this.particle = new Particle();
-    this.spring   = new Spring({anchor : this.endState});
-
-    this.PE.addBody(this.particle);
-    this.PE.attach(this.spring, this.particle);
-}
+function SnapTransition(state) {}
 
 SnapTransition.SUPPORTS_MULTIPLE = 3;
 
@@ -10145,17 +10117,7 @@ function _update() {
  * @param state {Number|Array}      State
  * @param [velocity] {Number|Array} Velocity
  */
-SnapTransition.prototype.reset = function reset(state, velocity) {
-    this._dimensions = (state instanceof Array)
-        ? state.length
-        : 0;
-
-    this.initState.set(state);
-    _setParticlePosition.call(this, state);
-    _setTarget.call(this, state);
-    if (velocity) _setParticleVelocity.call(this, velocity);
-    _setCallback.call(this, undefined);
-};
+SnapTransition.prototype.reset = function reset(state, velocity) {};
 
 /**
  * Getter for velocity
@@ -10164,9 +10126,7 @@ SnapTransition.prototype.reset = function reset(state, velocity) {
  *
  * @return velocity {Number|Array}
  */
-SnapTransition.prototype.getVelocity = function getVelocity() {
-    return _getParticleVelocity.call(this);
-};
+SnapTransition.prototype.getVelocity = function getVelocity() {};
 
 /**
  * Setter for velocity
@@ -10175,9 +10135,7 @@ SnapTransition.prototype.getVelocity = function getVelocity() {
  *
  * @return velocity {Number|Array}
  */
-SnapTransition.prototype.setVelocity = function setVelocity(velocity) {
-    this.call(this, _setParticleVelocity(velocity));
-};
+SnapTransition.prototype.setVelocity = function setVelocity(velocity) {};
 
 /**
  * Detects whether a transition is in progress
@@ -10186,18 +10144,14 @@ SnapTransition.prototype.setVelocity = function setVelocity(velocity) {
  *
  * @return {Boolean}
  */
-SnapTransition.prototype.isActive = function isActive() {
-    return !this.PE.isSleeping();
-};
+SnapTransition.prototype.isActive = function isActive() {};
 
 /**
  * Halt the transition
  *
  * @method halt
  */
-SnapTransition.prototype.halt = function halt() {
-    this.set(this.get());
-};
+SnapTransition.prototype.halt = function halt() {};
 
 /**
  * Get the current position of the transition
@@ -10206,10 +10160,7 @@ s     *
  *
  * @return state {Number|Array}
  */
-SnapTransition.prototype.get = function get() {
-    _update.call(this);
-    return _getParticlePosition.call(this);
-};
+SnapTransition.prototype.get = function get() {};
 
 /**
  * Set the end position and transition, with optional callback on completion.
@@ -10220,22 +10171,7 @@ SnapTransition.prototype.get = function get() {
  * @param [definition] {Object}     Transition definition
  * @param [callback] {Function}     Callback
  */
-SnapTransition.prototype.set = function set(state, definition, callback) {
-    if (!definition) {
-        this.reset(state);
-        if (callback) callback();
-        return;
-    }
-
-    this._dimensions = (state instanceof Array)
-        ? state.length
-        : 0;
-
-    _wake.call(this);
-    _setupDefinition.call(this, definition);
-    _setTarget.call(this, state);
-    _setCallback.call(this, callback);
-};
+SnapTransition.prototype.set = function set(state, definition, callback) {};
 
 module.exports = SnapTransition;
 },{"../math/Vector":41,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/constraints/Snap":58}],87:[function(_dereq_,module,exports){
@@ -10265,23 +10201,7 @@ var Vector = _dereq_('../math/Vector');
  *
  * @param {Number|Array} [state=0] Initial state
  */
-function SpringTransition(state) {
-    state = state || 0;
-    this.endState  = new Vector(state);
-    this.initState = new Vector();
-
-    this._dimensions       = undefined;
-    this._restTolerance    = 1e-10;
-    this._absRestTolerance = this._restTolerance;
-    this._callback         = undefined;
-
-    this.PE       = new PE();
-    this.spring   = new Spring({anchor : this.endState});
-    this.particle = new Particle();
-
-    this.PE.addBody(this.particle);
-    this.PE.attach(this.spring, this.particle);
-}
+function SpringTransition(state) {}
 
 SpringTransition.SUPPORTS_MULTIPLE = 3;
 
@@ -10326,93 +10246,7 @@ SpringTransition.DEFAULT_OPTIONS = {
     velocity : 0
 };
 
-function _getEnergy() {
-    return this.particle.getEnergy() + this.spring.getEnergy([this.particle]);
-}
 
-function _setParticlePosition(p) {
-    this.particle.setPosition(p);
-}
-
-function _setParticleVelocity(v) {
-    this.particle.setVelocity(v);
-}
-
-function _getParticlePosition() {
-    return (this._dimensions === 0)
-        ? this.particle.getPosition1D()
-        : this.particle.getPosition();
-}
-
-function _getParticleVelocity() {
-    return (this._dimensions === 0)
-        ? this.particle.getVelocity1D()
-        : this.particle.getVelocity();
-}
-
-function _setCallback(callback) {
-    this._callback = callback;
-}
-
-function _wake() {
-    this.PE.wake();
-}
-
-function _sleep() {
-    this.PE.sleep();
-}
-
-function _update() {
-    if (this.PE.isSleeping()) {
-        if (this._callback) {
-            var cb = this._callback;
-            this._callback = undefined;
-            cb();
-        }
-        return;
-    }
-
-    if (_getEnergy.call(this) < this._absRestTolerance) {
-        _setParticlePosition.call(this, this.endState);
-        _setParticleVelocity.call(this, [0,0,0]);
-        _sleep.call(this);
-    }
-}
-
-function _setupDefinition(definition) {
-    // TODO fix no-console error
-    /* eslint no-console: 0 */
-    var defaults = SpringTransition.DEFAULT_OPTIONS;
-    if (definition.period === undefined)       definition.period       = defaults.period;
-    if (definition.dampingRatio === undefined) definition.dampingRatio = defaults.dampingRatio;
-    if (definition.velocity === undefined)     definition.velocity     = defaults.velocity;
-
-    if (definition.period < 150) {
-        definition.period = 150;
-        console.warn('The period of a SpringTransition is capped at 150 ms. Use a SnapTransition for faster transitions');
-    }
-
-    //setup spring
-    this.spring.setOptions({
-        period       : definition.period,
-        dampingRatio : definition.dampingRatio
-    });
-
-    //setup particle
-    _setParticleVelocity.call(this, definition.velocity);
-}
-
-function _setAbsoluteRestTolerance() {
-    var distance = this.endState.sub(this.initState).normSquared();
-    this._absRestTolerance = (distance === 0)
-        ? this._restTolerance
-        : this._restTolerance * distance;
-}
-
-function _setTarget(target) {
-    this.endState.set(target);
-    _setAbsoluteRestTolerance.call(this);
-}
 
 /**
  * Resets the position and velocity
@@ -10441,9 +10275,7 @@ SpringTransition.prototype.reset = function reset(pos, vel) {
  *
  * @return {Number|Array} velocity
  */
-SpringTransition.prototype.getVelocity = function getVelocity() {
-    return _getParticleVelocity.call(this);
-};
+SpringTransition.prototype.getVelocity = function getVelocity() {};
 
 /**
  * Setter for velocity
@@ -10452,9 +10284,7 @@ SpringTransition.prototype.getVelocity = function getVelocity() {
  *
  * @return {Number|Array} velocity
  */
-SpringTransition.prototype.setVelocity = function setVelocity(v) {
-    this.call(this, _setParticleVelocity(v));
-};
+SpringTransition.prototype.setVelocity = function setVelocity(v) {};
 
 /**
  * Detects whether a transition is in progress
@@ -10590,44 +10420,7 @@ Transitionable.unregisterMethod = function unregisterMethod(name) {
     else return false;
 };
 
-function _loadNext() {
-    if (this._callback) {
-        var callback = this._callback;
-        this._callback = undefined;
-        callback();
-    }
-    if (this.actionQueue.length <= 0) {
-        this.set(this.get()); // no update required
-        return;
-    }
-    this.currentAction = this.actionQueue.shift();
-    this._callback = this.callbackQueue.shift();
 
-    var method = null;
-    var endValue = this.currentAction[0];
-    var transition = this.currentAction[1];
-    if (transition instanceof Object && transition.method) {
-        method = transition.method;
-        if (typeof method === 'string') method = transitionMethods[method];
-    }
-    else {
-        method = TweenTransition;
-    }
-
-    if (this._currentMethod !== method) {
-        if (!(endValue instanceof Object) || method.SUPPORTS_MULTIPLE === true || endValue.length <= method.SUPPORTS_MULTIPLE) {
-            this._engineInstance = new method();
-        }
-        else {
-            this._engineInstance = new MultipleTransition(method);
-        }
-        this._currentMethod = method;
-    }
-
-    this._engineInstance.reset(this.state, this.velocity);
-    if (this.velocity !== undefined) transition.velocity = this.velocity;
-    this._engineInstance.set(endValue, transition, _loadNext.bind(this));
-}
 
 /**
  * Add transition to end state to the queue of pending transitions. Special
@@ -10775,23 +10568,7 @@ function TransitionableTransform(transform) {
     if (transform) this.set(transform);
 }
 
-function _build() {
-    return Transform.build({
-        translate: this.translate.get(),
-        rotate: this.rotate.get(),
-        skew: this.skew.get(),
-        scale: this.scale.get()
-    });
-}
 
-function _buildFinal() {
-    return Transform.build({
-        translate: this._finalTranslate,
-        rotate: this._finalRotate,
-        skew: this._finalSkew,
-        scale: this._finalScale
-    });
-}
 
 /**
  * An optimized way of setting only the translation component of a Transform
@@ -10840,12 +10617,7 @@ TransitionableTransform.prototype.setScale = function setScale(scale, transition
  * @param [callback] {Function} Callback
  * @return {TransitionableTransform}
  */
-TransitionableTransform.prototype.setRotate = function setRotate(eulerAngles, transition, callback) {
-    this._finalRotate = eulerAngles;
-    this._final = _buildFinal.call(this);
-    this.rotate.set(eulerAngles, transition, callback);
-    return this;
-};
+TransitionableTransform.prototype.setRotate = function setRotate(eulerAngles, transition, callback) {};
 
 /**
  * An optimized way of setting only the skew component of a Transform
@@ -10858,12 +10630,7 @@ TransitionableTransform.prototype.setRotate = function setRotate(eulerAngles, tr
  * @param [callback] {Function} Callback
  * @return {TransitionableTransform}
  */
-TransitionableTransform.prototype.setSkew = function setSkew(skewAngles, transition, callback) {
-    this._finalSkew = skewAngles;
-    this._final = _buildFinal.call(this);
-    this.skew.set(skewAngles, transition, callback);
-    return this;
-};
+TransitionableTransform.prototype.setSkew = function setSkew(skewAngles, transition, callback) {};
 
 /**
  * Setter for a TransitionableTransform with optional parameters to transition
@@ -10877,22 +10644,7 @@ TransitionableTransform.prototype.setSkew = function setSkew(skewAngles, transit
  * @param [callback] {Function} Callback
  * @return {TransitionableTransform}
  */
-TransitionableTransform.prototype.set = function set(transform, transition, callback) {
-    var components = Transform.interpret(transform);
-
-    this._finalTranslate = components.translate;
-    this._finalRotate = components.rotate;
-    this._finalSkew = components.skew;
-    this._finalScale = components.scale;
-    this._final = transform;
-
-    var _callback = callback ? Utility.after(4, callback) : null;
-    this.translate.set(components.translate, transition, _callback);
-    this.rotate.set(components.rotate, transition, _callback);
-    this.skew.set(components.skew, transition, _callback);
-    this.scale.set(components.scale, transition, _callback);
-    return this;
-};
+TransitionableTransform.prototype.set = function set(transform, transition, callback) {};
 
 /**
  * Sets the default transition to use for transitioning betwen Transform states
@@ -10915,12 +10667,7 @@ TransitionableTransform.prototype.setDefaultTransition = function setDefaultTran
  *
  * @return {Transform}
  */
-TransitionableTransform.prototype.get = function get() {
-    if (this.isActive()) {
-        return _build.call(this);
-    }
-    else return this._final;
-};
+TransitionableTransform.prototype.get = function get() {};
 
 /**
  * Get the destination state of the Transform
@@ -10929,9 +10676,7 @@ TransitionableTransform.prototype.get = function get() {
  *
  * @return Transform {Transform}
  */
-TransitionableTransform.prototype.getFinal = function getFinal() {
-    return this._final;
-};
+TransitionableTransform.prototype.getFinal = function getFinal() {};
 
 /**
  * Determine if the TransitionalTransform is currently transitioning
@@ -10940,29 +10685,14 @@ TransitionableTransform.prototype.getFinal = function getFinal() {
  *
  * @return {Boolean}
  */
-TransitionableTransform.prototype.isActive = function isActive() {
-    return this.translate.isActive() || this.rotate.isActive() || this.scale.isActive() || this.skew.isActive();
-};
+TransitionableTransform.prototype.isActive = function isActive() {};
 
 /**
  * Halts the transition
  *
  * @method halt
  */
-TransitionableTransform.prototype.halt = function halt() {
-    this.translate.halt();
-    this.rotate.halt();
-    this.skew.halt();
-    this.scale.halt();
-
-    this._final = this.get();
-    this._finalTranslate = this.translate.get();
-    this._finalRotate = this.rotate.get();
-    this._finalSkew = this.skew.get();
-    this._finalScale = this.scale.get();
-
-    return this;
-};
+TransitionableTransform.prototype.halt = function halt() {};
 
 module.exports = TransitionableTransform;
 },{"../core/Transform":15,"../utilities/Utility":95,"./Transitionable":88}],90:[function(_dereq_,module,exports){
@@ -11001,21 +10731,7 @@ module.exports = TransitionableTransform;
  * @param {Object} options TODO
  *    beginning state
  */
-function TweenTransition(options) {
-    this.options = Object.create(TweenTransition.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    this._startTime = 0;
-    this._startValue = 0;
-    this._updateTime = 0;
-    this._endValue = 0;
-    this._curve = undefined;
-    this._duration = 0;
-    this._active = false;
-    this._callback = undefined;
-    this.state = 0;
-    this.velocity = undefined;
-}
+function TweenTransition(options) {}
 
 /**
  * Transition curves mapping independent variable t from domain [0,1] to a
@@ -11068,15 +10784,7 @@ var registeredCurves = {};
  *    to range inside [0,1]
  * @return {boolean} false if key is taken, else true
  */
-TweenTransition.registerCurve = function registerCurve(curveName, curve) {
-    if (!registeredCurves[curveName]) {
-        registeredCurves[curveName] = curve;
-        return true;
-    }
-    else {
-        return false;
-    }
-};
+TweenTransition.registerCurve = function registerCurve(curveName, curve) {};
 
 /**
  * Remove object with key "curveName" from internal dictionary of registered
@@ -11089,15 +10797,7 @@ TweenTransition.registerCurve = function registerCurve(curveName, curve) {
  * @param {string} curveName dictionary key
  * @return {boolean} false if key has no dictionary value
  */
-TweenTransition.unregisterCurve = function unregisterCurve(curveName) {
-    if (registeredCurves[curveName]) {
-        delete registeredCurves[curveName];
-        return true;
-    }
-    else {
-        return false;
-    }
-};
+TweenTransition.unregisterCurve = function unregisterCurve(curveName) {};
 
 /**
  * Retrieve function with key "curveName" from internal dictionary of
@@ -11113,11 +10813,7 @@ TweenTransition.unregisterCurve = function unregisterCurve(curveName) {
  * @return {unitCurve} curve function of one numeric variable mapping [0,1]
  *    to range inside [0,1]
  */
-TweenTransition.getCurve = function getCurve(curveName) {
-    var curve = registeredCurves[curveName];
-    if (curve !== undefined) return curve;
-    else throw new Error('curve not registered');
-};
+TweenTransition.getCurve = function getCurve(curveName) {};
 
 /**
  * Retrieve all available curves.
@@ -11129,38 +10825,11 @@ TweenTransition.getCurve = function getCurve(curveName) {
  * @return {object} curve functions of one numeric variable mapping [0,1]
  *    to range inside [0,1]
  */
-TweenTransition.getCurves = function getCurves() {
-    return registeredCurves;
-};
+TweenTransition.getCurves = function getCurves() {};
 
- // Interpolate: If a linear function f(0) = a, f(1) = b, then return f(t)
-function _interpolate(a, b, t) {
-    return ((1 - t) * a) + (t * b);
-}
 
-function _clone(obj) {
-    if (obj instanceof Object) {
-        if (obj instanceof Array) return obj.slice(0);
-        else return Object.create(obj);
-    }
-    else return obj;
-}
 
-// Fill in missing properties in "transition" with those in defaultTransition, and
-//   convert internal named curve to function object, returning as new
-//   object.
-function _normalize(transition, defaultTransition) {
-    var result = {curve: defaultTransition.curve};
-    if (defaultTransition.duration) result.duration = defaultTransition.duration;
-    if (defaultTransition.speed) result.speed = defaultTransition.speed;
-    if (transition instanceof Object) {
-        if (transition.duration !== undefined) result.duration = transition.duration;
-        if (transition.curve) result.curve = transition.curve;
-        if (transition.speed) result.speed = transition.speed;
-    }
-    if (typeof result.curve === 'string') result.curve = TweenTransition.getCurve(result.curve);
-    return result;
-}
+
 
 /**
  * Set internal options, overriding any default options.
@@ -11173,11 +10842,7 @@ function _normalize(transition, defaultTransition) {
  * @param {Number} [options.duration] duration in ms
  * @param {Number} [options.speed] speed in pixels per ms
  */
-TweenTransition.prototype.setOptions = function setOptions(options) {
-    if (options.curve !== undefined) this.options.curve = options.curve;
-    if (options.duration !== undefined) this.options.duration = options.duration;
-    if (options.speed !== undefined) this.options.speed = options.speed;
-};
+TweenTransition.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Add transition to end state to the queue of pending transitions. Special
@@ -11195,35 +10860,7 @@ TweenTransition.prototype.setOptions = function setOptions(options) {
  * @param {function()=} callback Zero-argument function to call on observed
  *    completion (t=1)
  */
-TweenTransition.prototype.set = function set(endValue, transition, callback) {
-    if (!transition) {
-        this.reset(endValue);
-        if (callback) callback();
-        return;
-    }
-
-    this._startValue = _clone(this.get());
-    transition = _normalize(transition, this.options);
-    if (transition.speed) {
-        var startValue = this._startValue;
-        if (startValue instanceof Object) {
-            var variance = 0;
-            for (var i in startValue) variance += (endValue[i] - startValue[i]) * (endValue[i] - startValue[i]);
-            transition.duration = Math.sqrt(variance) / transition.speed;
-        }
-        else {
-            transition.duration = Math.abs(endValue - startValue) / transition.speed;
-        }
-    }
-
-    this._startTime = Date.now();
-    this._endValue = _clone(endValue);
-    this._startVelocity = _clone(transition.velocity);
-    this._duration = transition.duration;
-    this._curve = transition.curve;
-    this._active = true;
-    this._callback = callback;
-};
+TweenTransition.prototype.set = function set(endValue, transition, callback) {};
 
 /**
  * Cancel all transitions and reset to a stable state
@@ -11235,22 +10872,7 @@ TweenTransition.prototype.set = function set(endValue, transition, callback) {
  * @param {number} startVelocity
  *    starting velocity
  */
-TweenTransition.prototype.reset = function reset(startValue, startVelocity) {
-    if (this._callback) {
-        var callback = this._callback;
-        this._callback = undefined;
-        callback();
-    }
-    this.state = _clone(startValue);
-    this.velocity = _clone(startVelocity);
-    this._startTime = 0;
-    this._duration = 0;
-    this._updateTime = 0;
-    this._startValue = this.state;
-    this._startVelocity = this.velocity;
-    this._endValue = this.state;
-    this._active = false;
-};
+TweenTransition.prototype.reset = function reset(startValue, startVelocity) {};
 
 /**
  * Get current velocity
@@ -11259,9 +10881,7 @@ TweenTransition.prototype.reset = function reset(startValue, startVelocity) {
  *
  * @returns {Number} velocity
  */
-TweenTransition.prototype.getVelocity = function getVelocity() {
-    return this.velocity;
-};
+TweenTransition.prototype.getVelocity = function getVelocity() {};
 
 /**
  * Get interpolated state of current action at provided time. If the last
@@ -11275,43 +10895,9 @@ TweenTransition.prototype.getVelocity = function getVelocity() {
  * @return {number|Object.<number|string, number>} beginning state
  *    _interpolated to this point in time.
  */
-TweenTransition.prototype.get = function get(timestamp) {
-    this.update(timestamp);
-    return this.state;
-};
+TweenTransition.prototype.get = function get(timestamp) {};
 
-function _calculateVelocity(current, start, curve, duration, t) {
-    var velocity;
-    var eps = 1e-7;
-    var speed = (curve(t) - curve(t - eps)) / eps;
-    if (current instanceof Array) {
-        velocity = [];
-        for (var i = 0; i < current.length; i++){
-            if (typeof current[i] === 'number')
-                velocity[i] = speed * (current[i] - start[i]) / duration;
-            else
-                velocity[i] = 0;
-        }
 
-    }
-    else velocity = speed * (current - start) / duration;
-    return velocity;
-}
-
-function _calculateState(start, end, t) {
-    var state;
-    if (start instanceof Array) {
-        state = [];
-        for (var i = 0; i < start.length; i++) {
-            if (typeof start[i] === 'number')
-                state[i] = _interpolate(start[i], end[i], t);
-            else
-                state[i] = start[i];
-        }
-    }
-    else state = _interpolate(start, end, t);
-    return state;
-}
 
 /**
  * Update internal state to the provided timestamp. This may invoke the last
@@ -11323,36 +10909,7 @@ function _calculateState(start, end, t) {
  * @param {number=} timestamp Evaluate the curve at a normalized version of this
  *    time. If omitted, use current time. (Unix epoch time)
  */
-TweenTransition.prototype.update = function update(timestamp) {
-    if (!this._active) {
-        if (this._callback) {
-            var callback = this._callback;
-            this._callback = undefined;
-            callback();
-        }
-        return;
-    }
-
-    if (!timestamp) timestamp = Date.now();
-    if (this._updateTime >= timestamp) return;
-    this._updateTime = timestamp;
-
-    var timeSinceStart = timestamp - this._startTime;
-    if (timeSinceStart >= this._duration) {
-        this.state = this._endValue;
-        this.velocity = _calculateVelocity(this.state, this._startValue, this._curve, this._duration, 1);
-        this._active = false;
-    }
-    else if (timeSinceStart < 0) {
-        this.state = this._startValue;
-        this.velocity = this._startVelocity;
-    }
-    else {
-        var t = timeSinceStart / this._duration;
-        this.state = _calculateState(this._startValue, this._endValue, this._curve(t));
-        this.velocity = _calculateVelocity(this.state, this._startValue, this._curve, this._duration, t);
-    }
-};
+TweenTransition.prototype.update = function update(timestamp) {};
 
 /**
  * Is there at least one action pending completion?
@@ -11362,9 +10919,7 @@ TweenTransition.prototype.update = function update(timestamp) {
  *
  * @return {boolean}
  */
-TweenTransition.prototype.isActive = function isActive() {
-    return this._active;
-};
+TweenTransition.prototype.isActive = function isActive() {};
 
 /**
  * Halt transition at current state and erase all pending actions.
@@ -11372,9 +10927,7 @@ TweenTransition.prototype.isActive = function isActive() {
  * @method halt
  *
  */
-TweenTransition.prototype.halt = function halt() {
-    this.reset(this.get());
-};
+TweenTransition.prototype.halt = function halt() {};
 
 // Register all the default curves
 TweenTransition.registerCurve('linear', TweenTransition.Curves.linear);
@@ -11419,26 +10972,7 @@ var Vector = _dereq_('../math/Vector');
  *
  * @param {Number|Array} [state=0] Initial state
  */
-function WallTransition(state) {
-    state = state || 0;
-
-    this.endState  = new Vector(state);
-    this.initState = new Vector();
-
-    this.spring = new Spring({anchor : this.endState});
-    this.wall   = new Wall();
-
-    this._restTolerance = 1e-10;
-    this._dimensions = 1;
-    this._absRestTolerance = this._restTolerance;
-    this._callback = undefined;
-
-    this.PE = new PE();
-    this.particle = new Particle();
-
-    this.PE.addBody(this.particle);
-    this.PE.attach([this.wall, this.spring], this.particle);
-}
+function WallTransition(state) {}
 
 WallTransition.SUPPORTS_MULTIPLE = 3;
 
@@ -11492,106 +11026,6 @@ WallTransition.DEFAULT_OPTIONS = {
     restitution : 0.5
 };
 
-function _getEnergy() {
-    return this.particle.getEnergy() + this.spring.getEnergy([this.particle]);
-}
-
-function _setAbsoluteRestTolerance() {
-    var distance = this.endState.sub(this.initState).normSquared();
-    this._absRestTolerance = (distance === 0)
-        ? this._restTolerance
-        : this._restTolerance * distance;
-}
-
-function _wake() {
-    this.PE.wake();
-}
-
-function _sleep() {
-    this.PE.sleep();
-}
-
-function _setTarget(target) {
-    this.endState.set(target);
-
-    var dist = this.endState.sub(this.initState).norm();
-
-    this.wall.setOptions({
-        distance : this.endState.norm(),
-        normal : (dist === 0)
-            ? this.particle.velocity.normalize(-1)
-            : this.endState.sub(this.initState).normalize(-1)
-    });
-
-    _setAbsoluteRestTolerance.call(this);
-}
-
-function _setParticlePosition(p) {
-    this.particle.position.set(p);
-}
-
-function _setParticleVelocity(v) {
-    this.particle.velocity.set(v);
-}
-
-function _getParticlePosition() {
-    return (this._dimensions === 0)
-        ? this.particle.getPosition1D()
-        : this.particle.getPosition();
-}
-
-function _getParticleVelocity() {
-    return (this._dimensions === 0)
-        ? this.particle.getVelocity1D()
-        : this.particle.getVelocity();
-}
-
-function _setCallback(callback) {
-    this._callback = callback;
-}
-
-function _update() {
-    if (this.PE.isSleeping()) {
-        if (this._callback) {
-            var cb = this._callback;
-            this._callback = undefined;
-            cb();
-        }
-        return;
-    }
-    var energy = _getEnergy.call(this);
-    if (energy < this._absRestTolerance) {
-        _sleep.call(this);
-        _setParticlePosition.call(this, this.endState);
-        _setParticleVelocity.call(this, [0,0,0]);
-    }
-}
-
-function _setupDefinition(def) {
-    var defaults = WallTransition.DEFAULT_OPTIONS;
-    if (def.period === undefined) def.period = defaults.period;
-    if (def.dampingRatio === undefined) def.dampingRatio = defaults.dampingRatio;
-    if (def.velocity === undefined) def.velocity = defaults.velocity;
-    if (def.restitution === undefined) def.restitution = defaults.restitution;
-    if (def.drift === undefined) def.drift = Wall.DEFAULT_OPTIONS.drift;
-    if (def.slop === undefined) def.slop = Wall.DEFAULT_OPTIONS.slop;
-
-    //setup spring
-    this.spring.setOptions({
-        period : def.period,
-        dampingRatio : def.dampingRatio
-    });
-
-    //setup wall
-    this.wall.setOptions({
-        restitution : def.restitution,
-        drift: def.drift,
-        slop: def.slop
-    });
-
-    //setup particle
-    _setParticleVelocity.call(this, def.velocity);
-}
 
 /**
  * Resets the state and velocity
@@ -11601,17 +11035,7 @@ function _setupDefinition(def) {
  * @param {Number|Array}  state     State
  * @param  {Number|Array} [velocity] Velocity
  */
-WallTransition.prototype.reset = function reset(state, velocity) {
-    this._dimensions = (state instanceof Array)
-        ? state.length
-        : 0;
-
-    this.initState.set(state);
-    _setParticlePosition.call(this, state);
-    if (velocity) _setParticleVelocity.call(this, velocity);
-    _setTarget.call(this, state);
-    _setCallback.call(this, undefined);
-};
+WallTransition.prototype.reset = function reset(state, velocity) {};
 
 /**
  * Getter for velocity
@@ -11620,9 +11044,7 @@ WallTransition.prototype.reset = function reset(state, velocity) {
  *
  * @return velocity {Number|Array}
  */
-WallTransition.prototype.getVelocity = function getVelocity() {
-    return _getParticleVelocity.call(this);
-};
+WallTransition.prototype.getVelocity = function getVelocity() {};
 
 /**
  * Setter for velocity
@@ -11631,9 +11053,7 @@ WallTransition.prototype.getVelocity = function getVelocity() {
  *
  * @return velocity {Number|Array}
  */
-WallTransition.prototype.setVelocity = function setVelocity(velocity) {
-    this.call(this, _setParticleVelocity(velocity));
-};
+WallTransition.prototype.setVelocity = function setVelocity(velocity) {};
 
 /**
  * Detects whether a transition is in progress
@@ -11642,18 +11062,14 @@ WallTransition.prototype.setVelocity = function setVelocity(velocity) {
  *
  * @return {Boolean}
  */
-WallTransition.prototype.isActive = function isActive() {
-    return !this.PE.isSleeping();
-};
+WallTransition.prototype.isActive = function isActive() {};
 
 /**
  * Halt the transition
  *
  * @method halt
  */
-WallTransition.prototype.halt = function halt() {
-    this.set(this.get());
-};
+WallTransition.prototype.halt = function halt() {};
 
 /**
  * Getter
@@ -11662,10 +11078,7 @@ WallTransition.prototype.halt = function halt() {
  *
  * @return state {Number|Array}
  */
-WallTransition.prototype.get = function get() {
-    _update.call(this);
-    return _getParticlePosition.call(this);
-};
+WallTransition.prototype.get = function get() {};
 
 /**
  * Set the end position and transition, with optional callback on completion.
@@ -11676,22 +11089,7 @@ WallTransition.prototype.get = function get() {
  * @param [definition] {Object}     Transition definition
  * @param [callback] {Function}     Callback
  */
-WallTransition.prototype.set = function set(state, definition, callback) {
-    if (!definition) {
-        this.reset(state);
-        if (callback) callback();
-        return;
-    }
-
-    this._dimensions = (state instanceof Array)
-        ? state.length
-        : 0;
-
-    _wake.call(this);
-    _setupDefinition.call(this, definition);
-    _setTarget.call(this, state);
-    _setCallback.call(this, callback);
-};
+WallTransition.prototype.set = function set(state, definition, callback) {};
 
 module.exports = WallTransition;
 },{"../math/Vector":41,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/constraints/Wall":60,"../physics/forces/Spring":68}],92:[function(_dereq_,module,exports){
@@ -11842,10 +11240,7 @@ var getTime = (window.performance && window.performance.now) ?
  *
  * @return {function} function passed in as parameter
  */
-function addTimerFunction(fn) {
-    FamousEngine.on(_event, fn);
-    return fn;
-}
+function addTimerFunction(fn) {}
 
 /**
  * Wraps a function to be invoked after a certain amount of time.
@@ -11859,17 +11254,7 @@ function addTimerFunction(fn) {
  *
  * @return {function} function passed in as parameter
  */
-function setTimeout(fn, duration) {
-    var t = getTime();
-    var callback = function() {
-        var t2 = getTime();
-        if (t2 - t >= duration) {
-            fn.apply(this, arguments);
-            FamousEngine.removeListener(_event, callback);
-        }
-    };
-    return addTimerFunction(callback);
-}
+function setTimeout(fn, duration) {}
 
 /**
  * Wraps a function to be invoked after a certain amount of time.
@@ -11883,17 +11268,7 @@ function setTimeout(fn, duration) {
  *
  * @return {function} function passed in as parameter
  */
-function setInterval(fn, duration) {
-    var t = getTime();
-    var callback = function() {
-        var t2 = getTime();
-        if (t2 - t >= duration) {
-            fn.apply(this, arguments);
-            t = getTime();
-        }
-    };
-    return addTimerFunction(callback);
-}
+function setInterval(fn, duration) {}
 
 /**
  * Wraps a function to be invoked after a certain amount of prerender ticks.
@@ -11906,17 +11281,7 @@ function setInterval(fn, duration) {
  *
  * @return {function} function passed in as parameter
  */
-function after(fn, numTicks) {
-    if (numTicks === undefined) return undefined;
-    var callback = function() {
-        numTicks--;
-        if (numTicks <= 0) { //in case numTicks is fraction or negative
-            fn.apply(this, arguments);
-            clear(callback);
-        }
-    };
-    return addTimerFunction(callback);
-}
+function after(fn, numTicks) {}
 
 /**
  * Wraps a function to be continually invoked after a certain amount of prerender ticks.
@@ -11929,18 +11294,7 @@ function after(fn, numTicks) {
  *
  * @return {function} function passed in as parameter
  */
-function every(fn, numTicks) {
-    numTicks = numTicks || 1;
-    var initial = numTicks;
-    var callback = function() {
-        numTicks--;
-        if (numTicks <= 0) { //in case numTicks is fraction or negative
-            fn.apply(this, arguments);
-            numTicks = initial;
-        }
-    };
-    return addTimerFunction(callback);
-}
+function every(fn, numTicks) {}
 
 /**
  * Remove a function that gets called every prerender
@@ -11949,9 +11303,7 @@ function every(fn, numTicks) {
  *
  * @param {function} fn event linstener
  */
-function clear(fn) {
-    FamousEngine.removeListener(_event, fn);
-}
+function clear(fn) {}
 
 /**
  * Executes a function after a certain amount of time. Makes sure
@@ -11964,34 +11316,7 @@ function clear(fn) {
  *
  * @return {function} function that is not able to debounce
  */
-function debounce(func, wait) {
-    var timeout;
-    var ctx;
-    var timestamp;
-    var result;
-    var args;
-    return function() {
-        ctx = this;
-        args = arguments;
-        timestamp = getTime();
-
-        var fn = function() {
-            var last = getTime - timestamp;
-
-            if (last < wait) {
-                timeout = setTimeout(fn, wait - last);
-            } else {
-                timeout = null;
-                result = func.apply(ctx, args);
-            }
-        };
-
-        clear(timeout);
-        timeout = setTimeout(fn, wait);
-
-        return result;
-    };
-}
+function debounce(func, wait) {}
 
 module.exports = {
     setTimeout : setTimeout,
@@ -12046,13 +11371,7 @@ Utility.Direction = {
  *
  * @return {function} wrapped callback with coundown feature
  */
-Utility.after = function after(count, callback) {
-    var counter = count;
-    return function() {
-        counter--;
-        if (counter === 0) callback.apply(this, arguments);
-    };
-};
+Utility.after = function after(count, callback) {};
 
 /**
  * Load a URL and return its contents in a callback
@@ -12062,16 +11381,7 @@ Utility.after = function after(count, callback) {
  * @param {string} url URL of object
  * @param {function} callback callback to dispatch with content
  */
-Utility.loadURL = function loadURL(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function onreadystatechange() {
-        if (this.readyState === 4) {
-            if (callback) callback(this.responseText);
-        }
-    };
-    xhr.open('GET', url);
-    xhr.send();
-};
+Utility.loadURL = function loadURL(url, callback) {};
 
 /**
  * Create a document fragment from a string of HTML
@@ -12082,45 +11392,14 @@ Utility.loadURL = function loadURL(url, callback) {
  *
  * @return {DocumentFragment} DocumentFragment representing input HTML
  */
-Utility.createDocumentFragmentFromHTML = function createDocumentFragmentFromHTML(html) {
-    var element = document.createElement('div');
-    element.innerHTML = html;
-    var result = document.createDocumentFragment();
-    while (element.hasChildNodes()) result.appendChild(element.firstChild);
-    return result;
-};
+Utility.createDocumentFragmentFromHTML = function createDocumentFragmentFromHTML(html) {};
 
 /*
  *  Deep clone an object.
  *  @param b {Object} Object to clone
  *  @return a {Object} Cloned object.
  */
-Utility.clone = function clone(b) {
-    var a;
-    if (typeof b === 'object') {
-        a = (b instanceof Array) ? [] : {};
-        for (var key in b) {
-            if (typeof b[key] === 'object' && b[key] !== null) {
-                if (b[key] instanceof Array) {
-                    a[key] = new Array(b[key].length);
-                    for (var i = 0; i < b[key].length; i++) {
-                        a[key][i] = Utility.clone(b[key][i]);
-                    }
-                }
-                else {
-                  a[key] = Utility.clone(b[key]);
-                }
-            }
-            else {
-                a[key] = b[key];
-            }
-        }
-    }
-    else {
-        a = b;
-    }
-    return a;
-};
+Utility.clone = function clone(b) {};
 
 module.exports = Utility;
 },{}],96:[function(_dereq_,module,exports){
@@ -12154,18 +11433,7 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @constructor
  * @param {Options} [options] An object of configurable options.
  */
-function ContextualView(options) {
-    this.options = Object.create(this.constructor.DEFAULT_OPTIONS || ContextualView.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this._id = Entity.register(this);
-}
+function ContextualView(options) {}
 
 ContextualView.DEFAULT_OPTIONS = {};
 
@@ -12175,9 +11443,7 @@ ContextualView.DEFAULT_OPTIONS = {};
  * @method setOptions
  * @param {Options} options An object of configurable options for the ContextualLayout instance.
  */
-ContextualView.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+ContextualView.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Returns ContextualLayout instance's options.
@@ -12186,9 +11452,7 @@ ContextualView.prototype.setOptions = function setOptions(options) {
  * @param {string} key
  * @return {Options} options The instance's object of configurable options.
  */
-ContextualView.prototype.getOptions = function getOptions(key) {
-    return this._optionsManager.getOptions(key);
-};
+ContextualView.prototype.getOptions = function getOptions(key) {};
 
 /**
  * Return the registers Entity id for the ContextualView.
@@ -12197,9 +11461,7 @@ ContextualView.prototype.getOptions = function getOptions(key) {
  * @method render
  * @return {Number} Registered Entity id
  */
-ContextualView.prototype.render = function render() {
-    return this._id;
-};
+ContextualView.prototype.render = function render() {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -12248,32 +11510,7 @@ var SequentialLayout = _dereq_('./SequentialLayout');
  * @param {Object} [options.transition] A transition object for changing between states.
  * @param {Number} [options.direction] axis of expansion (Utility.Direction.X or .Y)
  */
-function Deck(options) {
-    SequentialLayout.apply(this, arguments);
-    this.state = new Transitionable(0);
-    this._isOpen = false;
-
-    this.setOutputFunction(function(input, offset, index) {
-        var state = _getState.call(this);
-        var positionMatrix = (this.options.direction === Utility.Direction.X) ?
-            Transform.translate(state * offset, 0, 0.001 * (state - 1) * offset) :
-            Transform.translate(0, state * offset, 0.001 * (state - 1) * offset);
-        var output = input.render();
-        if (this.options.stackRotation) {
-            var amount = this.options.stackRotation * index * (1 - state);
-            output = {
-                transform: Transform.rotateZ(amount),
-                origin: [0.5, 0.5],
-                target: output
-            };
-        }
-        return {
-            transform: positionMatrix,
-            size: input.getSize(),
-            target: output
-        };
-    });
-}
+function Deck(options) {}
 Deck.prototype = Object.create(SequentialLayout.prototype);
 Deck.prototype.constructor = Deck;
 
@@ -12292,24 +11529,9 @@ Deck.DEFAULT_OPTIONS = OptionsManager.patch(SequentialLayout.DEFAULT_OPTIONS, {
  * @return {Array} A two value array of Deck's current width and height (in that order).
  *   Scales as Deck opens and closes.
  */
-Deck.prototype.getSize = function getSize() {
-    var originalSize = SequentialLayout.prototype.getSize.apply(this, arguments);
-    var firstSize = this._items ? this._items.get().getSize() : [0, 0];
-    if (!firstSize) firstSize = [0, 0];
-    var state = _getState.call(this);
-    var invState = 1 - state;
-    return [firstSize[0] * invState + originalSize[0] * state, firstSize[1] * invState + originalSize[1] * state];
-};
+Deck.prototype.getSize = function getSize() {};
 
-function _getState(returnFinal) {
-    if (returnFinal) return this._isOpen ? 1 : 0;
-    else return this.state.get();
-}
 
-function _setState(pos, transition, callback) {
-    this.state.halt();
-    this.state.set(pos, transition, callback);
-}
 
 /**
  * An accesor method to find out if the messaged Deck instance is open or closed.
@@ -12317,9 +11539,7 @@ function _setState(pos, transition, callback) {
  * @method isOpen
  * @return {Boolean} Returns true if the instance is open or false if it's closed.
  */
-Deck.prototype.isOpen = function isOpen() {
-    return this._isOpen;
-};
+Deck.prototype.isOpen = function isOpen() {};
 
 /**
  * Sets the Deck instance to an open state.
@@ -12327,10 +11547,7 @@ Deck.prototype.isOpen = function isOpen() {
  * @method open
  * @param {function} [callback] Executes after transitioning to a fully open state.
  */
-Deck.prototype.open = function open(callback) {
-    this._isOpen = true;
-   _setState.call(this, 1, this.options.transition, callback);
-};
+Deck.prototype.open = function open(callback) {};
 
 /**
  * Sets the Deck instance to an open state.
@@ -12338,10 +11555,7 @@ Deck.prototype.open = function open(callback) {
  * @method close
  * @param {function} [callback] Executes after transitioning to a fully closed state.
  */
-Deck.prototype.close = function close(callback) {
-    this._isOpen = false;
-    _setState.call(this, 0, this.options.transition, callback);
-};
+Deck.prototype.close = function close(callback) {};
 
 /**
  * Sets the Deck instance from its current state to the opposite state.
@@ -12349,10 +11563,7 @@ Deck.prototype.close = function close(callback) {
  * @method close
  * @param {function} [callback] Executes after transitioning to the toggled state.
  */
-Deck.prototype.toggle = function toggle(callback) {
-    if (this._isOpen) this.close(callback);
-    else this.open(callback);
-};
+Deck.prototype.toggle = function toggle(callback) {};
 
 module.exports = Deck;
 },{"../core/OptionsManager":10,"../core/Transform":15,"../transitions/Transitionable":88,"../utilities/Utility":95,"./SequentialLayout":110}],99:[function(_dereq_,module,exports){
@@ -12394,28 +11605,7 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @param [options.positionThreshold=0] {Number}            The position threshold to trigger a toggle
  * @param [options.transition=true] {Boolean|Object}        The toggle transition
  */
-function DrawerLayout(options) {
-    this.options = Object.create(DrawerLayout.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this._position = new Transitionable(0);
-    this._direction = _getDirectionFromSide(this.options.side);
-    this._orientation = _getOrientationFromSide(this.options.side);
-    this._isOpen = false;
-    this._cachedLength = 0;
-
-    this.drawer = new RenderNode();
-    this.content = new RenderNode();
-
-    this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-
-    this._eventInput.on('update', _handleUpdate.bind(this));
-    this._eventInput.on('end', _handleEnd.bind(this));
-}
+function DrawerLayout(options) {}
 
 var DIRECTION_X = 0;
 var DIRECTION_Y = 1;
@@ -12435,89 +11625,13 @@ DrawerLayout.DEFAULT_OPTIONS = {
     transition : true
 };
 
-function _getDirectionFromSide(side) {
-    var SIDES = DrawerLayout.SIDES;
-    return (side === SIDES.LEFT || side === SIDES.RIGHT) ? DIRECTION_X : DIRECTION_Y;
-}
-
-function _getOrientationFromSide(side) {
-    var SIDES = DrawerLayout.SIDES;
-    return (side === SIDES.LEFT || side === SIDES.TOP) ? 1 : -1;
-}
-
-function _resolveNodeSize(node) {
-    var options = this.options;
-    var size;
-    if (options.drawerLength) size = options.drawerLength;
-    else {
-        var nodeSize = node.getSize();
-        size = nodeSize ? nodeSize[this._direction] : options.drawerLength;
-    }
-    return this._orientation * size;
-}
-
-function _handleUpdate(data) {
-    var newPosition = this.getPosition() + data.delta;
-
-    var MIN_LENGTH;
-    var MAX_LENGTH;
-    this._cachedLength = _resolveNodeSize.call(this, this.drawer);
-
-    if (this._orientation === 1){
-        MIN_LENGTH = 0;
-        MAX_LENGTH = this._cachedLength;
-    }
-    else {
-        MIN_LENGTH = this._cachedLength;
-        MAX_LENGTH = 0;
-    }
-
-    if (newPosition > MAX_LENGTH) newPosition = MAX_LENGTH;
-    else if (newPosition < MIN_LENGTH) newPosition = MIN_LENGTH;
-
-    this.setPosition(newPosition);
-}
-
-function _handleEnd(data) {
-    var velocity = data.velocity;
-    var position = this._orientation * this.getPosition();
-    var options = this.options;
-
-    var MAX_LENGTH = this._orientation * this._cachedLength;
-    var positionThreshold = options.positionThreshold || MAX_LENGTH / 2;
-    var velocityThreshold = options.velocityThreshold;
-
-    if (options.transition instanceof Object)
-        options.transition.velocity = data.velocity;
-
-    if (position === 0) {
-        this._isOpen = false;
-        return;
-    }
-
-    if (position === MAX_LENGTH) {
-        this._isOpen = true;
-        return;
-    }
-
-    var shouldToggle = Math.abs(velocity) > velocityThreshold || (!this._isOpen && position > positionThreshold) || (this._isOpen && position < positionThreshold);
-    if (shouldToggle) this.toggle();
-    else this.reset();
-}
-
 /**
  * Patches the DrawerLayout instance's options with the passed-in ones.
  *
  * @method setOptions
  * @param options {Object} options
  */
-DrawerLayout.prototype.setOptions = function setOptions(options) {
-    this._optionsManager.setOptions(options);
-    if (options.side !== undefined) {
-        this._direction = _getDirectionFromSide(options.side);
-        this._orientation = _getOrientationFromSide(options.side);
-    }
-};
+DrawerLayout.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Reveals the drawer with a transition
@@ -12527,16 +11641,7 @@ DrawerLayout.prototype.setOptions = function setOptions(options) {
  * @param [transition] {Boolean|Object} transition definition
  * @param [callback] {Function}         callback
  */
-DrawerLayout.prototype.open = function open(transition, callback) {
-    if (transition instanceof Function) callback = transition;
-    if (transition === undefined) transition = this.options.transition;
-    this._cachedLength = _resolveNodeSize.call(this, this.drawer);
-    this.setPosition(this._cachedLength, transition, callback);
-    if (!this._isOpen) {
-        this._isOpen = true;
-        this._eventOutput.emit('open');
-    }
-};
+DrawerLayout.prototype.open = function open(transition, callback) {};
 
 /**
  * Conceals the drawer with a transition
@@ -12546,15 +11651,7 @@ DrawerLayout.prototype.open = function open(transition, callback) {
  * @param [transition] {Boolean|Object} transition definition
  * @param [callback] {Function}         callback
  */
-DrawerLayout.prototype.close = function close(transition, callback) {
-    if (transition instanceof Function) callback = transition;
-    if (transition === undefined) transition = this.options.transition;
-    this.setPosition(0, transition, callback);
-    if (this._isOpen){
-        this._isOpen = false;
-        this._eventOutput.emit('close');
-    }
-};
+DrawerLayout.prototype.close = function close(transition, callback) {};
 
 /**
  * Sets the position in pixels for the content's displacement
@@ -12564,10 +11661,7 @@ DrawerLayout.prototype.close = function close(transition, callback) {
  * @param [transition] {Boolean|Object} transition definition
  * @param [callback] {Function}         callback
  */
-DrawerLayout.prototype.setPosition = function setPosition(position, transition, callback) {
-    if (this._position.isActive()) this._position.halt();
-    this._position.set(position, transition, callback);
-};
+DrawerLayout.prototype.setPosition = function setPosition(position, transition, callback) {};
 
 /**
  * Gets the position in pixels for the content's displacement
@@ -12575,9 +11669,7 @@ DrawerLayout.prototype.setPosition = function setPosition(position, transition, 
  * @method getPosition
  * @return position {Number} position
  */
-DrawerLayout.prototype.getPosition = function getPosition() {
-    return this._position.get();
-};
+DrawerLayout.prototype.getPosition = function getPosition() {};
 
 /**
  * Sets the progress (between 0 and 1) for the content's displacement
@@ -12587,9 +11679,7 @@ DrawerLayout.prototype.getPosition = function getPosition() {
  * @param [transition] {Boolean|Object} transition definition
  * @param [callback] {Function}         callback
  */
-DrawerLayout.prototype.setProgress = function setProgress(progress, transition, callback) {
-    return this._position.set(progress * this._cachedLength, transition, callback);
-};
+DrawerLayout.prototype.setProgress = function setProgress(progress, transition, callback) {};
 
 /**
  * Gets the progress (between 0 and 1) for the content's displacement
@@ -12597,9 +11687,7 @@ DrawerLayout.prototype.setProgress = function setProgress(progress, transition, 
  * @method getProgress
  * @return position {Number} position
  */
-DrawerLayout.prototype.getProgress = function getProgress() {
-    return this._position.get() / this._cachedLength;
-};
+DrawerLayout.prototype.getProgress = function getProgress() {};
 
 /**
  * Toggles between open and closed states
