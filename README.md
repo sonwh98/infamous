@@ -35,4 +35,6 @@ Before running your code through advanced compilation, be sure to set
                     :non-standard-jsdoc :off}}
 ```
 
-or your terminal will go beserk on you.
+or your terminal will go berserk on you.
+
+see http://swannodette.github.io/2014/03/14/externs-got-you-down/
