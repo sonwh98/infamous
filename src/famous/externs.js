@@ -6083,74 +6083,7 @@ Snap.prototype.getEnergy = function getEnergy(targets, source) {
  * @param source {Body}         The source of the constraint
  * @param dt {Number}           Delta time
  */
-Snap.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    var options      = this.options;
-    var pDiff        = this.pDiff;
-    var vDiff        = this.vDiff;
-    var impulse1     = this.impulse1;
-    var impulse2     = this.impulse2;
-    var length       = options.length;
-    var anchor       = options.anchor || source.position;
-    var period       = options.period;
-    var dampingRatio = options.dampingRatio;
-
-    for (var i = 0; i < targets.length ; i++) {
-        var target = targets[i];
-
-        var p1 = target.position;
-        var v1 = target.velocity;
-        var m1 = target.mass;
-        var w1 = target.inverseMass;
-
-        pDiff.set(p1.sub(anchor));
-        var dist = pDiff.norm() - length;
-        var effMass;
-
-        if (source) {
-            var w2 = source.inverseMass;
-            var v2 = source.velocity;
-            vDiff.set(v1.sub(v2));
-            effMass = 1 / (w1 + w2);
-        }
-        else {
-            vDiff.set(v1);
-            effMass = m1;
-        }
-
-        var gamma;
-        var beta;
-
-        if (this.options.period === 0) {
-            gamma = 0;
-            beta = 1;
-        }
-        else {
-            var k = 4 * effMass * pi * pi / (period * period);
-            var c = 4 * effMass * pi * dampingRatio / period;
-
-            beta  = dt * k / (c + dt * k);
-            gamma = 1 / (c + dt*k);
-        }
-
-        var antiDrift = beta/dt * dist;
-        pDiff.normalize(-antiDrift)
-            .sub(vDiff)
-            .mult(dt / (gamma + dt/effMass))
-            .put(impulse1);
-
-        // var n = new Vector();
-        // n.set(pDiff.normalize());
-        // var lambda = -(n.dot(vDiff) + antiDrift) / (gamma + dt/effMass);
-        // impulse2.set(n.mult(dt*lambda));
-
-        target.applyImpulse(impulse1);
-
-        if (source) {
-            impulse1.mult(-1).put(impulse2);
-            source.applyImpulse(impulse2);
-        }
-    }
-};
+Snap.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 module.exports = Snap;
 },{"../../math/Vector":41,"./Constraint":55}],59:[function(_dereq_,module,exports){
@@ -6178,15 +6111,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @param {Number} [options.period] The spring-like reaction when the constraint is violated.
  *  @param {Number} [options.dampingRatio] The damping-like reaction when the constraint is violated.
  */
-function Surface(options) {
-    this.options = Object.create(Surface.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    this.J = new Vector();
-    this.impulse  = new Vector();
-
-    Constraint.call(this);
-}
+function Surface(options) {}
 
 Surface.prototype = Object.create(Constraint.prototype);
 Surface.prototype.constructor = Surface;
@@ -6218,54 +6143,7 @@ Surface.prototype.setOptions = function setOptions(options) {
  * @param source {Body} Not applicable
  * @param dt {Number} Delta time
  */
-Surface.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    var impulse = this.impulse;
-    var J       = this.J;
-    var options = this.options;
-
-    var f = options.equation;
-    var dampingRatio = options.dampingRatio;
-    var period = options.period;
-
-    for (var i = 0; i < targets.length; i++) {
-        var particle = targets[i];
-
-        var v = particle.velocity;
-        var p = particle.position;
-        var m = particle.mass;
-
-        var gamma;
-        var beta;
-
-        if (period === 0) {
-            gamma = 0;
-            beta = 1;
-        }
-        else {
-            var c = 4 * m * pi * dampingRatio / period;
-            var k = 4 * m * pi * pi / (period * period);
-
-            gamma = 1 / (c + dt*k);
-            beta  = dt*k / (c + dt*k);
-        }
-
-        var x = p.x;
-        var y = p.y;
-        var z = p.z;
-
-        var f0  = f(x, y, z);
-        var dfx = (f(x + epsilon, p, p) - f0) / epsilon;
-        var dfy = (f(x, y + epsilon, p) - f0) / epsilon;
-        var dfz = (f(x, y, p + epsilon) - f0) / epsilon;
-        J.setXYZ(dfx, dfy, dfz);
-
-        var antiDrift = beta/dt * f0;
-        var lambda = -(J.dot(v) + antiDrift) / (gamma + dt * J.normSquared() / m);
-
-        impulse.set(J.mult(dt*lambda));
-        particle.applyImpulse(impulse);
-    }
-};
+Surface.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 module.exports = Surface;
 },{"../../math/Vector":41,"./Constraint":55}],60:[function(_dereq_,module,exports){
@@ -6311,16 +6189,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @param {onContact} [options.onContact] How to handle collision against the wall.
  *
  */
-function Wall(options) {
-    this.options = Object.create(Wall.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.diff = new Vector();
-    this.impulse = new Vector();
-
-    Constraint.call(this);
-}
+function Wall(options) {}
 
 Wall.prototype = Object.create(Constraint.prototype);
 Wall.prototype.constructor = Wall;
@@ -6361,71 +6230,7 @@ Wall.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param options {Objects}
  */
-Wall.prototype.setOptions = function setOptions(options) {
-    if (options.normal !== undefined) {
-        if (options.normal instanceof Vector) this.options.normal = options.normal.clone();
-        if (options.normal instanceof Array)  this.options.normal = new Vector(options.normal);
-    }
-    if (options.restitution !== undefined) this.options.restitution = options.restitution;
-    if (options.drift !== undefined) this.options.drift = options.drift;
-    if (options.slop !== undefined) this.options.slop = options.slop;
-    if (options.distance !== undefined) this.options.distance = options.distance;
-    if (options.onContact !== undefined) this.options.onContact = options.onContact;
-};
-
-function _getNormalVelocity(n, v) {
-    return v.dot(n);
-}
-
-function _getDistanceFromOrigin(p) {
-    var n = this.options.normal;
-    var d = this.options.distance;
-    return p.dot(n) + d;
-}
-
-function _onEnter(particle, overlap, dt) {
-    var p = particle.position;
-    var v = particle.velocity;
-    var m = particle.mass;
-    var n = this.options.normal;
-    var action = this.options.onContact;
-    var restitution = this.options.restitution;
-    var impulse = this.impulse;
-
-    var drift = this.options.drift;
-    var slop = -this.options.slop;
-    var gamma = 0;
-
-    if (this._eventOutput) {
-        var data = {particle : particle, wall : this, overlap : overlap, normal : n};
-        this._eventOutput.emit('preCollision', data);
-        this._eventOutput.emit('collision', data);
-    }
-
-    switch (action) {
-        case Wall.ON_CONTACT.REFLECT:
-            var lambda = (overlap < slop)
-                ? -((1 + restitution) * n.dot(v) + drift / dt * (overlap - slop)) / (m * dt + gamma)
-                : -((1 + restitution) * n.dot(v)) / (m * dt + gamma);
-
-            impulse.set(n.mult(dt * lambda));
-            particle.applyImpulse(impulse);
-            particle.setPosition(p.add(n.mult(-overlap)));
-            break;
-    }
-
-    if (this._eventOutput) this._eventOutput.emit('postCollision', data);
-}
-
-function _onExit(particle, overlap, dt) {
-    var action = this.options.onContact;
-    var p = particle.position;
-    var n = this.options.normal;
-
-    if (action === Wall.ON_CONTACT.REFLECT) {
-        particle.setPosition(p.add(n.mult(-overlap)));
-    }
-}
+Wall.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds an impulse to a physics body's velocity due to the wall constraint
@@ -6435,24 +6240,7 @@ function _onExit(particle, overlap, dt) {
  * @param source {Body}         The source of the constraint
  * @param dt {Number}           Delta time
  */
-Wall.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    var n = this.options.normal;
-
-    for (var i = 0; i < targets.length; i++) {
-        var particle = targets[i];
-        var p = particle.position;
-        var v = particle.velocity;
-        var r = particle.radius || 0;
-
-        var overlap = _getDistanceFromOrigin.call(this, p.add(n.mult(-r)));
-        var nv = _getNormalVelocity.call(this, n, v);
-
-        if (overlap <= 0) {
-            if (nv < 0) _onEnter.call(this, particle, overlap, dt);
-            else _onExit.call(this, particle, overlap, dt);
-        }
-    }
-};
+Wall.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 module.exports = Wall;
 },{"../../math/Vector":41,"./Constraint":55}],61:[function(_dereq_,module,exports){
@@ -6487,13 +6275,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @param {Array} [options.restitution] The energy ratio lost in a collision (0 = stick, 1 = elastic) The energy ratio lost in a collision (0 = stick, 1 = elastic)
  *  @param {Array} [options.onContact] How to handle collision against the wall.
  */
-function Walls(options) {
-    this.options = Object.create(Walls.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-    _createComponents.call(this, options.sides || this.options.sides);
-
-    Constraint.call(this);
-}
+function Walls(options) {}
 
 Walls.prototype = Object.create(Constraint.prototype);
 Walls.prototype.constructor = Walls;
@@ -6536,40 +6318,6 @@ Walls.DEFAULT_OPTIONS = {
     onContact : Walls.ON_CONTACT.REFLECT
 };
 
-var _SIDE_NORMALS = {
-    0 : new Vector(1, 0, 0),
-    1 : new Vector(-1, 0, 0),
-    2 : new Vector(0, 1, 0),
-    3 : new Vector(0,-1, 0),
-    4 : new Vector(0, 0, 1),
-    5 : new Vector(0, 0,-1)
-};
-
-function _getDistance(side, size, origin) {
-    var distance;
-    var SIDES = Walls.SIDES;
-    switch (parseInt(side)) {
-        case SIDES.LEFT:
-            distance = size[0] * origin[0];
-            break;
-        case SIDES.TOP:
-            distance = size[1] * origin[1];
-            break;
-        case SIDES.FRONT:
-            distance = size[2] * origin[2];
-            break;
-        case SIDES.RIGHT:
-            distance = size[0] * (1 - origin[0]);
-            break;
-        case SIDES.BOTTOM:
-            distance = size[1] * (1 - origin[1]);
-            break;
-        case SIDES.BACK:
-            distance = size[2] * (1 - origin[2]);
-            break;
-    }
-    return distance;
-}
 
 /*
  * Setter for options.
@@ -6577,30 +6325,7 @@ function _getDistance(side, size, origin) {
  * @method setOptions
  * @param options {Objects}
  */
-Walls.prototype.setOptions = function setOptions(options) {
-    var resizeFlag = false;
-    if (options.restitution !== undefined) _setOptionsForEach.call(this, {restitution : options.restitution});
-    if (options.drift !== undefined) _setOptionsForEach.call(this, {drift : options.drift});
-    if (options.slop !== undefined) _setOptionsForEach.call(this, {slop : options.slop});
-    if (options.onContact !== undefined) _setOptionsForEach.call(this, {onContact : options.onContact});
-    if (options.size !== undefined) resizeFlag = true;
-    if (options.sides !== undefined) this.options.sides = options.sides;
-    if (options.origin !== undefined) resizeFlag = true;
-    if (resizeFlag) this.setSize(options.size, options.origin);
-};
-
-function _createComponents(sides) {
-    this.components = {};
-    var components = this.components;
-
-    for (var i = 0; i < sides.length; i++) {
-        var side = sides[i];
-        components[i] = new Wall({
-            normal   : _SIDE_NORMALS[side].clone(),
-            distance : _getDistance(side, this.options.size, this.options.origin)
-        });
-    }
-}
+Walls.prototype.setOptions = function setOptions(options) {};
 
 /*
  * Setter for size.
@@ -6608,25 +6333,9 @@ function _createComponents(sides) {
  * @method setOptions
  * @param options {Objects}
  */
-Walls.prototype.setSize = function setSize(size, origin) {
-    origin = origin || this.options.origin;
-    if (origin.length < 3) origin[2] = 0.5;
+Walls.prototype.setSize = function setSize(size, origin) {};
 
-    this.forEach(function(wall, side) {
-        var d = _getDistance(side, size, origin);
-        wall.setOptions({distance : d});
-    });
 
-    this.options.size   = size;
-    this.options.origin = origin;
-};
-
-function _setOptionsForEach(options) {
-    this.forEach(function(wall) {
-        wall.setOptions(options);
-    });
-    for (var key in options) this.options[key] = options[key];
-}
 
 /**
  * Adds an impulse to a physics body's velocity due to the walls constraint
@@ -6636,11 +6345,7 @@ function _setOptionsForEach(options) {
  * @param source {Body}         The source of the constraint
  * @param dt {Number}           Delta time
  */
-Walls.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    this.forEach(function(wall) {
-        wall.applyConstraint(targets, source, dt);
-    });
-};
+Walls.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 /**
  * Apply a method to each wall making up the walls
@@ -6648,10 +6353,7 @@ Walls.prototype.applyConstraint = function applyConstraint(targets, source, dt) 
  * @method applyConstraint
  * @param fn {Function}  Function that takes in a wall as its first parameter
  */
-Walls.prototype.forEach = function forEach(fn) {
-    var sides = this.options.sides;
-    for (var key in this.sides) fn(sides[key], key);
-};
+Walls.prototype.forEach = function forEach(fn) {};
 
 /**
  * Rotates the walls by an angle in the XY-plane
@@ -6659,12 +6361,7 @@ Walls.prototype.forEach = function forEach(fn) {
  * @method applyConstraint
  * @param angle {Function}
  */
-Walls.prototype.rotateZ = function rotateZ(angle) {
-    this.forEach(function(wall) {
-        var n = wall.options.normal;
-        n.rotateZ(angle).put(n);
-    });
-};
+Walls.prototype.rotateZ = function rotateZ(angle) {};
 
 /**
  * Rotates the walls by an angle in the YZ-plane
@@ -6672,12 +6369,7 @@ Walls.prototype.rotateZ = function rotateZ(angle) {
  * @method applyConstraint
  * @param angle {Function}
  */
-Walls.prototype.rotateX = function rotateX(angle) {
-    this.forEach(function(wall) {
-        var n = wall.options.normal;
-        n.rotateX(angle).put(n);
-    });
-};
+Walls.prototype.rotateX = function rotateX(angle) {};
 
 /**
  * Rotates the walls by an angle in the XZ-plane
@@ -6685,23 +6377,12 @@ Walls.prototype.rotateX = function rotateX(angle) {
  * @method applyConstraint
  * @param angle {Function}
  */
-Walls.prototype.rotateY = function rotateY(angle) {
-    this.forEach(function(wall) {
-        var n = wall.options.normal;
-        n.rotateY(angle).put(n);
-    });
-};
+Walls.prototype.rotateY = function rotateY(angle) {};
 
 /**
  * Resets the walls to their starting oritentation
  */
-Walls.prototype.reset = function reset() {
-    var sides = this.options.sides;
-    for (var i in sides) {
-        var component = this.components[i];
-        component.options.normal.set(_SIDE_NORMALS[i]);
-    }
-};
+Walls.prototype.reset = function reset() {};
 
 module.exports = Walls;
 },{"../../math/Vector":41,"./Constraint":55,"./Wall":60}],62:[function(_dereq_,module,exports){
@@ -6737,12 +6418,7 @@ var Force = _dereq_('./Force');
  * @extends Force
  * @param {Object} options options to set on drag
  */
-function Drag(options) {
-    this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    Force.call(this);
-}
+function Drag(options) {}
 
 Drag.prototype = Object.create(Force.prototype);
 Drag.prototype.constructor = Drag;
@@ -6809,19 +6485,7 @@ Drag.DEFAULT_OPTIONS = {
  * @method applyForce
  * @param targets {Array.Body} Array of bodies to apply drag force to.
  */
-Drag.prototype.applyForce = function applyForce(targets) {
-    var strength        = this.options.strength;
-    var forceFunction   = this.options.forceFunction;
-    var force           = this.force;
-    var index;
-    var particle;
-
-    for (index = 0; index < targets.length; index++) {
-        particle = targets[index];
-        forceFunction(particle.velocity).mult(-strength).put(force);
-        particle.applyForce(force);
-    }
-};
+Drag.prototype.applyForce = function applyForce(targets) {};
 
 /**
  * Basic options setter
@@ -6854,11 +6518,7 @@ var EventHandler = _dereq_('../../core/EventHandler');
  * @uses EventHandler
  * @constructor
  */
-function Force(force) {
-    this.force = new Vector(force);
-    this._eventOutput = new EventHandler();
-    EventHandler.setOutputHandler(this, this._eventOutput);
-}
+function Force(force) {}
 
 /**
  * Basic setter for options
@@ -6866,9 +6526,7 @@ function Force(force) {
  * @method setOptions
  * @param options {Objects}
  */
-Force.prototype.setOptions = function setOptions(options) {
-    this._eventOutput.emit('change', options);
-};
+Force.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds a force to a physics body's force accumulator.
@@ -6876,12 +6534,7 @@ Force.prototype.setOptions = function setOptions(options) {
  * @method applyForce
  * @param targets {Array.Body} Array of bodies to apply a force to.
  */
-Force.prototype.applyForce = function applyForce(targets) {
-    var length = targets.length;
-    while (length--) {
-        targets[length].applyForce(this.force);
-    }
-};
+Force.prototype.applyForce = function applyForce(targets) {};
 
 /**
  * Getter for a force's potential energy.
@@ -6889,9 +6542,7 @@ Force.prototype.applyForce = function applyForce(targets) {
  * @method getEnergy
  * @return energy {Number}
  */
-Force.prototype.getEnergy = function getEnergy() {
-    return 0.0;
-};
+Force.prototype.getEnergy = function getEnergy() {};
 
 module.exports = Force;
 },{"../../core/EventHandler":7,"../../math/Vector":41}],65:[function(_dereq_,module,exports){
@@ -6916,15 +6567,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @extends Force
  *  @param {Object} options overwrites default options
  */
-function Repulsion(options) {
-    this.options = Object.create(Repulsion.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.disp  = new Vector();
-
-    Force.call(this);
-}
+function Repulsion(options) {}
 
 Repulsion.prototype = Object.create(Force.prototype);
 Repulsion.prototype.constructor = Repulsion;
@@ -7049,14 +6692,7 @@ Repulsion.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param {Objects} options
  */
-Repulsion.prototype.setOptions = function setOptions(options) {
-    if (options.anchor !== undefined) {
-        if (options.anchor.position instanceof Vector) this.options.anchor = options.anchor.position;
-        if (options.anchor   instanceof Array)  this.options.anchor = new Vector(options.anchor);
-        delete options.anchor;
-    }
-    for (var key in options) this.options[key] = options[key];
-};
+Repulsion.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds a drag force to a physics body's force accumulator.
@@ -7065,45 +6701,7 @@ Repulsion.prototype.setOptions = function setOptions(options) {
  * @param targets {Array.Body}  Array of bodies to apply force to.
  * @param source {Body}         The source of the force
  */
-Repulsion.prototype.applyForce = function applyForce(targets, source) {
-    var options     = this.options;
-    var force       = this.force;
-    var disp        = this.disp;
-
-    var strength    = options.strength;
-    var anchor      = options.anchor || source.position;
-    var cap         = options.cap;
-    var cutoff      = options.cutoff;
-    var rMin        = options.range[0];
-    var rMax        = options.range[1];
-    var decayFn     = options.decayFunction;
-
-    if (strength === 0) return;
-
-    var length = targets.length;
-    var particle;
-    var m1;
-    var p1;
-    var r;
-
-    while (length--) {
-        particle = targets[length];
-
-        if (particle === source) continue;
-
-        m1 = particle.mass;
-        p1 = particle.position;
-
-        disp.set(p1.sub(anchor));
-        r = disp.norm();
-
-        if (r < rMax && r > rMin) {
-            force.set(disp.normalize(strength * m1 * decayFn(r, cutoff)).cap(cap));
-            particle.applyForce(force);
-        }
-    }
-
-};
+Repulsion.prototype.applyForce = function applyForce(targets, source) {};
 
 module.exports = Repulsion;
 },{"../../math/Vector":41,"./Force":64}],66:[function(_dereq_,module,exports){
@@ -7127,9 +6725,7 @@ var Drag = _dereq_('./Drag');
  * @extends Force
  * @param {Object} options options to set on drag
  */
-function RotationalDrag(options) {
-    Drag.call(this, options);
-}
+function RotationalDrag(options) {}
 
 RotationalDrag.prototype = Object.create(Drag.prototype);
 RotationalDrag.prototype.constructor = RotationalDrag;
@@ -7174,22 +6770,7 @@ RotationalDrag.FORCE_FUNCTIONS = {
  * @method applyForce
  * @param targets {Array.Body} Array of bodies to apply drag force to.
  */
-RotationalDrag.prototype.applyForce = function applyForce(targets) {
-    var strength       = this.options.strength;
-    var forceFunction  = this.options.forceFunction;
-    var force          = this.force;
-
-    //TODO: rotational drag as function of inertia
-
-    var index;
-    var particle;
-
-    for (index = 0; index < targets.length; index++) {
-        particle = targets[index];
-        forceFunction(particle.angularVelocity).mult(-100*strength).put(force);
-        particle.applyTorque(force);
-    }
-};
+RotationalDrag.prototype.applyForce = function applyForce(targets) {};
 
 /*
  * Setter for options.
@@ -7197,9 +6778,7 @@ RotationalDrag.prototype.applyForce = function applyForce(targets) {
  * @method setOptions
  * @param {Objects} options
  */
-RotationalDrag.prototype.setOptions = function setOptions(options) {
-    for (var key in options) this.options[key] = options[key];
-};
+RotationalDrag.prototype.setOptions = function setOptions(options) {};
 
 module.exports = RotationalDrag;
 },{"./Drag":63}],67:[function(_dereq_,module,exports){
@@ -7228,9 +6807,7 @@ var Quaternion = _dereq_('../../math/Quaternion');
  *  @extends Spring
  *  @param {Object} options options to set on drag
  */
-function RotationalSpring(options) {
-    Spring.call(this, options);
-}
+function RotationalSpring(options) {}
 
 RotationalSpring.prototype = Object.create(Spring.prototype);
 RotationalSpring.prototype.constructor = RotationalSpring;
@@ -7241,42 +6818,8 @@ RotationalSpring.FORCE_FUNCTIONS = Spring.FORCE_FUNCTIONS;
 /** @const */
 var pi = Math.PI;
 
-function _calcStiffness() {
-    var options = this.options;
-    options.stiffness = Math.pow(2 * pi / options.period, 2);
-}
 
-function _calcDamping() {
-    var options = this.options;
-    options.damping = 4 * pi * options.dampingRatio / options.period;
-}
-
-function _init() {
-    _calcStiffness.call(this);
-    _calcDamping.call(this);
-}
-
-RotationalSpring.prototype.setOptions = function setOptions(options) {
-    // TODO fix no-console error
-    /* eslint no-console: 0 */
-
-    if (options.anchor !== undefined) {
-        if (options.anchor instanceof Quaternion) this.options.anchor = options.anchor;
-        if (options.anchor  instanceof Array) this.options.anchor = new Quaternion(options.anchor);
-    }
-
-    if (options.period !== undefined){
-        this.options.period = options.period;
-    }
-
-    if (options.dampingRatio !== undefined) this.options.dampingRatio = options.dampingRatio;
-    if (options.length !== undefined) this.options.length = options.length;
-    if (options.forceFunction !== undefined) this.options.forceFunction = options.forceFunction;
-    if (options.maxLength !== undefined) this.options.maxLength = options.maxLength;
-
-    _init.call(this);
-    Force.prototype.setOptions.call(this, options);
-};
+RotationalSpring.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds a torque force to a physics body's torque accumulator.
@@ -7284,44 +6827,7 @@ RotationalSpring.prototype.setOptions = function setOptions(options) {
  * @method applyForce
  * @param targets {Array.Body} Array of bodies to apply torque to.
  */
-RotationalSpring.prototype.applyForce = function applyForce(targets) {
-    var force = this.force;
-    var options = this.options;
-    var disp = this.disp;
-
-    var stiffness = options.stiffness;
-    var damping = options.damping;
-    var restLength = options.length;
-    var anchor = options.anchor;
-    var forceFunction = options.forceFunction;
-    var maxLength = options.maxLength;
-
-    var i;
-    var target;
-    var dist;
-    var m;
-
-    for (i = 0; i < targets.length; i++) {
-        target = targets[i];
-
-        disp.set(anchor.sub(target.orientation));
-        dist = disp.norm() - restLength;
-
-        if (dist === 0) return;
-
-        //if dampingRatio specified, then override strength and damping
-        m      = target.mass;
-        stiffness *= m;
-        damping   *= m;
-
-        force.set(disp.normalize(stiffness * forceFunction(dist, maxLength)));
-
-        if (damping) force.add(target.angularVelocity.mult(-damping)).put(force);
-
-        target.applyTorque(force);
-    }
-};
-
+RotationalSpring.prototype.applyForce = function applyForce(targets) {};
 /**
  * Calculates the potential energy of the rotational spring.
  *
@@ -7368,17 +6874,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @extends Force
  *  @param {Object} options options to set on drag
  */
-function Spring(options) {
-    Force.call(this);
-
-    this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.disp = new Vector(0,0,0);
-
-    _init.call(this);
-}
+function Spring(options) {}
 
 Spring.prototype = Object.create(Force.prototype);
 Spring.prototype.constructor = Spring;
@@ -7487,20 +6983,7 @@ Spring.DEFAULT_OPTIONS = {
     forceFunction : Spring.FORCE_FUNCTIONS.HOOK
 };
 
-function _calcStiffness() {
-    var options = this.options;
-    options.stiffness = Math.pow(2 * pi / options.period, 2);
-}
 
-function _calcDamping() {
-    var options = this.options;
-    options.damping = 4 * pi * options.dampingRatio / options.period;
-}
-
-function _init() {
-    _calcStiffness.call(this);
-    _calcDamping.call(this);
-}
 
 /**
  * Basic options setter
@@ -7508,32 +6991,7 @@ function _init() {
  * @method setOptions
  * @param options {Object}
  */
-Spring.prototype.setOptions = function setOptions(options) {
-    // TODO fix no-console error
-    /* eslint no-console: 0 */
-
-    if (options.anchor !== undefined) {
-        if (options.anchor.position instanceof Vector) this.options.anchor = options.anchor.position;
-        if (options.anchor instanceof Vector) this.options.anchor = options.anchor;
-        if (options.anchor instanceof Array)  this.options.anchor = new Vector(options.anchor);
-    }
-
-    if (options.period !== undefined){
-        if (options.period < MIN_PERIOD) {
-            options.period = MIN_PERIOD;
-            console.warn('The period of a SpringTransition is capped at ' + MIN_PERIOD + ' ms. Use a SnapTransition for faster transitions');
-        }
-        this.options.period = options.period;
-    }
-
-    if (options.dampingRatio !== undefined) this.options.dampingRatio = options.dampingRatio;
-    if (options.length !== undefined) this.options.length = options.length;
-    if (options.forceFunction !== undefined) this.options.forceFunction = options.forceFunction;
-    if (options.maxLength !== undefined) this.options.maxLength = options.maxLength;
-
-    _init.call(this);
-    Force.prototype.setOptions.call(this, options);
-};
+Spring.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds a spring force to a physics body's force accumulator.
@@ -7541,51 +6999,7 @@ Spring.prototype.setOptions = function setOptions(options) {
  * @method applyForce
  * @param targets {Array.Body} Array of bodies to apply force to.
  */
-Spring.prototype.applyForce = function applyForce(targets, source) {
-    var force = this.force;
-    var disp = this.disp;
-    var options = this.options;
-
-    var stiffness = options.stiffness;
-    var damping = options.damping;
-    var restLength = options.length;
-    var maxLength = options.maxLength;
-    var anchor = options.anchor || source.position;
-    var forceFunction = options.forceFunction;
-
-    var i;
-    var target;
-    var p2;
-    var v2;
-    var dist;
-    var m;
-
-    for (i = 0; i < targets.length; i++) {
-        target = targets[i];
-        p2 = target.position;
-        v2 = target.velocity;
-
-        anchor.sub(p2).put(disp);
-        dist = disp.norm() - restLength;
-
-        if (dist === 0) return;
-
-        //if dampingRatio specified, then override strength and damping
-        m      = target.mass;
-        stiffness *= m;
-        damping   *= m;
-
-        disp.normalize(stiffness * forceFunction(dist, maxLength))
-            .put(force);
-
-        if (damping)
-            if (source) force.add(v2.sub(source.velocity).mult(-damping)).put(force);
-            else force.add(v2.mult(-damping)).put(force);
-
-        target.applyForce(force);
-        if (source) source.applyForce(force.mult(-1));
-    }
-};
+Spring.prototype.applyForce = function applyForce(targets, source) {};
 
 /**
  * Calculates the potential energy of the spring.
@@ -7594,20 +7008,7 @@ Spring.prototype.applyForce = function applyForce(targets, source) {
  * @param [targets] target  The physics body attached to the spring
  * @return {source}         The potential energy of the spring
  */
-Spring.prototype.getEnergy = function getEnergy(targets, source) {
-    var options     = this.options;
-    var restLength  = options.length;
-    var anchor      = (source) ? source.position : options.anchor;
-    var strength    = options.stiffness;
-
-    var energy = 0.0;
-    for (var i = 0; i < targets.length; i++){
-        var target = targets[i];
-        var dist = anchor.sub(target.position).norm() - restLength;
-        energy += 0.5 * strength * dist * dist;
-    }
-    return energy;
-};
+Spring.prototype.getEnergy = function getEnergy(targets, source) {};
 
 module.exports = Spring;
 },{"../../math/Vector":41,"./Force":64}],69:[function(_dereq_,module,exports){
@@ -7632,15 +7033,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @extends Force
  *  @param {Object} options options to set on drag
  */
-function VectorField(options) {
-    Force.call(this);
-
-    this.options = Object.create(VectorField.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.evaluation = new Vector();
-}
+function VectorField(options) {}
 
 VectorField.prototype = Object.create(Force.prototype);
 VectorField.prototype.constructor = VectorField;
@@ -7733,29 +7126,9 @@ VectorField.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param {Objects} options
  */
-VectorField.prototype.setOptions = function setOptions(options) {
-    if (options.strength !== undefined) this.options.strength = options.strength;
-    if (options.direction !== undefined) this.options.direction = options.direction;
-    if (options.field !== undefined) {
-        this.options.field = options.field;
-        _setFieldOptions.call(this, this.options.field);
-    }
-};
+VectorField.prototype.setOptions = function setOptions(options) {};
 
-function _setFieldOptions(field) {
-    var FIELDS = VectorField.FIELDS;
 
-    switch (field) {
-        case FIELDS.CONSTANT:
-            if (!this.options.direction) this.options.direction = new Vector(0,1,0);
-            else if (this.options.direction instanceof Array) this.options.direction = new Vector(this.options.direction);
-            break;
-        case FIELDS.POINT_ATTRACTOR:
-            if (!this.options.position) this.options.position = new Vector(0,0,0);
-            else if (this.options.position instanceof Array) this.options.position = new Vector(this.options.position);
-            break;
-    }
-}
 
 /**
  * Adds the VectorField's force to a physics body's force accumulator.
@@ -7763,50 +7136,9 @@ function _setFieldOptions(field) {
  * @method applyForce
  * @param targets {Array.body} Array of bodies to apply force to.
  */
-VectorField.prototype.applyForce = function applyForce(targets) {
-    var force = this.force;
-    var strength = this.options.strength;
-    var field = this.options.field;
+VectorField.prototype.applyForce = function applyForce(targets) {};
 
-    var i;
-    var target;
-
-    for (i = 0; i < targets.length; i++) {
-        target = targets[i];
-        field.call(this, target.position, this.options);
-        this.evaluation.mult(target.mass * strength).put(force);
-        target.applyForce(force);
-    }
-};
-
-VectorField.prototype.getEnergy = function getEnergy(targets) {
-    var field = this.options.field;
-    var FIELDS = VectorField.FIELDS;
-
-    var energy = 0;
-
-    var i;
-    var target;
-    switch (field) {
-        case FIELDS.CONSTANT:
-            energy = targets.length * this.options.direction.norm();
-            break;
-        case FIELDS.RADIAL:
-            for (i = 0; i < targets.length; i++){
-                target = targets[i];
-                energy += target.position.norm();
-            }
-            break;
-        case FIELDS.POINT_ATTRACTOR:
-            for (i = 0; i < targets.length; i++){
-                target = targets[i];
-                energy += target.position.sub(this.options.position).norm();
-            }
-            break;
-    }
-    energy *= this.options.strength;
-    return energy;
-};
+VectorField.prototype.getEnergy = function getEnergy(targets) {};
 
 module.exports = VectorField;
 },{"../../math/Vector":41,"./Force":64}],70:[function(_dereq_,module,exports){
@@ -7870,16 +7202,7 @@ var SymplecticEuler = {};
  * @param {Body} physics body
  * @param {Number} dt delta time
  */
-SymplecticEuler.integrateVelocity = function integrateVelocity(body, dt) {
-    var v = body.velocity;
-    var w = body.inverseMass;
-    var f = body.force;
-
-    if (f.isZero()) return;
-
-    v.add(f.mult(dt * w)).put(v);
-    f.clear();
-};
+SymplecticEuler.integrateVelocity = function integrateVelocity(body, dt) {};
 
 /*
  * Updates the position of a physics body from its velocity.
@@ -7889,12 +7212,7 @@ SymplecticEuler.integrateVelocity = function integrateVelocity(body, dt) {
  * @param {Body} physics body
  * @param {Number} dt delta time
  */
-SymplecticEuler.integratePosition = function integratePosition(body, dt) {
-    var p = body.position;
-    var v = body.velocity;
-
-    p.add(v.mult(dt)).put(p);
-};
+SymplecticEuler.integratePosition = function integratePosition(body, dt) {};
 
 /*
  * Updates the angular momentum of a physics body from its accumuled torque.
