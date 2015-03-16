@@ -4996,38 +4996,10 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @constructor
  * @param options {Object} options
  */
-function PhysicsEngine(options) {
-    this.options = Object.create(PhysicsEngine.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
+function PhysicsEngine(options) {}
 
-    this._particles      = [];   //list of managed particles
-    this._bodies         = [];   //list of managed bodies
-    this._agentData      = {};   //hash of managed agent data
-    this._forces         = [];   //list of Ids of agents that are forces
-    this._constraints    = [];   //list of Ids of agents that are constraints
 
-    this._buffer         = 0.0;
-    this._prevTime       = now();
-    this._isSleeping     = false;
-    this._eventHandler   = null;
-    this._currAgentId    = 0;
-    this._hasBodies      = false;
-    this._eventHandler   = null;
-}
 
-/** const */
-var TIMESTEP = 17;
-var MIN_TIME_STEP = 1000 / 120;
-var MAX_TIME_STEP = 17;
-
-var now = Date.now;
-
-// Catalogue of outputted events
-var _events = {
-    start : 'start',
-    update : 'update',
-    end : 'end'
-};
 
 /**
  * @property PhysicsEngine.DEFAULT_OPTIONS
@@ -5086,16 +5058,7 @@ PhysicsEngine.prototype.setOptions = function setOptions(opts) {
  * @param body {Body}
  * @return body {Body}
  */
-PhysicsEngine.prototype.addBody = function addBody(body) {
-    body._engine = this;
-    if (body.isBody) {
-        this._bodies.push(body);
-        this._hasBodies = true;
-    }
-    else this._particles.push(body);
-    body.on('start', this.wake.bind(this));
-    return body;
-};
+PhysicsEngine.prototype.addBody = function addBody(body) {};
 
 /**
  * Remove a body from the engine. Detaches body from all forces and
@@ -5106,41 +5069,9 @@ PhysicsEngine.prototype.addBody = function addBody(body) {
  * @method removeBody
  * @param body {Body}
  */
-PhysicsEngine.prototype.removeBody = function removeBody(body) {
-    var array = (body.isBody) ? this._bodies : this._particles;
-    var index = array.indexOf(body);
-    if (index > -1) {
-        for (var agentKey in this._agentData) {
-            if (this._agentData.hasOwnProperty(agentKey)) {
-                this.detachFrom(this._agentData[agentKey].id, body);
-            }
-        }
-        array.splice(index,1);
-    }
-    if (this.getBodies().length === 0) this._hasBodies = false;
-};
+PhysicsEngine.prototype.removeBody = function removeBody(body) {};
 
-function _mapAgentArray(agent) {
-    if (agent.applyForce)      return this._forces;
-    if (agent.applyConstraint) return this._constraints;
-}
 
-function _attachOne(agent, targets, source) {
-    if (targets === undefined) targets = this.getParticlesAndBodies();
-    if (!(targets instanceof Array)) targets = [targets];
-
-    agent.on('change', this.wake.bind(this));
-
-    this._agentData[this._currAgentId] = {
-        agent   : agent,
-        id      : this._currAgentId,
-        targets : targets,
-        source  : source
-    };
-
-    _mapAgentArray.call(this, agent).push(this._currAgentId);
-    return this._currAgentId++;
-}
 
 /**
  * Attaches a force or constraint to a Body. Returns an AgentId of the
@@ -5152,17 +5083,7 @@ function _attachOne(agent, targets, source) {
  * @param [source] {Body} The source of the agent
  * @return AgentId {Number}
  */
-PhysicsEngine.prototype.attach = function attach(agents, targets, source) {
-    this.wake();
-
-    if (agents instanceof Array) {
-        var agentIDs = [];
-        for (var i = 0; i < agents.length; i++)
-            agentIDs[i] = _attachOne.call(this, agents[i], targets, source);
-        return agentIDs;
-    }
-    else return _attachOne.call(this, agents, targets, source);
-};
+PhysicsEngine.prototype.attach = function attach(agents, targets, source) {};
 
 /**
  * Append a body to the targets of a previously defined physics agent.
@@ -5171,9 +5092,7 @@ PhysicsEngine.prototype.attach = function attach(agents, targets, source) {
  * @param agentID {AgentId} The agentId of a previously defined agent
  * @param target {Body} The Body affected by the agent
  */
-PhysicsEngine.prototype.attachTo = function attachTo(agentID, target) {
-    _getAgentData.call(this, agentID).targets.push(target);
-};
+PhysicsEngine.prototype.attachTo = function attachTo(agentID, target) {};
 
 /**
  * Undoes PhysicsEngine.attach. Removes an agent and its associated
@@ -5182,16 +5101,7 @@ PhysicsEngine.prototype.attachTo = function attachTo(agentID, target) {
  * @method detach
  * @param id {AgentId} The agentId of a previously defined agent
  */
-PhysicsEngine.prototype.detach = function detach(id) {
-    // detach from forces/constraints array
-    var agent = this.getAgent(id);
-    var agentArray = _mapAgentArray.call(this, agent);
-    var index = agentArray.indexOf(id);
-    agentArray.splice(index,1);
-
-    // detach agents array
-    delete this._agentData[id];
-};
+PhysicsEngine.prototype.detach = function detach(id) {};
 
 /**
  * Remove a single Body from a previously defined agent.
@@ -5200,15 +5110,7 @@ PhysicsEngine.prototype.detach = function detach(id) {
  * @param id {AgentId} The agentId of a previously defined agent
  * @param target {Body} The body to remove from the agent
  */
-PhysicsEngine.prototype.detachFrom = function detachFrom(id, target) {
-    var boundAgent = _getAgentData.call(this, id);
-    if (boundAgent.source === target) this.detach(id);
-    else {
-        var targets = boundAgent.targets;
-        var index = targets.indexOf(target);
-        if (index > -1) targets.splice(index,1);
-    }
-};
+PhysicsEngine.prototype.detachFrom = function detachFrom(id, target) {};
 
 /**
  * A convenience method to give the Physics Engine a clean slate of
@@ -5216,16 +5118,8 @@ PhysicsEngine.prototype.detachFrom = function detachFrom(id, target) {
  *
  * @method detachAll
  */
-PhysicsEngine.prototype.detachAll = function detachAll() {
-    this._agentData     = {};
-    this._forces        = [];
-    this._constraints   = [];
-    this._currAgentId   = 0;
-};
+PhysicsEngine.prototype.detachAll = function detachAll() {};
 
-function _getAgentData(id) {
-    return this._agentData[id];
-}
 
 /**
  * Returns the corresponding agent given its agentId.
@@ -5233,9 +5127,7 @@ function _getAgentData(id) {
  * @method getAgent
  * @param id {AgentId}
  */
-PhysicsEngine.prototype.getAgent = function getAgent(id) {
-    return _getAgentData.call(this, id).agent;
-};
+PhysicsEngine.prototype.getAgent = function getAgent(id) {};
 
 /**
  * Returns all particles that are currently managed by the Physics Engine.
@@ -5243,9 +5135,7 @@ PhysicsEngine.prototype.getAgent = function getAgent(id) {
  * @method getParticles
  * @return particles {Array.Particles}
  */
-PhysicsEngine.prototype.getParticles = function getParticles() {
-    return this._particles;
-};
+PhysicsEngine.prototype.getParticles = function getParticles() {};
 
 /**
  * Returns all bodies, except particles, that are currently managed by the Physics Engine.
@@ -5253,9 +5143,7 @@ PhysicsEngine.prototype.getParticles = function getParticles() {
  * @method getBodies
  * @return bodies {Array.Bodies}
  */
-PhysicsEngine.prototype.getBodies = function getBodies() {
-    return this._bodies;
-};
+PhysicsEngine.prototype.getBodies = function getBodies() {};
 
 /**
  * Returns all bodies that are currently managed by the Physics Engine.
@@ -5263,9 +5151,7 @@ PhysicsEngine.prototype.getBodies = function getBodies() {
  * @method getBodies
  * @return bodies {Array.Bodies}
  */
-PhysicsEngine.prototype.getParticlesAndBodies = function getParticlesAndBodies() {
-    return this.getParticles().concat(this.getBodies());
-};
+PhysicsEngine.prototype.getParticlesAndBodies = function getParticlesAndBodies() {};
 
 /**
  * Iterates over every Particle and applies a function whose first
@@ -5275,11 +5161,7 @@ PhysicsEngine.prototype.getParticlesAndBodies = function getParticlesAndBodies()
  * @param fn {Function} Function to iterate over
  * @param [dt] {Number} Delta time
  */
-PhysicsEngine.prototype.forEachParticle = function forEachParticle(fn, dt) {
-    var particles = this.getParticles();
-    for (var index = 0, len = particles.length; index < len; index++)
-        fn.call(this, particles[index], dt);
-};
+PhysicsEngine.prototype.forEachParticle = function forEachParticle(fn, dt) {};
 
 /**
  * Iterates over every Body that isn't a Particle and applies
@@ -5289,12 +5171,7 @@ PhysicsEngine.prototype.forEachParticle = function forEachParticle(fn, dt) {
  * @param fn {Function} Function to iterate over
  * @param [dt] {Number} Delta time
  */
-PhysicsEngine.prototype.forEachBody = function forEachBody(fn, dt) {
-    if (!this._hasBodies) return;
-    var bodies = this.getBodies();
-    for (var index = 0, len = bodies.length; index < len; index++)
-        fn.call(this, bodies[index], dt);
-};
+PhysicsEngine.prototype.forEachBody = function forEachBody(fn, dt) {};
 
 /**
  * Iterates over every Body and applies a function whose first
@@ -5304,82 +5181,7 @@ PhysicsEngine.prototype.forEachBody = function forEachBody(fn, dt) {
  * @param fn {Function} Function to iterate over
  * @param [dt] {Number} Delta time
  */
-PhysicsEngine.prototype.forEach = function forEach(fn, dt) {
-    this.forEachParticle(fn, dt);
-    this.forEachBody(fn, dt);
-};
-
-function _updateForce(index) {
-    var boundAgent = _getAgentData.call(this, this._forces[index]);
-    boundAgent.agent.applyForce(boundAgent.targets, boundAgent.source);
-}
-
-function _updateForces() {
-    for (var index = this._forces.length - 1; index > -1; index--)
-        _updateForce.call(this, index);
-}
-
-function _updateConstraint(index, dt) {
-    var boundAgent = this._agentData[this._constraints[index]];
-    return boundAgent.agent.applyConstraint(boundAgent.targets, boundAgent.source, dt);
-}
-
-function _updateConstraints(dt) {
-    var iteration = 0;
-    while (iteration < this.options.constraintSteps) {
-        for (var index = this._constraints.length - 1; index > -1; index--)
-            _updateConstraint.call(this, index, dt);
-        iteration++;
-    }
-}
-
-function _updateVelocities(body, dt) {
-    body.integrateVelocity(dt);
-    if (this.options.velocityCap)
-        body.velocity.cap(this.options.velocityCap).put(body.velocity);
-}
-
-function _updateAngularVelocities(body, dt) {
-    body.integrateAngularMomentum(dt);
-    body.updateAngularVelocity();
-    if (this.options.angularVelocityCap)
-        body.angularVelocity.cap(this.options.angularVelocityCap).put(body.angularVelocity);
-}
-
-function _updateOrientations(body, dt) {
-    body.integrateOrientation(dt);
-}
-
-function _updatePositions(body, dt) {
-    body.integratePosition(dt);
-    body.emit(_events.update, body);
-}
-
-function _integrate(dt) {
-    _updateForces.call(this, dt);
-    this.forEach(_updateVelocities, dt);
-    this.forEachBody(_updateAngularVelocities, dt);
-    _updateConstraints.call(this, dt);
-    this.forEachBody(_updateOrientations, dt);
-    this.forEach(_updatePositions, dt);
-}
-
-function _getParticlesEnergy() {
-    var energy = 0.0;
-    var particleEnergy = 0.0;
-    this.forEach(function(particle) {
-        particleEnergy = particle.getEnergy();
-        energy += particleEnergy;
-    });
-    return energy;
-}
-
-function _getAgentsEnergy() {
-    var energy = 0;
-    for (var id in this._agentData)
-        energy += this.getAgentEnergy(id);
-    return energy;
-}
+PhysicsEngine.prototype.forEach = function forEach(fn, dt) {};
 
 /**
  * Calculates the potential energy of an agent, like a spring, by its Id
@@ -5388,10 +5190,7 @@ function _getAgentsEnergy() {
  * @param agentId {Number} The attached agent Id
  * @return energy {Number}
  */
-PhysicsEngine.prototype.getAgentEnergy = function(agentId) {
-    var agentData = _getAgentData.call(this, agentId);
-    return agentData.agent.getEnergy(agentData.targets, agentData.source);
-};
+PhysicsEngine.prototype.getAgentEnergy = function(agentId) {};
 
 /**
  * Calculates the kinetic energy of all Body objects and potential energy
@@ -5401,9 +5200,7 @@ PhysicsEngine.prototype.getAgentEnergy = function(agentId) {
  * @method getEnergy
  * @return energy {Number}
  */
-PhysicsEngine.prototype.getEnergy = function getEnergy() {
-    return _getParticlesEnergy.call(this) + _getAgentsEnergy.call(this);
-};
+PhysicsEngine.prototype.getEnergy = function getEnergy() {};
 
 /**
  * Updates all Body objects managed by the physics engine over the
@@ -5411,35 +5208,7 @@ PhysicsEngine.prototype.getEnergy = function getEnergy() {
  *
  * @method step
  */
-PhysicsEngine.prototype.step = function step() {
-    if (this.isSleeping()) return;
-
-    //set current frame's time
-    var currTime = now();
-
-    //milliseconds elapsed since last frame
-    var dtFrame = currTime - this._prevTime;
-
-    this._prevTime = currTime;
-
-    if (dtFrame < MIN_TIME_STEP) return;
-    if (dtFrame > MAX_TIME_STEP) dtFrame = MAX_TIME_STEP;
-
-    //robust integration
-//        this._buffer += dtFrame;
-//        while (this._buffer > this._timestep){
-//            _integrate.call(this, this._timestep);
-//            this._buffer -= this._timestep;
-//        };
-//        _integrate.call(this, this._buffer);
-//        this._buffer = 0.0;
-
-    _integrate.call(this, TIMESTEP);
-
-    this.emit(_events.update, this);
-
-    if (this.getEnergy() < this.options.sleepTolerance) this.sleep();
-};
+PhysicsEngine.prototype.step = function step() {};
 
 /**
  * Tells whether the Physics Engine is sleeping or awake.
@@ -5447,9 +5216,7 @@ PhysicsEngine.prototype.step = function step() {
  * @method isSleeping
  * @return {Boolean}
  */
-PhysicsEngine.prototype.isSleeping = function isSleeping() {
-    return this._isSleeping;
-};
+PhysicsEngine.prototype.isSleeping = function isSleeping() {};
 
 /**
  * Tells whether the Physics Engine is sleeping or awake.
@@ -5457,45 +5224,25 @@ PhysicsEngine.prototype.isSleeping = function isSleeping() {
  * @method isActive
  * @return {Boolean}
  */
-PhysicsEngine.prototype.isActive = function isSleeping() {
-    return !this._isSleeping;
-};
+PhysicsEngine.prototype.isActive = function isSleeping() {};
 
 /**
  * Stops the Physics Engine update loop. Emits an 'end' event.
  *
  * @method sleep
  */
-PhysicsEngine.prototype.sleep = function sleep() {
-    if (this._isSleeping) return;
-    this.forEach(function(body) {
-        body.sleep();
-    });
-    this.emit(_events.end, this);
-    this._isSleeping = true;
-};
+PhysicsEngine.prototype.sleep = function sleep() {};
 
 /**
  * Restarts the Physics Engine update loop. Emits an 'start' event.
  *
  * @method wake
  */
-PhysicsEngine.prototype.wake = function wake() {
-    if (!this._isSleeping) return;
-    this._prevTime = now();
-    this.emit(_events.start, this);
-    this._isSleeping = false;
-};
+PhysicsEngine.prototype.wake = function wake() {};
 
-PhysicsEngine.prototype.emit = function emit(type, data) {
-    if (this._eventHandler === null) return;
-    this._eventHandler.emit(type, data);
-};
+PhysicsEngine.prototype.emit = function emit(type, data) {};
 
-PhysicsEngine.prototype.on = function on(event, fn) {
-    if (this._eventHandler === null) this._eventHandler = new EventHandler();
-    this._eventHandler.on(event, fn);
-};
+PhysicsEngine.prototype.on = function on(event, fn) {};
 
 module.exports = PhysicsEngine;
 },{"../core/EventHandler":7}],49:[function(_dereq_,module,exports){
@@ -5555,10 +5302,7 @@ Body.prototype.constructor = Body;
 
 Body.prototype.isBody = true;
 
-Body.prototype.setMass = function setMass() {
-    Particle.prototype.setMass.apply(this, arguments);
-    this.setMomentsOfInertia();
-};
+Body.prototype.setMass = function setMass() {};
 
 /**
  * Setter for moment of inertia, which is necessary to give proper
@@ -5566,19 +5310,14 @@ Body.prototype.setMass = function setMass() {
  *
  * @method setMomentsOfInertia
  */
-Body.prototype.setMomentsOfInertia = function setMomentsOfInertia() {
-    this.inertia = new Matrix();
-    this.inverseInertia = new Matrix();
-};
+Body.prototype.setMomentsOfInertia = function setMomentsOfInertia() {};
 
 /**
  * Update the angular velocity from the angular momentum state.
  *
  * @method updateAngularVelocity
  */
-Body.prototype.updateAngularVelocity = function updateAngularVelocity() {
-    this.angularVelocity.set(this.inverseInertia.vectorMultiply(this.angularMomentum));
-};
+Body.prototype.updateAngularVelocity = function updateAngularVelocity() {};
 
 /**
  * Determine world coordinates from the local coordinate system. Useful
@@ -5588,9 +5327,7 @@ Body.prototype.updateAngularVelocity = function updateAngularVelocity() {
  * @param localPosition {Vector} local coordinate vector
  * @return global coordinate vector {Vector}
  */
-Body.prototype.toWorldCoordinates = function toWorldCoordinates(localPosition) {
-    return this.pWorld.set(this.orientation.rotateVector(localPosition));
-};
+Body.prototype.toWorldCoordinates = function toWorldCoordinates(localPosition) {};
 
 /**
  * Calculates the kinetic and intertial energy of a body.
@@ -5598,10 +5335,7 @@ Body.prototype.toWorldCoordinates = function toWorldCoordinates(localPosition) {
  * @method getEnergy
  * @return energy {Number}
  */
-Body.prototype.getEnergy = function getEnergy() {
-    return Particle.prototype.getEnergy.call(this)
-        + 0.5 * this.inertia.vectorMultiply(this.angularVelocity).dot(this.angularVelocity);
-};
+Body.prototype.getEnergy = function getEnergy() {};
 
 /**
  * Extends Particle.reset to reset orientation, angular velocity
@@ -5613,12 +5347,7 @@ Body.prototype.getEnergy = function getEnergy() {
  * @param [q] {Array|Quaternion} orientation
  * @param [L] {Array|Vector} angular momentum
  */
-Body.prototype.reset = function reset(p, v, q, L) {
-    Particle.prototype.reset.call(this, p, v);
-    this.angularVelocity.clear();
-    this.setOrientation(q || [1,0,0,0]);
-    this.setAngularMomentum(L || [0,0,0]);
-};
+Body.prototype.reset = function reset(p, v, q, L) {};
 
 /**
  * Setter for orientation
@@ -5626,9 +5355,7 @@ Body.prototype.reset = function reset(p, v, q, L) {
  * @method setOrientation
  * @param q {Array|Quaternion} orientation
  */
-Body.prototype.setOrientation = function setOrientation(q) {
-    this.orientation.set(q);
-};
+Body.prototype.setOrientation = function setOrientation(q) {};
 
 /**
  * Setter for angular velocity
@@ -5636,10 +5363,7 @@ Body.prototype.setOrientation = function setOrientation(q) {
  * @method setAngularVelocity
  * @param w {Array|Vector} angular velocity
  */
-Body.prototype.setAngularVelocity = function setAngularVelocity(w) {
-    this.wake();
-    this.angularVelocity.set(w);
-};
+Body.prototype.setAngularVelocity = function setAngularVelocity(w) {};
 
 /**
  * Setter for angular momentum
@@ -5647,10 +5371,7 @@ Body.prototype.setAngularVelocity = function setAngularVelocity(w) {
  * @method setAngularMomentum
  * @param L {Array|Vector} angular momentum
  */
-Body.prototype.setAngularMomentum = function setAngularMomentum(L) {
-    this.wake();
-    this.angularMomentum.set(L);
-};
+Body.prototype.setAngularMomentum = function setAngularMomentum(L) {};
 
 /**
  * Extends Particle.applyForce with an optional argument
@@ -5660,10 +5381,7 @@ Body.prototype.setAngularMomentum = function setAngularMomentum(L) {
  * @param force {Vector} force
  * @param [location] {Vector} off-center location on the body
  */
-Body.prototype.applyForce = function applyForce(force, location) {
-    Particle.prototype.applyForce.call(this, force);
-    if (location !== undefined) this.applyTorque(location.cross(force));
-};
+Body.prototype.applyForce = function applyForce(force, location) {};
 
 /**
  * Applied a torque force to a body, inducing a rotation.
@@ -5671,10 +5389,7 @@ Body.prototype.applyForce = function applyForce(force, location) {
  * @method applyTorque
  * @param torque {Vector} torque
  */
-Body.prototype.applyTorque = function applyTorque(torque) {
-    this.wake();
-    this.torque.set(this.torque.add(torque));
-};
+Body.prototype.applyTorque = function applyTorque(torque) {};
 
 /**
  * Extends Particle.getTransform to include a rotational component
@@ -5683,12 +5398,7 @@ Body.prototype.applyTorque = function applyTorque(torque) {
  * @method getTransform
  * @return transform {Transform}
  */
-Body.prototype.getTransform = function getTransform() {
-    return Transform.thenMove(
-        this.orientation.getTransform(),
-        Transform.getTranslate(Particle.prototype.getTransform.call(this))
-    );
-};
+Body.prototype.getTransform = function getTransform() {};
 
 /**
  * Extends Particle._integrate to also update the rotational states
@@ -5698,12 +5408,7 @@ Body.prototype.getTransform = function getTransform() {
  * @protected
  * @param dt {Number} delta time
  */
-Body.prototype._integrate = function _integrate(dt) {
-    Particle.prototype._integrate.call(this, dt);
-    this.integrateAngularMomentum(dt);
-    this.updateAngularVelocity(dt);
-    this.integrateOrientation(dt);
-};
+Body.prototype._integrate = function _integrate(dt) {};
 
 /**
  * Updates the angular momentum via the its integrator.
@@ -5711,9 +5416,7 @@ Body.prototype._integrate = function _integrate(dt) {
  * @method integrateAngularMomentum
  * @param dt {Number} delta time
  */
-Body.prototype.integrateAngularMomentum = function integrateAngularMomentum(dt) {
-    Integrator.integrateAngularMomentum(this, dt);
-};
+Body.prototype.integrateAngularMomentum = function integrateAngularMomentum(dt) {};
 
 /**
  * Updates the orientation via the its integrator.
@@ -5721,9 +5424,7 @@ Body.prototype.integrateAngularMomentum = function integrateAngularMomentum(dt) 
  * @method integrateOrientation
  * @param dt {Number} delta time
  */
-Body.prototype.integrateOrientation = function integrateOrientation(dt) {
-    Integrator.integrateOrientation(this, dt);
-};
+Body.prototype.integrateOrientation = function integrateOrientation(dt) {};
 
 module.exports = Body;
 },{"../../core/Transform":15,"../../math/Matrix":37,"../../math/Quaternion":38,"../../math/Vector":41,"../integrators/SymplecticEuler":72,"./Particle":51}],50:[function(_dereq_,module,exports){
@@ -5747,11 +5448,7 @@ var Matrix = _dereq_('../../math/Matrix');
  * @extends Body
  * @constructor
  */
-function Circle(options) {
-    options = options || {};
-    this.setRadius(options.radius || 0);
-    Body.call(this, options);
-}
+function Circle(options) {}
 
 Circle.prototype = Object.create(Body.prototype);
 Circle.prototype.constructor = Circle;
@@ -5761,28 +5458,9 @@ Circle.prototype.constructor = Circle;
  * @method setRadius
  * @param r {Number} radius
  */
-Circle.prototype.setRadius = function setRadius(r) {
-    this.radius = r;
-    this.size = [2*this.radius, 2*this.radius];
-    this.setMomentsOfInertia();
-};
+Circle.prototype.setRadius = function setRadius(r) {};
 
-Circle.prototype.setMomentsOfInertia = function setMomentsOfInertia() {
-    var m = this.mass;
-    var r = this.radius;
-
-    this.inertia = new Matrix([
-        [0.25 * m * r * r, 0, 0],
-        [0, 0.25 * m * r * r, 0],
-        [0, 0, 0.5 * m * r * r]
-    ]);
-
-    this.inverseInertia = new Matrix([
-        [4 / (m * r * r), 0, 0],
-        [0, 4 / (m * r * r), 0],
-        [0, 0, 2 / (m * r * r)]
-    ]);
-};
+Circle.prototype.setMomentsOfInertia = function setMomentsOfInertia() {};
 
 module.exports = Circle;
 },{"../../math/Matrix":37,"./Body":49}],51:[function(_dereq_,module,exports){
@@ -5815,44 +5493,7 @@ var Integrator = _dereq_('../integrators/SymplecticEuler');
  * @param [options.velocity] {Array}    The velocity of the particle.
  * @param [options.mass] {Number}       The mass of the particle.
  */
- function Particle(options) {
-    options = options || {};
-    var defaults = Particle.DEFAULT_OPTIONS;
-
-    // registers
-    this.position = new Vector();
-    this.velocity = new Vector();
-    this.force = new Vector();
-
-    // state variables
-    this._engine = null;
-    this._isSleeping = true;
-    this._eventOutput = null;
-
-    // set scalars
-    this.mass = (options.mass !== undefined)
-        ? options.mass
-        : defaults.mass;
-
-    this.inverseMass = 1 / this.mass;
-
-    // set vectors
-    this.setPosition(options.position || defaults.position);
-    this.setVelocity(options.velocity || defaults.velocity);
-    this.force.set(options.force || [0,0,0]);
-
-    this.transform = Transform.identity.slice();
-
-    // cached _spec
-    this._spec = {
-        size : [true, true],
-        target : {
-            transform : this.transform,
-            origin : [0.5, 0.5],
-            target : null
-        }
-    };
-}
+ function Particle(options) {}
 
 Particle.DEFAULT_OPTIONS = {
     position : [0, 0, 0],
@@ -5860,12 +5501,6 @@ Particle.DEFAULT_OPTIONS = {
     mass : 1
 };
 
-//Catalogue of outputted events
-var _events = {
-    start : 'start',
-    update : 'update',
-    end : 'end'
-};
 
 // Cached timing function
 var now = Date.now;
@@ -5883,33 +5518,21 @@ Particle.prototype.isBody = false;
  * @method isActive
  * @return {Boolean}
  */
-Particle.prototype.isActive = function isActive() {
-    return !this._isSleeping;
-};
+Particle.prototype.isActive = function isActive() {};
 
 /**
  * Stops the particle from updating
  *
  * @method sleep
  */
-Particle.prototype.sleep = function sleep() {
-    if (this._isSleeping) return;
-    this.emit(_events.end, this);
-    this._isSleeping = true;
-};
+Particle.prototype.sleep = function sleep() {};
 
 /**
  * Starts the particle update
  *
  * @method wake
  */
-Particle.prototype.wake = function wake() {
-    if (!this._isSleeping) return;
-    this.emit(_events.start, this);
-    this._isSleeping = false;
-    this._prevTime = now();
-    if (this._engine) this._engine.wake();
-};
+Particle.prototype.wake = function wake() {};
 
 /**
  * Basic setter for position
@@ -5917,9 +5540,7 @@ Particle.prototype.wake = function wake() {
  * @method setPosition
  * @param position {Array|Vector}
  */
-Particle.prototype.setPosition = function setPosition(position) {
-    this.position.set(position);
-};
+Particle.prototype.setPosition = function setPosition(position) {};
 
 /**
  * 1-dimensional setter for position
@@ -5927,9 +5548,7 @@ Particle.prototype.setPosition = function setPosition(position) {
  * @method setPosition1D
  * @param x {Number}
  */
-Particle.prototype.setPosition1D = function setPosition1D(x) {
-    this.position.x = x;
-};
+Particle.prototype.setPosition1D = function setPosition1D(x) {};
 
 /**
  * Basic getter function for position
@@ -5937,10 +5556,7 @@ Particle.prototype.setPosition1D = function setPosition1D(x) {
  * @method getPosition
  * @return position {Array}
  */
-Particle.prototype.getPosition = function getPosition() {
-    this._engine.step();
-    return this.position.get();
-};
+Particle.prototype.getPosition = function getPosition() {};
 
 /**
  * 1-dimensional getter for position
@@ -5948,10 +5564,7 @@ Particle.prototype.getPosition = function getPosition() {
  * @method getPosition1D
  * @return value {Number}
  */
-Particle.prototype.getPosition1D = function getPosition1D() {
-    this._engine.step();
-    return this.position.x;
-};
+Particle.prototype.getPosition1D = function getPosition1D() {};
 
 /**
  * Basic setter function for velocity Vector
@@ -5959,11 +5572,7 @@ Particle.prototype.getPosition1D = function getPosition1D() {
  * @method setVelocity
  * @function
  */
-Particle.prototype.setVelocity = function setVelocity(velocity) {
-    this.velocity.set(velocity);
-    if (!(velocity[0] === 0 && velocity[1] === 0 && velocity[2] === 0))
-        this.wake();
-};
+Particle.prototype.setVelocity = function setVelocity(velocity) {};
 
 /**
  * 1-dimensional setter for velocity
@@ -5971,10 +5580,7 @@ Particle.prototype.setVelocity = function setVelocity(velocity) {
  * @method setVelocity1D
  * @param x {Number}
  */
-Particle.prototype.setVelocity1D = function setVelocity1D(x) {
-    this.velocity.x = x;
-    if (x !== 0) this.wake();
-};
+Particle.prototype.setVelocity1D = function setVelocity1D(x) {};
 
 /**
  * Basic getter function for velocity Vector
@@ -5982,9 +5588,7 @@ Particle.prototype.setVelocity1D = function setVelocity1D(x) {
  * @method getVelocity
  * @return velocity {Array}
  */
-Particle.prototype.getVelocity = function getVelocity() {
-    return this.velocity.get();
-};
+Particle.prototype.getVelocity = function getVelocity() {};
 
 /**
  * Basic setter function for force Vector
@@ -5992,10 +5596,7 @@ Particle.prototype.getVelocity = function getVelocity() {
  * @method setForce
  * @return force {Array}
  */
-Particle.prototype.setForce = function setForce(force) {
-    this.force.set(force);
-    this.wake();
-};
+Particle.prototype.setForce = function setForce(force) {};
 
 /**
  * 1-dimensional getter for velocity
@@ -6003,9 +5604,7 @@ Particle.prototype.setForce = function setForce(force) {
  * @method getVelocity1D
  * @return velocity {Number}
  */
-Particle.prototype.getVelocity1D = function getVelocity1D() {
-    return this.velocity.x;
-};
+Particle.prototype.getVelocity1D = function getVelocity1D() {};
 
 /**
  * Basic setter function for mass quantity
@@ -6013,10 +5612,7 @@ Particle.prototype.getVelocity1D = function getVelocity1D() {
  * @method setMass
  * @param mass {Number} mass
  */
-Particle.prototype.setMass = function setMass(mass) {
-    this.mass = mass;
-    this.inverseMass = 1 / mass;
-};
+Particle.prototype.setMass = function setMass(mass) {};
 
 /**
  * Basic getter function for mass quantity
@@ -6024,9 +5620,7 @@ Particle.prototype.setMass = function setMass(mass) {
  * @method getMass
  * @return mass {Number}
  */
-Particle.prototype.getMass = function getMass() {
-    return this.mass;
-};
+Particle.prototype.getMass = function getMass() {};
 
 /**
  * Reset position and velocity
@@ -6035,10 +5629,7 @@ Particle.prototype.getMass = function getMass() {
  * @param position {Array|Vector}
  * @param velocity {Array|Vector}
  */
-Particle.prototype.reset = function reset(position, velocity) {
-    this.setPosition(position || [0,0,0]);
-    this.setVelocity(velocity || [0,0,0]);
-};
+Particle.prototype.reset = function reset(position, velocity) {};
 
 /**
  * Add force vector to existing internal force Vector
@@ -6046,11 +5637,7 @@ Particle.prototype.reset = function reset(position, velocity) {
  * @method applyForce
  * @param force {Vector}
  */
-Particle.prototype.applyForce = function applyForce(force) {
-    if (force.isZero()) return;
-    this.force.add(force).put(this.force);
-    this.wake();
-};
+Particle.prototype.applyForce = function applyForce(force) {};
 
 /**
  * Add impulse (change in velocity) Vector to this Vector's velocity.
@@ -6058,11 +5645,7 @@ Particle.prototype.applyForce = function applyForce(force) {
  * @method applyImpulse
  * @param impulse {Vector}
  */
-Particle.prototype.applyImpulse = function applyImpulse(impulse) {
-    if (impulse.isZero()) return;
-    var velocity = this.velocity;
-    velocity.add(impulse.mult(this.inverseMass)).put(velocity);
-};
+Particle.prototype.applyImpulse = function applyImpulse(impulse) {};
 
 /**
  * Update a particle's velocity from its force accumulator
@@ -6070,9 +5653,7 @@ Particle.prototype.applyImpulse = function applyImpulse(impulse) {
  * @method integrateVelocity
  * @param dt {Number} Time differential
  */
-Particle.prototype.integrateVelocity = function integrateVelocity(dt) {
-    Integrator.integrateVelocity(this, dt);
-};
+Particle.prototype.integrateVelocity = function integrateVelocity(dt) {};
 
 /**
  * Update a particle's position from its velocity
@@ -6080,9 +5661,7 @@ Particle.prototype.integrateVelocity = function integrateVelocity(dt) {
  * @method integratePosition
  * @param dt {Number} Time differential
  */
-Particle.prototype.integratePosition = function integratePosition(dt) {
-    Integrator.integratePosition(this, dt);
-};
+Particle.prototype.integratePosition = function integratePosition(dt) {};
 
 /**
  * Update the position and velocity of the particle
@@ -6091,10 +5670,7 @@ Particle.prototype.integratePosition = function integratePosition(dt) {
  * @protected
  * @param dt {Number} Time differential
  */
-Particle.prototype._integrate = function _integrate(dt) {
-    this.integrateVelocity(dt);
-    this.integratePosition(dt);
-};
+Particle.prototype._integrate = function _integrate(dt) {};
 
 /**
  * Get kinetic energy of the particle.
@@ -6102,9 +5678,7 @@ Particle.prototype._integrate = function _integrate(dt) {
  * @method getEnergy
  * @function
  */
-Particle.prototype.getEnergy = function getEnergy() {
-    return 0.5 * this.mass * this.velocity.normSquared();
-};
+Particle.prototype.getEnergy = function getEnergy() {};
 
 /**
  * Generate transform from the current position state
@@ -6112,17 +5686,7 @@ Particle.prototype.getEnergy = function getEnergy() {
  * @method getTransform
  * @return Transform {Transform}
  */
-Particle.prototype.getTransform = function getTransform() {
-    this._engine.step();
-
-    var position = this.position;
-    var transform = this.transform;
-
-    transform[12] = position.x;
-    transform[13] = position.y;
-    transform[14] = position.z;
-    return transform;
-};
+Particle.prototype.getTransform = function getTransform() {};
 
 /**
  * The modify interface of a Modifier
@@ -6131,44 +5695,17 @@ Particle.prototype.getTransform = function getTransform() {
  * @param target {Spec}
  * @return Spec {Spec}
  */
-Particle.prototype.modify = function modify(target) {
-    var _spec = this._spec.target;
-    _spec.transform = this.getTransform();
-    _spec.target = target;
-    return this._spec;
-};
+Particle.prototype.modify = function modify(target) {};
 
-// private
-function _createEventOutput() {
-    this._eventOutput = new EventHandler();
-    this._eventOutput.bindThis(this);
-    EventHandler.setOutputHandler(this, this._eventOutput);
-}
+Particle.prototype.emit = function emit(type, data) {};
 
-Particle.prototype.emit = function emit(type, data) {
-    if (!this._eventOutput) return;
-    this._eventOutput.emit(type, data);
-};
+Particle.prototype.on = function on() {};
 
-Particle.prototype.on = function on() {
-    _createEventOutput.call(this);
-    return this.on.apply(this, arguments);
-};
+Particle.prototype.removeListener = function removeListener() {};
 
-Particle.prototype.removeListener = function removeListener() {
-    _createEventOutput.call(this);
-    return this.removeListener.apply(this, arguments);
-};
+Particle.prototype.pipe = function pipe() {};
 
-Particle.prototype.pipe = function pipe() {
-    _createEventOutput.call(this);
-    return this.pipe.apply(this, arguments);
-};
-
-Particle.prototype.unpipe = function unpipe() {
-    _createEventOutput.call(this);
-    return this.unpipe.apply(this, arguments);
-};
+Particle.prototype.unpipe = function unpipe() {};
 
 module.exports = Particle;
 },{"../../core/EventHandler":7,"../../core/Transform":15,"../../math/Vector":41,"../integrators/SymplecticEuler":72}],52:[function(_dereq_,module,exports){
@@ -6192,11 +5729,7 @@ var Matrix = _dereq_('../../math/Matrix');
  * @extends Body
  * @constructor
  */
-function Rectangle(options) {
-    options = options || {};
-    this.size = options.size || [0,0];
-    Body.call(this, options);
-}
+function Rectangle(options) {}
 
 Rectangle.prototype = Object.create(Body.prototype);
 Rectangle.prototype.constructor = Rectangle;
@@ -6206,28 +5739,9 @@ Rectangle.prototype.constructor = Rectangle;
  * @method setSize
  * @param size {Array} size = [width, height]
  */
-Rectangle.prototype.setSize = function setSize(size) {
-    this.size = size;
-    this.setMomentsOfInertia();
-};
+Rectangle.prototype.setSize = function setSize(size) {};
 
-Rectangle.prototype.setMomentsOfInertia = function setMomentsOfInertia() {
-    var m = this.mass;
-    var w = this.size[0];
-    var h = this.size[1];
-
-    this.inertia = new Matrix([
-        [m * h * h / 12, 0, 0],
-        [0, m * w * w / 12, 0],
-        [0, 0, m * (w * w + h * h) / 12]
-    ]);
-
-    this.inverseInertia = new Matrix([
-        [12 / (m * h * h), 0, 0],
-        [0, 12 / (m * w * w), 0],
-        [0, 0, 12 / (m * (w * w + h * h))]
-    ]);
-};
+Rectangle.prototype.setMomentsOfInertia = function setMomentsOfInertia() {};
 
 module.exports = Rectangle;
 },{"../../math/Matrix":37,"./Body":49}],53:[function(_dereq_,module,exports){
@@ -6263,19 +5777,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @param {Number} [options.slop] Amount of penetration in pixels to ignore before collision event triggers
  *
  */
-function Collision(options) {
-    this.options = Object.create(Collision.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.normal   = new Vector();
-    this.pDiff    = new Vector();
-    this.vDiff    = new Vector();
-    this.impulse1 = new Vector();
-    this.impulse2 = new Vector();
-
-    Constraint.call(this);
-}
+function Collision(options) {}
 
 Collision.prototype = Object.create(Constraint.prototype);
 Collision.prototype.constructor = Collision;
@@ -6286,9 +5788,7 @@ Collision.DEFAULT_OPTIONS = {
     slop : 0
 };
 
-function _normalVelocity(particle1, particle2) {
-    return particle1.velocity.dot(particle2.velocity);
-}
+function _normalVelocity(particle1, particle2) {}
 
 /*
  * Setter for options.
@@ -6296,9 +5796,7 @@ function _normalVelocity(particle1, particle2) {
  * @method setOptions
  * @param options {Objects}
  */
-Collision.prototype.setOptions = function setOptions(options) {
-    for (var key in options) this.options[key] = options[key];
-};
+Collision.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds an impulse to a physics body's velocity due to the constraint
@@ -6308,77 +5806,7 @@ Collision.prototype.setOptions = function setOptions(options) {
  * @param source {Body}         The source of the constraint
  * @param dt {Number}           Delta time
  */
-Collision.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    if (source === undefined) return;
-
-    var v1 = source.velocity;
-    var p1 = source.position;
-    var w1 = source.inverseMass;
-    var r1 = source.radius;
-
-    var options = this.options;
-    var drift = options.drift;
-    var slop = -options.slop;
-    var restitution = options.restitution;
-
-    var n     = this.normal;
-    var pDiff = this.pDiff;
-    var vDiff = this.vDiff;
-    var impulse1 = this.impulse1;
-    var impulse2 = this.impulse2;
-
-    for (var i = 0; i < targets.length; i++) {
-        var target = targets[i];
-
-        if (target === source) continue;
-
-        var v2 = target.velocity;
-        var p2 = target.position;
-        var w2 = target.inverseMass;
-        var r2 = target.radius;
-
-        pDiff.set(p2.sub(p1));
-        vDiff.set(v2.sub(v1));
-
-        var dist    = pDiff.norm();
-        var overlap = dist - (r1 + r2);
-        var effMass = 1/(w1 + w2);
-        var gamma   = 0;
-
-        if (overlap < 0) {
-
-            n.set(pDiff.normalize());
-
-            if (this._eventOutput) {
-                var collisionData = {
-                    target  : target,
-                    source  : source,
-                    overlap : overlap,
-                    normal  : n
-                };
-
-                this._eventOutput.emit('preCollision', collisionData);
-                this._eventOutput.emit('collision', collisionData);
-            }
-
-            var lambda = (overlap <= slop)
-                ? ((1 + restitution) * n.dot(vDiff) + drift/dt * (overlap - slop)) / (gamma + dt/effMass)
-                : ((1 + restitution) * n.dot(vDiff)) / (gamma + dt/effMass);
-
-            n.mult(dt*lambda).put(impulse1);
-            impulse1.mult(-1).put(impulse2);
-
-            source.applyImpulse(impulse1);
-            target.applyImpulse(impulse2);
-
-            //source.setPosition(p1.add(n.mult(overlap/2)));
-            //target.setPosition(p2.sub(n.mult(overlap/2)));
-
-            if (this._eventOutput) this._eventOutput.emit('postCollision', collisionData);
-
-        }
-    }
-};
+Collision.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 module.exports = Collision;
 },{"../../math/Vector":41,"./Constraint":55}],55:[function(_dereq_,module,exports){
@@ -6401,11 +5829,7 @@ var EventHandler = _dereq_('../../core/EventHandler');
  *  @uses EventHandler
  *  @param options {Object}
  */
-function Constraint() {
-    this.options = this.options || {};
-    this._eventOutput = new EventHandler();
-    EventHandler.setOutputHandler(this, this._eventOutput);
-}
+function Constraint() {}
 
 /*
  * Setter for options.
@@ -6413,9 +5837,7 @@ function Constraint() {
  * @method setOptions
  * @param options {Objects}
  */
-Constraint.prototype.setOptions = function setOptions(options) {
-    this._eventOutput.emit('change', options);
-};
+Constraint.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds an impulse to a physics body's velocity due to the constraint
@@ -6464,16 +5886,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @param {Number} [options.period] The spring-like reaction when the constraint is violated
  *  @param {Number} [options.number] The damping-like reaction when the constraint is violated
  */
-function Curve(options) {
-    this.options = Object.create(Curve.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.J = new Vector();
-    this.impulse = new Vector();
-
-    Constraint.call(this);
-}
+function Curve(options) {}
 
 Curve.prototype = Object.create(Constraint.prototype);
 Curve.prototype.constructor = Curve;
@@ -6510,61 +5923,7 @@ Curve.prototype.setOptions = function setOptions(options) {
  * @param source {Body} Not applicable
  * @param dt {Number} Delta time
  */
-Curve.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    var options = this.options;
-    var impulse = this.impulse;
-    var J = this.J;
-
-    var f = options.equation;
-    var g = options.plane;
-    var dampingRatio = options.dampingRatio;
-    var period = options.period;
-
-    for (var i = 0; i < targets.length; i++) {
-        var body = targets[i];
-
-        var v = body.velocity;
-        var p = body.position;
-        var m = body.mass;
-
-        var gamma;
-        var beta;
-
-        if (period === 0) {
-            gamma = 0;
-            beta = 1;
-        }
-        else {
-            var c = 4 * m * pi * dampingRatio / period;
-            var k = 4 * m * pi * pi / (period * period);
-
-            gamma = 1 / (c + dt*k);
-            beta  = dt*k / (c + dt*k);
-        }
-
-        var x = p.x;
-        var y = p.y;
-        var z = p.z;
-
-        var f0  = f(x, y, z);
-        var dfx = (f(x + epsilon, p, p) - f0) / epsilon;
-        var dfy = (f(x, y + epsilon, p) - f0) / epsilon;
-        var dfz = (f(x, y, p + epsilon) - f0) / epsilon;
-
-        var g0  = g(x, y, z);
-        var dgx = (g(x + epsilon, y, z) - g0) / epsilon;
-        var dgy = (g(x, y + epsilon, z) - g0) / epsilon;
-        var dgz = (g(x, y, z + epsilon) - g0) / epsilon;
-
-        J.setXYZ(dfx + dgx, dfy + dgy, dfz + dgz);
-
-        var antiDrift = beta/dt * (f0 + g0);
-        var lambda = -(J.dot(v) + antiDrift) / (gamma + dt * J.normSquared() / m);
-
-        impulse.set(J.mult(dt*lambda));
-        body.applyImpulse(impulse);
-    }
-};
+Curve.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 module.exports = Curve;
 },{"../../math/Vector":41,"./Constraint":55}],57:[function(_dereq_,module,exports){
@@ -6596,18 +5955,7 @@ var Vector = _dereq_('../../math/Vector');
  *  @param {Number} [options.dampingRatio] The damping-like reaction when the constraint is broken.
  *
  */
-function Distance(options) {
-    this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.impulse  = new Vector();
-    this.normal   = new Vector();
-    this.diffP    = new Vector();
-    this.diffV    = new Vector();
-
-    Constraint.call(this);
-}
+function Distance(options) {}
 
 Distance.prototype = Object.create(Constraint.prototype);
 Distance.prototype.constructor = Distance;
@@ -6628,17 +5976,7 @@ Distance.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param options {Objects}
  */
-Distance.prototype.setOptions = function setOptions(options) {
-    if (options.anchor) {
-        if (options.anchor.position instanceof Vector) this.options.anchor = options.anchor.position;
-        if (options.anchor   instanceof Vector)  this.options.anchor = options.anchor;
-        if (options.anchor   instanceof Array)  this.options.anchor = new Vector(options.anchor);
-    }
-    if (options.length !== undefined) this.options.length = options.length;
-    if (options.dampingRatio !== undefined) this.options.dampingRatio = options.dampingRatio;
-    if (options.period !== undefined) this.options.period = options.period;
-    if (options.minLength !== undefined) this.options.minLength = options.minLength;
-};
+Distance.prototype.setOptions = function setOptions(options) {};
 
 function _calcError(impulse, body) {
     return body.mass * impulse.norm();
@@ -6650,10 +5988,7 @@ function _calcError(impulse, body) {
  * @method setOptions
  * @param anchor {Array}
  */
-Distance.prototype.setAnchor = function setAnchor(anchor) {
-    if (!this.options.anchor) this.options.anchor = new Vector();
-    this.options.anchor.set(anchor);
-};
+Distance.prototype.setAnchor = function setAnchor(anchor) {};
 
 /**
  * Adds an impulse to a physics body's velocity due to the constraint
@@ -6663,75 +5998,7 @@ Distance.prototype.setAnchor = function setAnchor(anchor) {
  * @param source {Body}         The source of the constraint
  * @param dt {Number}           Delta time
  */
-Distance.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
-    var n        = this.normal;
-    var diffP    = this.diffP;
-    var diffV    = this.diffV;
-    var impulse  = this.impulse;
-    var options  = this.options;
-
-    var dampingRatio = options.dampingRatio;
-    var period       = options.period;
-    var minLength    = options.minLength;
-
-    var p2;
-    var w2;
-
-    if (source) {
-        var v2 = source.velocity;
-        p2 = source.position;
-        w2 = source.inverseMass;
-    }
-    else {
-        p2 = this.options.anchor;
-        w2 = 0;
-    }
-
-    var length = this.options.length;
-
-    for (var i = 0; i < targets.length; i++) {
-        var body = targets[i];
-
-        var v1 = body.velocity;
-        var p1 = body.position;
-        var w1 = body.inverseMass;
-
-        diffP.set(p1.sub(p2));
-        n.set(diffP.normalize());
-
-        var dist = diffP.norm() - length;
-
-        //rope effect
-        if (Math.abs(dist) < minLength) return;
-
-        if (source) diffV.set(v1.sub(v2));
-        else diffV.set(v1);
-
-        var effMass = 1 / (w1 + w2);
-        var gamma;
-        var beta;
-
-        if (period === 0) {
-            gamma = 0;
-            beta  = 1;
-        }
-        else {
-            var c = 4 * effMass * pi * dampingRatio / period;
-            var k = 4 * effMass * pi * pi / (period * period);
-
-            gamma = 1 / (c + dt*k);
-            beta  = dt*k / (c + dt*k);
-        }
-
-        var antiDrift = beta/dt * dist;
-        var lambda    = -(n.dot(diffV) + antiDrift) / (gamma + dt/effMass);
-
-        impulse.set(n.mult(dt*lambda));
-        body.applyImpulse(impulse);
-
-        if (source) source.applyImpulse(impulse.mult(-1));
-    }
-};
+Distance.prototype.applyConstraint = function applyConstraint(targets, source, dt) {};
 
 module.exports = Distance;
 },{"../../math/Vector":41,"./Constraint":55}],58:[function(_dereq_,module,exports){
@@ -6765,18 +6032,6 @@ var Vector = _dereq_('../../math/Vector');
  *
  */
 function Snap(options) {
-    Constraint.call(this);
-
-    this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-
-    //registers
-    this.pDiff  = new Vector();
-    this.vDiff  = new Vector();
-    this.impulse1 = new Vector();
-    this.impulse2 = new Vector();
-}
-
 Snap.prototype = Object.create(Constraint.prototype);
 Snap.prototype.constructor = Snap;
 
@@ -6795,17 +6050,7 @@ Snap.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param options {Objects} options
  */
-Snap.prototype.setOptions = function setOptions(options) {
-    if (options.anchor !== undefined) {
-        if (options.anchor   instanceof Vector) this.options.anchor = options.anchor;
-        if (options.anchor.position instanceof Vector) this.options.anchor = options.anchor.position;
-        if (options.anchor   instanceof Array)  this.options.anchor = new Vector(options.anchor);
-    }
-    if (options.length !== undefined) this.options.length = options.length;
-    if (options.dampingRatio !== undefined) this.options.dampingRatio = options.dampingRatio;
-    if (options.period !== undefined) this.options.period = options.period;
-    Constraint.prototype.setOptions.call(this, options);
-};
+Snap.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Calculates energy of spring
@@ -10499,14 +9744,7 @@ Transitionable.prototype.delay = function delay(duration, callback) {
  * @return {number|Object.<number|string, number>} beginning state
  *    interpolated to this point in time.
  */
-Transitionable.prototype.get = function get(timestamp) {
-    if (this._engineInstance) {
-        if (this._engineInstance.getVelocity)
-            this.velocity = this._engineInstance.getVelocity();
-        this.state = this._engineInstance.get(timestamp);
-    }
-    return this.state;
-};
+Transitionable.prototype.get = function get(timestamp) {};
 
 /**
  * Is there at least one action pending completion?
@@ -10552,21 +9790,7 @@ var Utility = _dereq_('../utilities/Utility');
  *
  * @param [transform=Transform.identity] {Transform} The initial transform state
  */
-function TransitionableTransform(transform) {
-    this._final = Transform.identity.slice();
-
-    this._finalTranslate = [0, 0, 0];
-    this._finalRotate = [0, 0, 0];
-    this._finalSkew = [0, 0, 0];
-    this._finalScale = [1, 1, 1];
-
-    this.translate = new Transitionable(this._finalTranslate);
-    this.rotate = new Transitionable(this._finalRotate);
-    this.skew = new Transitionable(this._finalSkew);
-    this.scale = new Transitionable(this._finalScale);
-
-    if (transform) this.set(transform);
-}
+function TransitionableTransform(transform) {}
 
 
 
@@ -10581,12 +9805,7 @@ function TransitionableTransform(transform) {
  * @param [callback] {Function} Callback
  * @return {TransitionableTransform}
  */
-TransitionableTransform.prototype.setTranslate = function setTranslate(translate, transition, callback) {
-    this._finalTranslate = translate;
-    this._final = _buildFinal.call(this);
-    this.translate.set(translate, transition, callback);
-    return this;
-};
+TransitionableTransform.prototype.setTranslate = function setTranslate(translate, transition, callback) {};
 
 /**
  * An optimized way of setting only the scale component of a Transform
@@ -10599,12 +9818,7 @@ TransitionableTransform.prototype.setTranslate = function setTranslate(translate
  * @param [callback] {Function} Callback
  * @return {TransitionableTransform}
  */
-TransitionableTransform.prototype.setScale = function setScale(scale, transition, callback) {
-    this._finalScale = scale;
-    this._final = _buildFinal.call(this);
-    this.scale.set(scale, transition, callback);
-    return this;
-};
+TransitionableTransform.prototype.setScale = function setScale(scale, transition, callback) {};
 
 /**
  * An optimized way of setting only the rotational component of a Transform
@@ -10653,12 +9867,7 @@ TransitionableTransform.prototype.set = function set(transform, transition, call
  *
  * @param transition {Object} Transition definition
  */
-TransitionableTransform.prototype.setDefaultTransition = function setDefaultTransition(transition) {
-    this.translate.setDefault(transition);
-    this.rotate.setDefault(transition);
-    this.skew.setDefault(transition);
-    this.scale.setDefault(transition);
-};
+TransitionableTransform.prototype.setDefaultTransition = function setDefaultTransition(transition) {};
 
 /**
  * Getter. Returns the current state of the Transform
@@ -11695,10 +10904,7 @@ DrawerLayout.prototype.getProgress = function getProgress() {};
  * @method toggle
  * @param [transition] {Boolean|Object} transition definition
  */
-DrawerLayout.prototype.toggle = function toggle(transition) {
-    if (this._isOpen) this.close(transition);
-    else this.open(transition);
-};
+DrawerLayout.prototype.toggle = function toggle(transition) {};
 
 /**
  * Resets to last state of being open or closed
@@ -11706,10 +10912,7 @@ DrawerLayout.prototype.toggle = function toggle(transition) {
  * @method reset
  * @param [transition] {Boolean|Object} transition definition
  */
-DrawerLayout.prototype.reset = function reset(transition) {
-    if (this._isOpen) this.open(transition);
-    else this.close(transition);
-};
+DrawerLayout.prototype.reset = function reset(transition) {};
 
 /**
  * Returns if drawer is committed to being open or closed
@@ -11717,9 +10920,7 @@ DrawerLayout.prototype.reset = function reset(transition) {
  * @method isOpen
  * @return {Boolean}
  */
-DrawerLayout.prototype.isOpen = function isOpen(transition) {
-    return this._isOpen;
-};
+DrawerLayout.prototype.isOpen = function isOpen(transition) {};
 
 /**
  * Generates a Render Spec from the contents of this component
@@ -11728,30 +10929,7 @@ DrawerLayout.prototype.isOpen = function isOpen(transition) {
  * @method render
  * @return {Spec}
  */
-DrawerLayout.prototype.render = function render() {
-    var position = this.getPosition();
-
-    // clamp transition on close
-    if (!this._isOpen && (position < 0 && this._orientation === 1) || (position > 0 && this._orientation === -1)) {
-        position = 0;
-        this.setPosition(position);
-    }
-
-    var contentTransform = (this._direction === DIRECTION_X)
-        ? Transform.translate(position, 0, 0)
-        : Transform.translate(0, position, 0);
-
-    return [
-        {
-            transform : Transform.behind,
-            target: this.drawer.render()
-        },
-        {
-            transform: contentTransform,
-            target: this.content.render()
-        }
-    ];
-};
+DrawerLayout.prototype.render = function render() {};
 
 module.exports = DrawerLayout;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../transitions/Transitionable":88}],100:[function(_dereq_,module,exports){
@@ -11778,24 +10956,8 @@ var RenderController = _dereq_('./RenderController');
  *   Takes the same options as RenderController.
  * @uses RenderController
  */
-function EdgeSwapper(options) {
-    this._currentTarget = null;
-    this._size = [undefined, undefined];
+function EdgeSwapper(options) {}
 
-    this._controller = new RenderController(options);
-    this._controller.inTransformFrom(CachedMap.create(_transformMap.bind(this, 0.0001)));
-    this._controller.outTransformFrom(CachedMap.create(_transformMap.bind(this, -0.0001)));
-
-    this._eventInput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-
-    this._entityId = Entity.register(this);
-    if (options) this.setOptions(options);
-}
-
-function _transformMap(zMax, progress) {
-    return Transform.translate(this._size[0] * (1 - progress), 0, zMax * (1 - progress));
-}
 
 /**
  * Displays the passed-in content with the EdgeSwapper instance's default transition.
@@ -11803,17 +10965,7 @@ function _transformMap(zMax, progress) {
  * @method show
  * @param {Object} content The renderable you want to display.
  */
-EdgeSwapper.prototype.show = function show(content) {
-    // stop sending input to old target
-    if (this._currentTarget) this._eventInput.unpipe(this._currentTarget);
-
-    this._currentTarget = content;
-
-    // start sending input to new target
-    if (this._currentTarget && this._currentTarget.trigger) this._eventInput.pipe(this._currentTarget);
-
-    this._controller.show.apply(this._controller, arguments);
-};
+EdgeSwapper.prototype.show = function show(content) {};
 
 /**
  * Patches the EdgeSwapper instance's options with the passed-in ones.
@@ -11821,9 +10973,7 @@ EdgeSwapper.prototype.show = function show(content) {
  * @method setOptions
  * @param {Options} options An object of configurable options for the Edgeswapper instance.
  */
-EdgeSwapper.prototype.setOptions = function setOptions(options) {
-    this._controller.setOptions(options);
-};
+EdgeSwapper.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -11832,9 +10982,7 @@ EdgeSwapper.prototype.setOptions = function setOptions(options) {
  * @method render
  * @return {number} Render spec for this component
  */
-EdgeSwapper.prototype.render = function render() {
-    return this._entityId;
-};
+EdgeSwapper.prototype.render = function render() {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -11845,18 +10993,7 @@ EdgeSwapper.prototype.render = function render() {
  * @method commit
  * @param {Context} context commit context
  */
-EdgeSwapper.prototype.commit = function commit(context) {
-    this._size[0] = context.size[0];
-    this._size[1] = context.size[1];
-
-    return {
-        transform: context.transform,
-        opacity: context.opacity,
-        origin: context.origin,
-        size: context.size,
-        target: this._controller.render()
-    };
-};
+EdgeSwapper.prototype.commit = function commit(context) {};
 
 module.exports = EdgeSwapper;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Transform":15,"../transitions/CachedMap":83,"./RenderController":106}],101:[function(_dereq_,module,exports){
@@ -11886,25 +11023,7 @@ var Transitionable = _dereq_('../transitions/Transitionable');
  * @param {Transition} [options.transition=false] The transiton that controls the FlexibleLayout instance's reflow.
  * @param {Ratios} [options.ratios=[]] The proportions for the renderables to maintain
  */
-function FlexibleLayout(options) {
-    this.options = Object.create(FlexibleLayout.DEFAULT_OPTIONS);
-    this.optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this.id = Entity.register(this);
-
-    this._ratios = new Transitionable(this.options.ratios);
-    this._nodes = [];
-    this._size = [0, 0];
-
-    this._cachedDirection = null;
-    this._cachedLengths = [];
-    this._cachedTransforms = null;
-    this._ratiosDirty = false;
-
-    this._eventOutput = new EventHandler();
-    EventHandler.setOutputHandler(this, this._eventOutput);
-}
+function FlexibleLayout(options) {}
 
 FlexibleLayout.DIRECTION_X = 0;
 FlexibleLayout.DIRECTION_Y = 1;
@@ -11915,57 +11034,8 @@ FlexibleLayout.DEFAULT_OPTIONS = {
     ratios : []
 };
 
-function _reflow(ratios, length, direction) {
-    var currTransform;
-    var translation = 0;
-    var flexLength = length;
-    var ratioSum = 0;
-    var ratio;
-    var node;
-    var i;
 
-    this._cachedLengths = [];
-    this._cachedTransforms = [];
 
-    for (i = 0; i < ratios.length; i++){
-        ratio = ratios[i];
-        node = this._nodes[i];
-
-        if (typeof ratio !== 'number')
-            flexLength -= node.getSize()[direction] || 0;
-        else
-            ratioSum += ratio;
-    }
-
-    for (i = 0; i < ratios.length; i++) {
-        node = this._nodes[i];
-        ratio = ratios[i];
-
-        length = (typeof ratio === 'number')
-            ? flexLength * ratio / ratioSum
-            : node.getSize()[direction];
-
-        currTransform = (direction === FlexibleLayout.DIRECTION_X)
-            ? Transform.translate(translation, 0, 0)
-            : Transform.translate(0, translation, 0);
-
-        this._cachedTransforms.push(currTransform);
-        this._cachedLengths.push(length);
-
-        translation += length;
-    }
-}
-
-function _trueSizedDirty(ratios, direction) {
-    for (var i = 0; i < ratios.length; i++) {
-        if (typeof ratios[i] !== 'number') {
-            if (this._nodes[i].getSize()[direction] !== this._cachedLengths[i])
-                return true;
-        }
-    }
-
-    return false;
-}
 
 /**
  * Generate a render spec from the contents of this component.
@@ -11974,9 +11044,7 @@ function _trueSizedDirty(ratios, direction) {
  * @method render
  * @return {Object} Render spec for this component
  */
-FlexibleLayout.prototype.render = function render() {
-    return this.id;
-};
+FlexibleLayout.prototype.render = function render() {};
 
 /**
  * Patches the FlexibleLayouts instance's options with the passed-in ones.
@@ -11984,9 +11052,7 @@ FlexibleLayout.prototype.render = function render() {
  * @method setOptions
  * @param {Options} options An object of configurable options for the FlexibleLayout instance.
  */
-FlexibleLayout.prototype.setOptions = function setOptions(options) {
-    this.optionsManager.setOptions(options);
-};
+FlexibleLayout.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Sets the collection of renderables under the FlexibleLayout instance's control.  Also sets
@@ -11995,15 +11061,7 @@ FlexibleLayout.prototype.setOptions = function setOptions(options) {
  * @method sequenceFrom
  * @param {Array} sequence An array of renderables.
  */
-FlexibleLayout.prototype.sequenceFrom = function sequenceFrom(sequence) {
-    this._nodes = sequence;
-
-    if (this._ratios.get().length === 0) {
-        var ratios = [];
-        for (var i = 0; i < this._nodes.length; i++) ratios.push(1);
-        this.setRatios(ratios);
-    }
-};
+FlexibleLayout.prototype.sequenceFrom = function sequenceFrom(sequence) {};
 
 /**
  * Sets the associated ratio values for sizing the renderables.
@@ -12011,14 +11069,7 @@ FlexibleLayout.prototype.sequenceFrom = function sequenceFrom(sequence) {
  * @method setRatios
  * @param {Array} ratios Array of ratios corresponding to the percentage sizes each renderable should be
  */
-FlexibleLayout.prototype.setRatios = function setRatios(ratios, transition, callback) {
-    if (transition === undefined) transition = this.options.transition;
-    var currRatios = this._ratios;
-    if (currRatios.get().length === 0) transition = undefined;
-    if (currRatios.isActive()) currRatios.halt();
-    currRatios.set(ratios, transition, callback);
-    this._ratiosDirty = true;
-};
+FlexibleLayout.prototype.setRatios = function setRatios(ratios, transition, callback) {};
 
 /**
  * Gets the size of the context the FlexibleLayout exists within.
@@ -12027,9 +11078,7 @@ FlexibleLayout.prototype.setRatios = function setRatios(ratios, transition, call
  *
  * @return {Array} Size of the FlexibleLayout in pixels [width, height]
  */
-FlexibleLayout.prototype.getSize = function getSize() {
-    return this._size;
-};
+FlexibleLayout.prototype.getSize = function getSize() {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -12040,51 +11089,7 @@ FlexibleLayout.prototype.getSize = function getSize() {
  * @method commit
  * @param {Context} context commit context
  */
-FlexibleLayout.prototype.commit = function commit(context) {
-    var parentSize = context.size;
-    var parentTransform = context.transform;
-    var parentOrigin = context.origin;
-    var parentOpacity = context.opacity;
-
-    var ratios = this._ratios.get();
-    var direction = this.options.direction;
-    var length = parentSize[direction];
-    var size;
-
-    if (length !== this._size[direction] || this._ratiosDirty || this._ratios.isActive() || direction !== this._cachedDirection || _trueSizedDirty.call(this, ratios, direction)) {
-        _reflow.call(this, ratios, length, direction);
-
-        if (length !== this._size[direction]) {
-            this._size[0] = parentSize[0];
-            this._size[1] = parentSize[1];
-        }
-
-        if (direction !== this._cachedDirection) this._cachedDirection = direction;
-        if (this._ratiosDirty) this._ratiosDirty = false;
-    }
-
-    var result = [];
-    for (var i = 0; i < ratios.length; i++) {
-        size = [undefined, undefined];
-        length = this._cachedLengths[i];
-        size[direction] = length;
-        result.push({
-            transform : this._cachedTransforms[i],
-            size: size,
-            target : this._nodes[i].render()
-        });
-    }
-
-    if (parentSize && (parentOrigin[0] !== 0 && parentOrigin[1] !== 0))
-        parentTransform = Transform.moveThen([-parentSize[0]*parentOrigin[0], -parentSize[1]*parentOrigin[1], 0], parentTransform);
-
-    return {
-        transform: parentTransform,
-        size: parentSize,
-        opacity: parentOpacity,
-        target: result
-    };
-};
+FlexibleLayout.prototype.commit = function commit(context) {};
 
 module.exports = FlexibleLayout;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/OptionsManager":10,"../core/Transform":15,"../transitions/Transitionable":88}],102:[function(_dereq_,module,exports){
@@ -12113,28 +11118,14 @@ var OptionsManager = _dereq_('../core/OptionsManager');
  * @param {Transition} [options.transition=true] The transition executed when flipping your Flipper instance.
  * @param {Direction} [options.direction=Flipper.DIRECTION_X] Direction specifies the axis of rotation.
  */
-function Flipper(options) {
-    this.options = Object.create(Flipper.DEFAULT_OPTIONS);
-    this._optionsManager = new OptionsManager(this.options);
-    if (options) this.setOptions(options);
-
-    this.angle = new Transitionable(0);
-
-    this.frontNode = undefined;
-    this.backNode = undefined;
-
-    this.flipped = false;
-}
+function Flipper(options) {}
 
 Flipper.DIRECTION_X = 0;
 Flipper.DIRECTION_Y = 1;
 
 var SEPERATION_LENGTH = 1;
 
-Flipper.DEFAULT_OPTIONS = {
-    transition: true,
-    direction: Flipper.DIRECTION_X
-};
+Flipper.DEFAULT_OPTIONS = {};
 
 /**
  * Toggles the rotation between the front and back renderables
@@ -12143,11 +11134,7 @@ Flipper.DEFAULT_OPTIONS = {
  * @param {Object} [transition] Transition definition
  * @param {Function} [callback] Callback
  */
-Flipper.prototype.flip = function flip(transition, callback) {
-    var angle = this.flipped ? 0 : Math.PI;
-    this.setAngle(angle, transition, callback);
-    this.flipped = !this.flipped;
-};
+Flipper.prototype.flip = function flip(transition, callback) {};
 
 /**
  * Basic setter to the angle
@@ -12157,11 +11144,7 @@ Flipper.prototype.flip = function flip(transition, callback) {
  * @param {Object} [transition] Transition definition
  * @param {Function} [callback] Callback
  */
-Flipper.prototype.setAngle = function setAngle(angle, transition, callback) {
-    if (transition === undefined) transition = this.options.transition;
-    if (this.angle.isActive()) this.angle.halt();
-    this.angle.set(angle, transition, callback);
-};
+Flipper.prototype.setAngle = function setAngle(angle, transition, callback) {};
 
 /**
  * Patches the Flipper instance's options with the passed-in ones.
@@ -12169,9 +11152,7 @@ Flipper.prototype.setAngle = function setAngle(angle, transition, callback) {
  * @method setOptions
  * @param {Options} options An object of configurable options for the Flipper instance.
  */
-Flipper.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+Flipper.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds the passed-in renderable to the view associated with the 'front' of the Flipper instance.
@@ -12180,9 +11161,7 @@ Flipper.prototype.setOptions = function setOptions(options) {
  * @chainable
  * @param {Object} node The renderable you want to add to the front.
  */
-Flipper.prototype.setFront = function setFront(node) {
-    this.frontNode = node;
-};
+Flipper.prototype.setFront = function setFront(node) {};
 
 /**
  * Adds the passed-in renderable to the view associated with the 'back' of the Flipper instance.
@@ -12191,9 +11170,7 @@ Flipper.prototype.setFront = function setFront(node) {
  * @chainable
  * @param {Object} node The renderable you want to add to the back.
  */
-Flipper.prototype.setBack = function setBack(node) {
-    this.backNode = node;
-};
+Flipper.prototype.setBack = function setBack(node) {};
 
 /**
  * Generate a render spec from the contents of this component.
@@ -13273,28 +12250,14 @@ Slider.DEFAULT_OPTIONS = {
     fillColor: 'rgba(170, 170, 170, 1)'
 };
 
-function _updateLabel() {
-    this.label.setContent(this.options.label + '<span style="float: right">' + this.get().toFixed(this.options.precision) + '</span>');
-}
 
-Slider.prototype.setOptions = function setOptions(options) {
-    return this.optionsManager.setOptions(options);
-};
+Slider.prototype.setOptions = function setOptions(options) {};
 
-Slider.prototype.get = function get() {
-    return this.options.value;
-};
+Slider.prototype.get = function get() {};
 
-Slider.prototype.set = function set(value) {
-    if (value === this.options.value) return;
-    this.options.value = Utilities.clamp(value, this.options.range);
-    _updateLabel.call(this);
-    this.eventOutput.emit('change', {value: value});
-};
+Slider.prototype.set = function set(value) {};
 
-Slider.prototype.getSize = function getSize() {
-    return this.options.size;
-};
+Slider.prototype.getSize = function getSize() {};
 
 Slider.prototype.render = function render() {};
 
@@ -13425,14 +12388,7 @@ ToggleButton.TOGGLE = 2;
  * @param [suppressEvent] {Boolean} When truthy, prevents the
  *   widget from emitting the 'select' event.
  */
-ToggleButton.prototype.select = function select(suppressEvent) {
-    this.selected = true;
-    this.arbiter.show(this.onSurface, this.options.inTransition);
-//        this.arbiter.setMode(ToggleButton.ON, this.options.inTransition);
-    if (!suppressEvent) {
-        this._eventOutput.emit('select');
-    }
-};
+ToggleButton.prototype.select = function select(suppressEvent) {};
 
 /**
  * Transition towards the 'off' state and dispatch an event to
@@ -13444,13 +12400,7 @@ ToggleButton.prototype.select = function select(suppressEvent) {
  * @param [suppressEvent] {Boolean} When truthy, prevents the
  *   widget from emitting the 'deselect' event.
  */
-ToggleButton.prototype.deselect = function deselect(suppressEvent) {
-    this.selected = false;
-    this.arbiter.show(this.offSurface, this.options.outTransition);
-    if (!suppressEvent) {
-        this._eventOutput.emit('deselect');
-    }
-};
+ToggleButton.prototype.deselect = function deselect(suppressEvent) {};
 
 /**
  * Return the state of the button
@@ -13459,9 +12409,7 @@ ToggleButton.prototype.deselect = function deselect(suppressEvent) {
  *
  * @return {boolean} selected state
  */
-ToggleButton.prototype.isSelected = function isSelected() {
-    return this.selected;
-};
+ToggleButton.prototype.isSelected = function isSelected() {};
 
 /**
  * Override the current options
@@ -13479,9 +12427,7 @@ ToggleButton.prototype.setOptions = function setOptions(options) {};
  *
  * @return {array} two element array [height, width]
  */
-ToggleButton.prototype.getSize = function getSize() {
-    return this.options.size;
-};
+ToggleButton.prototype.getSize = function getSize() {};
 
 /**
  * Generate a render spec from the contents of this component.
