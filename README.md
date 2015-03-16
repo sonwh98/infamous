@@ -28,7 +28,7 @@ In your namespaces
 The externs file is nowhere near finished. PRs greatly appreciated
 
 
-Before running your code through advanced animations, be sure to set
+Before running your code through advanced compilation, be sure to set
 
 ```
 :closure-warnings {:externs-validation :off
