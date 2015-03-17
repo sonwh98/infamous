@@ -14,19 +14,6 @@ var ElementAllocator = _dereq_('./ElementAllocator');
 var Transform = _dereq_('./Transform');
 var Transitionable = _dereq_('../transitions/Transitionable');
 
-var _zeroZero = [0, 0];
-var usePrefix = !('perspective' in document.documentElement.style);
-
-function _getElementSize(element) {
-    return [element.clientWidth, element.clientHeight];
-}
-
-var _setPerspective = usePrefix ? function(element, perspective) {
-    element.style.webkitPerspective = perspective ? perspective.toFixed() + 'px' : '';
-} : function(element, perspective) {
-    element.style.perspective = perspective ? perspective.toFixed() + 'px' : '';
-};
-
 /**
  * The top-level container for a Famous-renderable piece of the document.
  *   It is directly updated by the process-wide Engine object, and manages one
@@ -40,9 +27,7 @@ var _setPerspective = usePrefix ? function(element, perspective) {
 function Context(container) {}
 
 // Note: Unused
-Context.prototype.getAllocator = function getAllocator() {
-    return this._allocator;
-};
+Context.prototype.getAllocator = function getAllocator() {};
 
 /**
  * Add renderables to this Context's render tree.
@@ -70,9 +55,7 @@ Context.prototype.migrate = function migrate(container) {};
  *
  * @return {Array.Number} viewport size as [width, height]
  */
-Context.prototype.getSize = function getSize() {
-    return this._size;
-};
+Context.prototype.getSize = function getSize() {};
 
 /**
  * Sets viewport size for Context.
@@ -330,14 +313,6 @@ ElementOutput.prototype.unpipe = function unpipe(target) {};
  */
 ElementOutput.prototype.render = function render() {};
 
-//  Attach Famous event handling to document events emanating from target
-//    document element.  This occurs just after attachment to the document.
-//    Calling this enables methods like #on and #pipe.
-function _addEventListeners(target) {}
-
-//  Detach Famous event handling from document events emanating from target
-//  document element.  This occurs just before detach from the document.
-function _removeEventListeners(target) {}
 
 /**
  * Return a Matrix's webkit css representation to be used with the
@@ -381,16 +356,7 @@ else {
     };
 }
 
-// format origin as CSS percentage string
-function _formatCSSOrigin(origin) {}
 
-// Directly apply given origin coordinates to the document element as the
-// appropriate webkit CSS style.
-var _setOrigin = usePrefix ? function(element, origin) {
-    element.style.webkitTransformOrigin = _formatCSSOrigin(origin);
-} : function(element, origin) {
-    element.style.transformOrigin = _formatCSSOrigin(origin);
-};
 
 // Shrink given document element until it is effectively invisible.
 var _setInvisible = usePrefix ? function(element) {
@@ -401,7 +367,6 @@ var _setInvisible = usePrefix ? function(element) {
     element.style.opacity = 0;
 };
 
-function _xyNotEquals(a, b) {}
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -1369,7 +1334,6 @@ function OptionsManager(value) {}
  */
 OptionsManager.patch = function patchObject(source, data) {};
 
-function _createEventOutput() {}
 
 /**
  * Create OptionsManager from source with arguments overriden by patches.
@@ -1602,17 +1566,6 @@ var _MATRIX_GENERATORS = {
  * @return {Scene} deep copy of this scene
  */
 Scene.prototype.create = function create() {};
-
-function _resolveTransformMatrix(matrixDefinition) {}
-
-// parse transform into tree of render nodes, doing matrix multiplication
-// when available
-function _parseTransform(definition) {}
-
-function _parseArray(definition) {}
-
-// parse object directly into tree of RenderNodes
-function _parse(definition) {}
 
 /**
  * Builds and renders a scene graph based on a canonical declarative scene definition.
@@ -1866,27 +1819,6 @@ Surface.prototype.getContent = function getContent() {};
  * @param {Object} [options] overrides for default options.  See constructor.
  */
 Surface.prototype.setOptions = function setOptions(options) {};
-
-//  Apply to document all changes from removeClass() since last setup().
-function _cleanupClasses(target) {}
-
-// Apply values of all Famous-managed styles to the document element.
-//  These will be deployed to the document on call to #setup().
-function _applyStyles(target) {}
-
-// Clear all Famous-managed styles from the document element.
-// These will be deployed to the document on call to #setup().
-function _cleanupStyles(target) {}
-
-// Apply values of all Famous-managed attributes to the document element.
-//  These will be deployed to the document on call to #setup().
-function _applyAttributes(target) {}
-
-// Clear all Famous-managed attributes from the document element.
-// These will be deployed to the document on call to #setup().
-function _cleanupAttributes(target) {}
-
-function _xyNotEquals(a, b) {}
 
 /**
  * One-time setup for an element to be ready for commits to document.
@@ -2783,17 +2715,13 @@ var Transitionable = _dereq_('../transitions/Transitionable');
  */
 function Accumulator(value, eventName) {}
 
-function _handleUpdate(data) {}
-
 /**
  * Basic getter
  *
  * @method get
  * @return {Number|Array} current value
  */
-Accumulator.prototype.get = function get() {
-    return this._state.get();
-};
+Accumulator.prototype.get = function get() {};
 
 /**
  * Basic setter
@@ -2801,9 +2729,7 @@ Accumulator.prototype.get = function get() {
  * @method set
  * @param value {Number|Array} new value
  */
-Accumulator.prototype.set = function set(value) {
-    this._state.set(value);
-};
+Accumulator.prototype.set = function set(value) {};
 
 module.exports = Accumulator;
 },{"../core/EventHandler":7,"../transitions/Transitionable":88}],25:[function(_dereq_,module,exports){
@@ -2811,90 +2737,6 @@ var hasTouch = 'ontouchstart' in window;
 
 function kill(type) {}
 
-if (hasTouch) {
-    kill('mousedown');
-    kill('mousemove');
-    kill('mouseup');
-    kill('mouseleave');
-}
-},{}],26:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
-
-/**
- * FastClick is an override shim which maps event pairs of
- *   'touchstart' and 'touchend' which differ by less than a certain
- *   threshold to the 'click' event.
- *   This is used to speed up clicks on some browsers.
- */
-(function() {
-  if (!window.CustomEvent) return;
-  var clickThreshold = 300;
-  var clickWindow = 500;
-  var potentialClicks = {};
-  var recentlyDispatched = {};
-  var _now = Date.now;
-
-  window.addEventListener('touchstart', function(event) {
-      var timestamp = _now();
-      for (var i = 0; i < event.changedTouches.length; i++) {
-          var touch = event.changedTouches[i];
-          potentialClicks[touch.identifier] = timestamp;
-      }
-  });
-
-  window.addEventListener('touchmove', function(event) {
-      for (var i = 0; i < event.changedTouches.length; i++) {
-          var touch = event.changedTouches[i];
-          delete potentialClicks[touch.identifier];
-      }
-  });
-
-  window.addEventListener('touchend', function(event) {
-      var currTime = _now();
-      for (var i = 0; i < event.changedTouches.length; i++) {
-          var touch = event.changedTouches[i];
-          var startTime = potentialClicks[touch.identifier];
-          if (startTime && currTime - startTime < clickThreshold) {
-              var clickEvt = new window.CustomEvent('click', {
-                  'bubbles': true,
-                  'detail': touch
-              });
-              recentlyDispatched[currTime] = event;
-              event.target.dispatchEvent(clickEvt);
-          }
-          delete potentialClicks[touch.identifier];
-      }
-  });
-
-  window.addEventListener('click', function(event) {
-      var currTime = _now();
-      for (var i in recentlyDispatched) {
-          var previousEvent = recentlyDispatched[i];
-          if (currTime - i < clickWindow) {
-              if (event instanceof window.MouseEvent && event.target === previousEvent.target) event.stopPropagation();
-          }
-          else delete recentlyDispatched[i];
-      }
-  }, true);
-})();
-},{}],27:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 var EventHandler = _dereq_('../core/EventHandler');
 
 /**
@@ -4236,12 +4078,6 @@ GenericSync.register({'mouse': MouseSync, 'touch': TouchSync});
  */
 function Draggable(options) {}
 
-//binary representation of directions for bitwise operations
-var _direction = {
-    x : 0x01,         //001
-    y : 0x02          //010
-};
-
 Draggable.DIRECTION_X = _direction.x;
 Draggable.DIRECTION_Y = _direction.y;
 
@@ -4274,9 +4110,7 @@ Draggable.prototype.setOptions = function setOptions(options) {};
  *
  * @return {array<number>} [x, y] position delta from start.
  */
-Draggable.prototype.getPosition = function getPosition() {
-    return this._positionState.get();
-};
+Draggable.prototype.getPosition = function getPosition() {};
 
 /**
  * Transition the element to the desired relative position via provided transition.
@@ -4309,9 +4143,7 @@ Draggable.prototype.setPosition = function setPosition(position, transition, cal
  * @method activate
  *
  */
-Draggable.prototype.activate = function activate() {
-    this._active = true;
-};
+Draggable.prototype.activate = function activate() {};
 
 /**
  * Set this draggable to ignore user input.
@@ -4319,9 +4151,7 @@ Draggable.prototype.activate = function activate() {
  * @method deactivate
  *
  */
-Draggable.prototype.deactivate = function deactivate() {
-    this._active = false;
-};
+Draggable.prototype.deactivate = function deactivate() {};
 
 /**
  * Switch the input response stage between active and inactive.
@@ -4329,9 +4159,7 @@ Draggable.prototype.deactivate = function deactivate() {
  * @method toggle
  *
  */
-Draggable.prototype.toggle = function toggle() {
-    this._active = !this._active;
-};
+Draggable.prototype.toggle = function toggle() {};
 
 /**
  * Return render spec for this Modifier, applying to the provided
@@ -4345,13 +4173,7 @@ Draggable.prototype.toggle = function toggle() {
  * @return {Object} render spec for this Modifier, including the
  *    provided target
  */
-Draggable.prototype.modify = function modify(target) {
-    var pos = this.getPosition();
-    return {
-        transform: Transform.translate(pos[0], pos[1]),
-        target: target
-    };
-};
+Draggable.prototype.modify = function modify(target) {};
 
 module.exports = Draggable;
 },{"../core/EventHandler":7,"../core/Transform":15,"../inputs/GenericSync":27,"../inputs/MouseSync":28,"../inputs/TouchSync":33,"../math/Utilities":40,"../transitions/Transitionable":88}],44:[function(_dereq_,module,exports){
@@ -4416,19 +4238,14 @@ Fader.prototype.hide = function hide(transition, callback) {};
  * @param {Transition} [transition] The transition that coordinates setting to the new state.
  * @param {Function} [callback] A callback that executes once you've finished executing the pulse.
  */
-Fader.prototype.set = function set(state, transition, callback) {
-    this.halt();
-    this.transitionHelper.set(state, transition, callback);
-};
+Fader.prototype.set = function set(state, transition, callback) {};
 
 /**
  * Halt the transition
  *
  * @method halt
  */
-Fader.prototype.halt = function halt() {
-    this.transitionHelper.halt();
-};
+Fader.prototype.halt = function halt() {};
 
 /**
  * Tells you if your Fader instance is above its visibility threshold.
@@ -4436,9 +4253,7 @@ Fader.prototype.halt = function halt() {
  * @method isVisible
  * @return {Boolean} Whether or not your Fader instance is visible.
  */
-Fader.prototype.isVisible = function isVisible() {
-    return (this.transitionHelper.get() > 0);
-};
+Fader.prototype.isVisible = function isVisible() {};
 
 /**
  * Return render spec for this Modifier, applying to the provided
@@ -4452,11 +4267,7 @@ Fader.prototype.isVisible = function isVisible() {
  * @return {Object} render spec for this Modifier, including the
  *    provided target
  */
-Fader.prototype.modify = function modify(target) {
-    var currOpacity = this.transitionHelper.get();
-    if (this.options.cull && !currOpacity) return undefined;
-    else return {opacity: currOpacity, target: target};
-};
+Fader.prototype.modify = function modify(target) {};
 
 module.exports = Fader;
 },{"../core/OptionsManager":10,"../transitions/Transitionable":88}],45:[function(_dereq_,module,exports){
@@ -4479,10 +4290,7 @@ module.exports = Fader;
  * @class ModifierChain
  * @constructor
  */
-function ModifierChain() {
-    this._chain = [];
-    if (arguments.length) this.addModifier.apply(this, arguments);
-}
+function ModifierChain() {}
 
 /**
  * Add a modifier, or comma separated modifiers, to the modifier chain.
@@ -4491,9 +4299,7 @@ function ModifierChain() {
  *
  * @param {...Modifier*} varargs args list of Modifiers
  */
-ModifierChain.prototype.addModifier = function addModifier(varargs) {
-    Array.prototype.push.apply(this._chain, arguments);
-};
+ModifierChain.prototype.addModifier = function addModifier(varargs) {};
 
 /**
  * Remove a modifier from the modifier chain.
@@ -4502,11 +4308,7 @@ ModifierChain.prototype.addModifier = function addModifier(varargs) {
  *
  * @param {Modifier} modifier
  */
-ModifierChain.prototype.removeModifier = function removeModifier(modifier) {
-    var index = this._chain.indexOf(modifier);
-    if (index < 0) return;
-    this._chain.splice(index, 1);
-};
+ModifierChain.prototype.removeModifier = function removeModifier(modifier) {};
 
 /**
  * Return render spec for this Modifier, applying to the provided
@@ -4520,14 +4322,7 @@ ModifierChain.prototype.removeModifier = function removeModifier(modifier) {
  * @return {Object} render spec for this Modifier, including the
  *    provided target
  */
-ModifierChain.prototype.modify = function modify(input) {
-    var chain  = this._chain;
-    var result = input;
-    for (var i = 0; i < chain.length; i++) {
-        result = chain[i].modify(result);
-    }
-    return result;
-};
+ModifierChain.prototype.modify = function modify(input) {};
 
 module.exports = ModifierChain;
 },{}],46:[function(_dereq_,module,exports){
@@ -5041,26 +4836,7 @@ var Integrator = _dereq_('../integrators/SymplecticEuler');
  * @extends Particle
  * @constructor
  */
-function Body(options) {
-    Particle.call(this, options);
-    options = options || {};
-
-    this.orientation     = new Quaternion();
-    this.angularVelocity = new Vector();
-    this.angularMomentum = new Vector();
-    this.torque          = new Vector();
-
-    if (options.orientation)     this.orientation.set(options.orientation);
-    if (options.angularVelocity) this.angularVelocity.set(options.angularVelocity);
-    if (options.angularMomentum) this.angularMomentum.set(options.angularMomentum);
-    if (options.torque)          this.torque.set(options.torque);
-
-    this.angularVelocity.w = 0;        //quaternify the angular velocity
-    this.setMomentsOfInertia();
-
-    // registers
-    this.pWorld = new Vector();        //placeholder for world space position
-}
+function Body(options) {}
 
 Body.DEFAULT_OPTIONS = Particle.DEFAULT_OPTIONS;
 Body.DEFAULT_OPTIONS.orientation = [0, 0, 0, 1];
@@ -5557,8 +5333,6 @@ Collision.DEFAULT_OPTIONS = {
     slop : 0
 };
 
-function _normalVelocity(particle1, particle2) {}
-
 /*
  * Setter for options.
  *
@@ -5621,9 +5395,7 @@ Constraint.prototype.applyConstraint = function applyConstraint() {};
  * @method getEnergy
  * @return energy {Number}
  */
-Constraint.prototype.getEnergy = function getEnergy() {
-    return 0.0;
-};
+Constraint.prototype.getEnergy = function getEnergy() {};
 
 module.exports = Constraint;
 },{"../../core/EventHandler":7}],56:[function(_dereq_,module,exports){
@@ -5664,12 +5436,8 @@ Curve.prototype.constructor = Curve;
 /** @const */ var pi = Math.PI;
 
 Curve.DEFAULT_OPTIONS = {
-    equation  : function(x,y,z) {
-        return 0;
-    },
-    plane : function(x,y,z) {
-        return z;
-    },
+    equation  : function(x,y,z) {},
+    plane : function(x,y,z) {},
     period : 0,
     dampingRatio : 0
 };
@@ -5680,9 +5448,7 @@ Curve.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param options {Objects}
  */
-Curve.prototype.setOptions = function setOptions(options) {
-    for (var key in options) this.options[key] = options[key];
-};
+Curve.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds a curve impulse to a physics body.
@@ -5746,10 +5512,6 @@ Distance.DEFAULT_OPTIONS = {
  * @param options {Objects}
  */
 Distance.prototype.setOptions = function setOptions(options) {};
-
-function _calcError(impulse, body) {
-    return body.mass * impulse.norm();
-}
 
 /**
  * Set the anchor position
@@ -6194,9 +5956,7 @@ Drag.FORCE_FUNCTIONS = {
      * @param {Vector} velocity
      * @return {Vector} drag force
      */
-    LINEAR : function(velocity) {
-        return velocity;
-    },
+    LINEAR : function(velocity) {},
 
     /**
      * A drag force proportional to the square of the velocity
@@ -6205,9 +5965,7 @@ Drag.FORCE_FUNCTIONS = {
      * @param {Vector} velocity
      * @return {Vector} drag force
      */
-    QUADRATIC : function(velocity) {
-        return velocity.mult(velocity.norm());
-    }
+    QUADRATIC : function(velocity) {}
 };
 
 /**
@@ -6342,9 +6100,7 @@ Repulsion.DECAY_FUNCTIONS = {
      * @param {Number} r distance from the source body
      * @param {Number} cutoff the effective radius of influence
      */
-    LINEAR : function(r, cutoff) {
-        return Math.max(1 - (1 / cutoff) * r, 0);
-    },
+    LINEAR : function(r, cutoff) {},
 
     /**
      * A Morse potential decay function (http://en.wikipedia.org/wiki/Morse_potential)
@@ -6353,11 +6109,7 @@ Repulsion.DECAY_FUNCTIONS = {
      * @param {Number} r distance from the source body
      * @param {Number} cutoff the minimum radius of influence
      */
-    MORSE : function(r, cutoff) {
-        var r0 = (cutoff === 0) ? 100 : cutoff;
-        var rShifted = r + r0 * (1 - Math.log(2)); //shift by x-intercept
-        return Math.max(1 - Math.pow(1 - Math.exp(rShifted/r0 - 1), 2), 0);
-    },
+    MORSE : function(r, cutoff) {},
 
     /**
      * An inverse distance decay function
@@ -6366,9 +6118,7 @@ Repulsion.DECAY_FUNCTIONS = {
      * @param {Number} r distance from the source body
      * @param {Number} cutoff a distance shift to avoid singularities
      */
-    INVERSE : function(r, cutoff) {
-        return 1 / (1 - cutoff + r);
-    },
+    INVERSE : function(r, cutoff) {},
 
     /**
      * An inverse squared distance decay function
@@ -6377,9 +6127,7 @@ Repulsion.DECAY_FUNCTIONS = {
      * @param {Number} r distance from the source body
      * @param {Number} cutoff a distance shift to avoid singularities
      */
-    GRAVITY : function(r, cutoff) {
-        return 1 / (1 - cutoff + r*r);
-    }
+    GRAVITY : function(r, cutoff) {}
 };
 
 /**
@@ -6504,9 +6252,7 @@ RotationalDrag.FORCE_FUNCTIONS = {
      * @param {Vector} angularVelocity
      * @return {Vector} drag force
      */
-    LINEAR : function(angularVelocity) {
-        return angularVelocity;
-    },
+    LINEAR : function(angularVelocity) {},
 
     /**
      * A drag force proprtional to the square of the angular velocity
@@ -6515,9 +6261,7 @@ RotationalDrag.FORCE_FUNCTIONS = {
      * @param {Vector} angularVelocity
      * @return {Vector} drag force
      */
-    QUADRATIC : function(angularVelocity) {
-        return angularVelocity.mult(angularVelocity.norm());
-    }
+    QUADRATIC : function(angularVelocity) {}
 };
 
 /**
@@ -6643,11 +6387,7 @@ Spring.FORCE_FUNCTIONS = {
      * @param {Number} rMax maximum range of influence
      * @return {Number} unscaled force
      */
-    FENE : function(dist, rMax) {
-        var rMaxSmall = rMax * .99;
-        var r = Math.max(Math.min(dist, rMaxSmall), -rMaxSmall);
-        return r / (1 - r * r/(rMax * rMax));
-    },
+    FENE : function(dist, rMax) {},
 
     /**
      * A Hookean spring force, linear in the displacement
@@ -6657,9 +6397,7 @@ Spring.FORCE_FUNCTIONS = {
      * @param {Number} dist current distance target is from source body
      * @return {Number} unscaled force
      */
-    HOOK : function(dist) {
-        return dist;
-    }
+    HOOK : function(dist) {}
 };
 
 /**
@@ -6797,9 +6535,7 @@ VectorField.FIELDS = {
      *      Pass a {direction : Vector} into the VectorField options
      * @return {Number} unscaled force
      */
-    CONSTANT : function(v, options) {
-        options.direction.put(this.evaluation);
-    },
+    CONSTANT : function(v, options) {},
 
     /**
      * Linear force
@@ -6808,9 +6544,7 @@ VectorField.FIELDS = {
      * @param v {Vector} Current position of physics body
      * @return {Vector} unscaled force
      */
-    LINEAR : function(v) {
-        v.put(this.evaluation);
-    },
+    LINEAR : function(v) {},
 
     /**
      * Radial force, e.g., Hookean spring
@@ -6819,9 +6553,7 @@ VectorField.FIELDS = {
      * @param v {Vector} Current position of physics body
      * @return {Vector} unscaled force
      */
-    RADIAL : function(v) {
-        v.mult(-1).put(this.evaluation);
-    },
+    RADIAL : function(v) {},
 
     /**
      * Point attractor force, e.g., Hookean spring with an anchor
@@ -6832,9 +6564,7 @@ VectorField.FIELDS = {
      *      Pass a {position : Vector} into the VectorField options
      * @return {Vector} unscaled force
      */
-    POINT_ATTRACTOR : function(v, options) {
-        options.position.sub(v).put(this.evaluation);
-    }
+    POINT_ATTRACTOR : function(v, options) {}
 };
 
 /**
@@ -7646,117 +7376,85 @@ var Easing = {
      * @property inQuad
      * @static
      */
-    inQuad: function(t) {
-        return t*t;
-    },
+    inQuad: function(t) {},
 
     /**
      * @property outQuad
      * @static
      */
-    outQuad: function(t) {
-        return -(t-=1)*t+1;
-    },
+    outQuad: function(t) {},
 
     /**
      * @property inOutQuad
      * @static
      */
-    inOutQuad: function(t) {
-        if ((t/=.5) < 1) return .5*t*t;
-        return -.5*((--t)*(t-2) - 1);
-    },
+    inOutQuad: function(t) {},
 
     /**
      * @property inCubic
      * @static
      */
-    inCubic: function(t) {
-        return t*t*t;
-    },
+    inCubic: function(t) {},
 
     /**
      * @property outCubic
      * @static
      */
-    outCubic: function(t) {
-        return ((--t)*t*t + 1);
-    },
+    outCubic: function(t) {},
 
     /**
      * @property inOutCubic
      * @static
      */
-    inOutCubic: function(t) {
-        if ((t/=.5) < 1) return .5*t*t*t;
-        return .5*((t-=2)*t*t + 2);
-    },
+    inOutCubic: function(t) {},
 
     /**
      * @property inQuart
      * @static
      */
-    inQuart: function(t) {
-        return t*t*t*t;
-    },
+    inQuart: function(t) {},
 
     /**
      * @property outQuart
      * @static
      */
-    outQuart: function(t) {
-        return -((--t)*t*t*t - 1);
-    },
+    outQuart: function(t) {},
 
     /**
      * @property inOutQuart
      * @static
      */
-    inOutQuart: function(t) {
-        if ((t/=.5) < 1) return .5*t*t*t*t;
-        return -.5 * ((t-=2)*t*t*t - 2);
-    },
+    inOutQuart: function(t) {},
 
     /**
      * @property inQuint
      * @static
      */
-    inQuint: function(t) {
-        return t*t*t*t*t;
-    },
+    inQuint: function(t) {},
 
     /**
      * @property outQuint
      * @static
      */
-    outQuint: function(t) {
-        return ((--t)*t*t*t*t + 1);
-    },
+    outQuint: function(t) {},
 
     /**
      * @property inOutQuint
      * @static
      */
-    inOutQuint: function(t) {
-        if ((t/=.5) < 1) return .5*t*t*t*t*t;
-        return .5*((t-=2)*t*t*t*t + 2);
-    },
+    inOutQuint: function(t) {},
 
     /**
      * @property inSine
      * @static
      */
-    inSine: function(t) {
-        return -1.0*Math.cos(t * (Math.PI/2)) + 1.0;
-    },
+    inSine: function(t) {},
 
     /**
      * @property outSine
      * @static
      */
-    outSine: function(t) {
-        return Math.sin(t * (Math.PI/2));
-    },
+    outSine: function(t) {},
 
     /**
      * @property inOutSine
@@ -7770,139 +7468,85 @@ var Easing = {
      * @property inExpo
      * @static
      */
-    inExpo: function(t) {
-        return (t===0) ? 0.0 : Math.pow(2, 10 * (t - 1));
-    },
+    inExpo: function(t) {},
 
     /**
      * @property outExpo
      * @static
      */
-    outExpo: function(t) {
-        return (t===1.0) ? 1.0 : (-Math.pow(2, -10 * t) + 1);
-    },
+    outExpo: function(t) {},
 
     /**
      * @property inOutExpo
      * @static
      */
-    inOutExpo: function(t) {
-        if (t===0) return 0.0;
-        if (t===1.0) return 1.0;
-        if ((t/=.5) < 1) return .5 * Math.pow(2, 10 * (t - 1));
-        return .5 * (-Math.pow(2, -10 * --t) + 2);
-    },
+    inOutExpo: function(t) {},
 
     /**
      * @property inCirc
      * @static
      */
-    inCirc: function(t) {
-        return -(Math.sqrt(1 - t*t) - 1);
-    },
+    inCirc: function(t) {},
 
     /**
      * @property outCirc
      * @static
      */
-    outCirc: function(t) {
-        return Math.sqrt(1 - (--t)*t);
-    },
+    outCirc: function(t) {},
 
     /**
      * @property inOutCirc
      * @static
      */
-    inOutCirc: function(t) {
-        if ((t/=.5) < 1) return -.5 * (Math.sqrt(1 - t*t) - 1);
-        return .5 * (Math.sqrt(1 - (t-=2)*t) + 1);
-    },
+    inOutCirc: function(t) {},
 
     /**
      * @property inElastic
      * @static
      */
-    inElastic: function(t) {
-        var s=1.70158;var p=0;var a=1.0;
-        if (t===0) return 0.0;  if (t===1) return 1.0;  if (!p) p=.3;
-        s = p/(2*Math.PI) * Math.asin(1.0/a);
-        return -(a*Math.pow(2,10*(t-=1)) * Math.sin((t-s)*(2*Math.PI)/ p));
-    },
+    inElastic: function(t) {},
 
     /**
      * @property outElastic
      * @static
      */
-    outElastic: function(t) {
-        var s=1.70158;var p=0;var a=1.0;
-        if (t===0) return 0.0;  if (t===1) return 1.0;  if (!p) p=.3;
-        s = p/(2*Math.PI) * Math.asin(1.0/a);
-        return a*Math.pow(2,-10*t) * Math.sin((t-s)*(2*Math.PI)/p) + 1.0;
-    },
+    outElastic: function(t) {},
 
     /**
      * @property inOutElastic
      * @static
      */
-    inOutElastic: function(t) {
-        var s=1.70158;var p=0;var a=1.0;
-        if (t===0) return 0.0;  if ((t/=.5)===2) return 1.0;  if (!p) p=(.3*1.5);
-        s = p/(2*Math.PI) * Math.asin(1.0/a);
-        if (t < 1) return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin((t-s)*(2*Math.PI)/p));
-        return a*Math.pow(2,-10*(t-=1)) * Math.sin((t-s)*(2*Math.PI)/p)*.5 + 1.0;
-    },
+    inOutElastic: function(t) {},
 
     /**
      * @property inBack
      * @static
      */
-    inBack: function(t, s) {
-        if (s === undefined) s = 1.70158;
-        return t*t*((s+1)*t - s);
-    },
+    inBack: function(t, s) {},
 
     /**
      * @property outBack
      * @static
      */
-    outBack: function(t, s) {
-        if (s === undefined) s = 1.70158;
-        return ((--t)*t*((s+1)*t + s) + 1);
-    },
+    outBack: function(t, s) {},
 
     /**
      * @property inOutBack
      * @static
      */
-    inOutBack: function(t, s) {
-        if (s === undefined) s = 1.70158;
-        if ((t/=.5) < 1) return .5*(t*t*(((s*=(1.525))+1)*t - s));
-        return .5*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2);
-    },
+    inOutBack: function(t, s) {},
 
     /**
      * @property inBounce
      * @static
      */
-    inBounce: function(t) {
-        return 1.0 - Easing.outBounce(1.0-t);
-    },
+    inBounce: function(t) {},
 
     /**
      * @property outBounce
      * @static
      */
-    outBounce: function(t) {
-        if (t < (1/2.75)) {
-            return (7.5625*t*t);
-        } else if (t < (2/2.75)) {
-            return (7.5625*(t-=(1.5/2.75))*t + .75);
-        } else if (t < (2.5/2.75)) {
-            return (7.5625*(t-=(2.25/2.75))*t + .9375);
-        } else {
-            return (7.5625*(t-=(2.625/2.75))*t + .984375);
-        }
-    },
+    outBounce: function(t) {},
 
     /**
      * @property inOutBounce
@@ -8213,18 +7857,14 @@ SpringTransition.prototype.setVelocity = function setVelocity(v) {};
  *
  * @return {Boolean}
  */
-SpringTransition.prototype.isActive = function isActive() {
-    return !this.PE.isSleeping();
-};
+SpringTransition.prototype.isActive = function isActive() {};
 
 /**
  * Halt the transition
  *
  * @method halt
  */
-SpringTransition.prototype.halt = function halt() {
-    this.set(this.get());
-};
+SpringTransition.prototype.halt = function halt() {};
 
 /**
  * Get the current position of the transition
@@ -8233,10 +7873,7 @@ SpringTransition.prototype.halt = function halt() {
  *
  * @return {Number|Array} state
  */
-SpringTransition.prototype.get = function get() {
-    _update.call(this);
-    return _getParticlePosition.call(this);
-};
+SpringTransition.prototype.get = function get() {};
 
 /**
  * Set the end position and transition, with optional callback on completion.
@@ -8743,12 +8380,7 @@ TweenTransition.registerCurve('easeInOut', TweenTransition.Curves.easeInOut);
 TweenTransition.registerCurve('easeOutBounce', TweenTransition.Curves.easeOutBounce);
 TweenTransition.registerCurve('spring', TweenTransition.Curves.spring);
 
-TweenTransition.customCurve = function customCurve(v1, v2) {
-    v1 = v1 || 0; v2 = v2 || 0;
-    return function(t) {
-        return v1*t + (-2*v1 - v2 + 3)*t*t + (v1 + v2 - 2)*t*t*t;
-    };
-};
+TweenTransition.customCurve = function customCurve(v1, v2) {};
 
 module.exports = TweenTransition;
 },{}],91:[function(_dereq_,module,exports){
@@ -9027,7 +8659,6 @@ module.exports = KeyCodes;
  */
 var FamousEngine = _dereq_('../core/Engine');
 
-var _event  = 'prerender';
 
 var getTime = (window.performance && window.performance.now) ?
     function() {
@@ -9815,12 +9446,6 @@ var TransitionableTransform = _dereq_('../transitions/TransitionableTransform');
  */
 function GridLayout(options) {}
 
-function _reflow(size, cols, rows) {}
-
-function _createModifier(index, size, position, opacity) {}
-
-function _animateModifier(index, size, position, opacity) {}
-
 GridLayout.DEFAULT_OPTIONS = {};
 
 /**
@@ -9939,12 +9564,6 @@ HeaderFooterLayout.prototype.render = function render() {};
  * @param {Options} options An object of configurable options for the HeaderFooterLayout instance.
  */
 HeaderFooterLayout.prototype.setOptions = function setOptions(options) {};
-
-function _resolveNodeSize(node, defaultSize) {}
-
-function _outputTransform(offset) {}
-
-function _finalSize(directionSize, size) {}
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -10088,8 +9707,6 @@ RenderController.DefaultMap = {
     origin: null,
     align: null
 };
-
-function _mappedState(map, state) {}
 
 /**
  * As your RenderController shows a new renderable, it executes a transition in. This transition in
@@ -10386,8 +10003,6 @@ Scroller.prototype.render = function render() {};
  */
 Scroller.prototype.commit = function commit(context) {};
 
-function _innerRender() {}
-
 module.exports = Scroller;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Group":8,"../core/OptionsManager":10,"../core/Transform":15,"../core/ViewSequence":17,"../utilities/Utility":95}],109:[function(_dereq_,module,exports){
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -10476,29 +10091,6 @@ Scrollview.DEFAULT_OPTIONS = {
     syncScale: 1
 };
 
-function _handleStart(event) {}
-
-function _handleMove(event) {}
-
-function _handleEnd(event) {}
-
-function _bindEvents() {}
-
-function _attachAgents() {}
-
-function _detachAgents() {}
-
-function _nodeSizeForDirection(node) {}
-
-function _handleEdge(edge) {}
-
-function _handlePagination() {}
-
-function _setSpring(position, springState) {}
-
-function _normalizeState() {}
-
-function _shiftOrigin(amount) {}
 
 /**
  * Returns the index of the first visible renderable
