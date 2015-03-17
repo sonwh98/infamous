@@ -4762,21 +4762,7 @@ StateModifier.prototype.setOpacity = function setOpacity(opacity, transition, ca
  * @param {Function} callback callback to call after transition completes
  * @return {StateModifier} this
  */
-StateModifier.prototype.setOrigin = function setOrigin(origin, transition, callback) {
-    if (origin === null) {
-        if (this._hasOrigin) {
-            this._modifier.originFrom(null);
-            this._hasOrigin = false;
-        }
-        return this;
-    }
-    else if (!this._hasOrigin) {
-        this._hasOrigin = true;
-        this._modifier.originFrom(this._originState);
-    }
-    this._originState.set(origin, transition, callback);
-    return this;
-};
+StateModifier.prototype.setOrigin = function setOrigin(origin, transition, callback) {};
 
 /**
  * Set the alignment of this modifier, either statically or
