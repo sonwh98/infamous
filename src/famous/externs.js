@@ -3111,9 +3111,7 @@ PinchSync.prototype._moveUpdate = function _moveUpdate(diffTime) {};
  * @method getOptions
  * @return {Object} configuration options
  */
-PinchSync.prototype.getOptions = function getOptions() {
-    return this.options;
-};
+PinchSync.prototype.getOptions = function getOptions() {};
 
 /**
  * Set internal options, overriding any default options
@@ -3170,9 +3168,7 @@ RotateSync.prototype._moveUpdate = function _moveUpdate(diffTime) {};
  * @method getOptions
  * @return {Object} configuration options
  */
-RotateSync.prototype.getOptions = function getOptions() {
-    return this.options;
-};
+RotateSync.prototype.getOptions = function getOptions() {};
 
 /**
  * Set internal options, overriding any default options
@@ -3182,9 +3178,7 @@ RotateSync.prototype.getOptions = function getOptions() {
  * @param {Object} [options] overrides of default options
  * @param {Number} [options.scale] scale velocity by this factor
  */
-RotateSync.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+RotateSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = RotateSync;
 },{"../core/OptionsManager":10,"./TwoFingerSync":35}],31:[function(_dereq_,module,exports){
@@ -3219,10 +3213,6 @@ ScaleSync.DEFAULT_OPTIONS = {
     scale : 1
 };
 
-function _reset() {
-    this.touchAId = undefined;
-    this.touchBId = undefined;
-}
 
 // handles initial touch of two fingers
 ScaleSync.prototype._startUpdate = function _startUpdate(event) {};
@@ -3236,9 +3226,7 @@ ScaleSync.prototype._moveUpdate = function _moveUpdate(diffTime) {};
  * @method getOptions
  * @return {Object} configuration options
  */
-ScaleSync.prototype.getOptions = function getOptions() {
-    return this.options;
-};
+ScaleSync.prototype.getOptions = function getOptions() {};
 
 /**
  * Set internal options, overriding any default options
@@ -3248,9 +3236,7 @@ ScaleSync.prototype.getOptions = function getOptions() {
  * @param {Object} [options] overrides of default options
  * @param {Number} [options.scale] scale velocity by this factor
  */
-ScaleSync.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+ScaleSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = ScaleSync;
 },{"../core/OptionsManager":10,"./TwoFingerSync":35}],32:[function(_dereq_,module,exports){
@@ -3303,11 +3289,6 @@ ScrollSync.DIRECTION_Y = 1;
 
 var MINIMUM_TICK_TIME = 8;
 
-var _now = Date.now;
-
-function _newFrame() {}
-
-function _handleMove(event) {}
 
 /**
  * Return entire options dictionary, including defaults.
@@ -3448,18 +3429,6 @@ module.exports = TouchSync;
  */
 var EventHandler = _dereq_('../core/EventHandler');
 
-var _now = Date.now;
-
-function _timestampTouch(touch, event, history) {}
-
-function _handleStart(event) {}
-
-function _handleMove(event) {}
-
-function _handleEnd(event) {}
-
-function _handleUnpipe() {}
-
 /**
  * Helper to TouchSync – tracks piped in touch events, organizes touch
  *   events by ID, and emits track events back to TouchSync.
@@ -3505,21 +3474,11 @@ var EventHandler = _dereq_('../core/EventHandler');
  */
 function TwoFingerSync() {}
 
-TwoFingerSync.calculateAngle = function(posA, posB) {
-    var diffX = posB[0] - posA[0];
-    var diffY = posB[1] - posA[1];
-    return Math.atan2(diffY, diffX);
-};
+TwoFingerSync.calculateAngle = function(posA, posB) {};
 
-TwoFingerSync.calculateDistance = function(posA, posB) {
-    var diffX = posB[0] - posA[0];
-    var diffY = posB[1] - posA[1];
-    return Math.sqrt(diffX * diffX + diffY * diffY);
-};
+TwoFingerSync.calculateDistance = function(posA, posB) {};
 
-TwoFingerSync.calculateCenter = function(posA, posB) {
-    return [(posA[0] + posB[0]) / 2.0, (posA[1] + posB[1]) / 2.0];
-};
+TwoFingerSync.calculateCenter = function(posA, posB) {};
 
 var _now = Date.now;
 
@@ -3569,19 +3528,7 @@ var Vector = _dereq_('./Vector');
  *
  * @param {Array.Array} values array of rows
  */
-function Matrix(values) {
-    this.values = values ||
-        [
-            [1,0,0],
-            [0,1,0],
-            [0,0,1]
-        ];
-
-    return this;
-}
-
-var _register = new Matrix();
-var _vectorRegister = new Vector();
+function Matrix(values) {}
 
 /**
  * Return the values in the matrix as an array of numerical row arrays
@@ -3590,9 +3537,7 @@ var _vectorRegister = new Vector();
  *
  * @return {Array.array} matrix values as array of rows.
  */
-Matrix.prototype.get = function get() {
-    return this.values;
-};
+Matrix.prototype.get = function get() {};
 
 /**
  * Set the nested array of rows in the matrix.
@@ -3800,9 +3745,7 @@ Quaternion.prototype.set = function set(v) {};
  * @param {Quaternion} q
  * @return {Quaternion}
  */
-Quaternion.prototype.put = function put(q) {
-    q.set(register);
-};
+Quaternion.prototype.put = function put(q) {};
 
 /**
  * Doc: TODO
@@ -3810,9 +3753,7 @@ Quaternion.prototype.put = function put(q) {
  * @method clone
  * @return {Quaternion}
  */
-Quaternion.prototype.clone = function clone() {
-    return new Quaternion(this);
-};
+Quaternion.prototype.clone = function clone() {};
 
 /**
  * Doc: TODO
@@ -3829,9 +3770,7 @@ Quaternion.prototype.clear = function clear() {};
  * @param {Quaternion} q
  * @return {Boolean}
  */
-Quaternion.prototype.isEqual = function isEqual(q) {
-    return q.w === this.w && q.x === this.x && q.y === this.y && q.z === this.z;
-};
+Quaternion.prototype.isEqual = function isEqual(q) {};
 
 /**
  * Doc: TODO
@@ -3840,9 +3779,7 @@ Quaternion.prototype.isEqual = function isEqual(q) {
  * @param {Quaternion} q
  * @return {Number}
  */
-Quaternion.prototype.dot = function dot(q) {
-    return this.w * q.w + this.x * q.x + this.y * q.y + this.z * q.z;
-};
+Quaternion.prototype.dot = function dot(q) {};
 
 /**
  * Doc: TODO
@@ -3850,9 +3787,7 @@ Quaternion.prototype.dot = function dot(q) {
  * @method normSquared
  * @return {Number}
  */
-Quaternion.prototype.normSquared = function normSquared() {
-    return this.dot(this);
-};
+Quaternion.prototype.normSquared = function normSquared() {};
 
 /**
  * Doc: TODO
@@ -3860,9 +3795,7 @@ Quaternion.prototype.normSquared = function normSquared() {
  * @method norm
  * @return {Number}
  */
-Quaternion.prototype.norm = function norm() {
-    return Math.sqrt(this.normSquared());
-};
+Quaternion.prototype.norm = function norm() {};
 
 /**
  * Doc: TODO
@@ -3870,9 +3803,7 @@ Quaternion.prototype.norm = function norm() {
  * @method isZero
  * @return {Boolean}
  */
-Quaternion.prototype.isZero = function isZero() {
-    return !(this.x || this.y || this.z);
-};
+Quaternion.prototype.isZero = function isZero() {};
 
 /**
  * Doc: TODO
@@ -3920,13 +3851,6 @@ module.exports = Quaternion;
 
 var RAND = Math.random;
 
-function _randomFloat(min,max) {
-    return min + RAND() * (max - min);
-}
-
-function _randomInteger(min,max) {
-    return (min + RAND() * (max - min + 1)) >> 0;
-}
 
 /**
  * Very simple uniform random number generator library wrapping Math.random().
@@ -3970,10 +3894,7 @@ Random.range = function range(min,max,dim) {};
  * @param {Number} prob probability of returning 1, default 0.5
  * @return {Number} random sign (-1 or 1)
  */
-Random.sign = function sign(prob) {
-    prob = (prob !== undefined) ? prob : 0.5;
-    return (RAND() < prob) ? 1 : -1;
-};
+Random.sign = function sign(prob) {};
 
 /**
  * Return random boolean value, true or false.
@@ -3983,10 +3904,7 @@ Random.sign = function sign(prob) {
  * @param {Number} prob probability of returning true, default 0.5
  * @return {Boolean} random boolean
  */
-Random.bool = function bool(prob) {
-    prob = (prob !== undefined) ? prob : 0.5;
-    return RAND() < prob;
-};
+Random.bool = function bool(prob) {};
 
 module.exports = Random;
 },{}],40:[function(_dereq_,module,exports){
@@ -4189,9 +4107,7 @@ Vector.prototype.normalize = function normalize(length) {};
  *
  * @return {Vector}
  */
-Vector.prototype.clone = function clone() {
-    return new Vector(this);
-};
+Vector.prototype.clone = function clone() {};
 
 /**
  * True if and only if every value is 0 (or falsy)
@@ -4200,28 +4116,9 @@ Vector.prototype.clone = function clone() {
  *
  * @return {boolean}
  */
-Vector.prototype.isZero = function isZero() {
-    return !(this.x || this.y || this.z);
-};
+Vector.prototype.isZero = function isZero() {};
 
-function _setXYZ(x,y,z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    return this;
-}
 
-function _setFromArray(v) {
-    return _setXYZ.call(this,v[0],v[1],v[2] || 0);
-}
-
-function _setFromVector(v) {
-    return _setXYZ.call(this, v.x, v.y, v.z);
-}
-
-function _setFromNumber(x) {
-    return _setXYZ.call(this,x,0,0);
-}
 
 /**
  * Set this Vector to the values in the provided Array or Vector.
@@ -4230,19 +4127,11 @@ function _setFromNumber(x) {
  * @param {object} v array, Vector, or number
  * @return {Vector} this
  */
-Vector.prototype.set = function set(v) {
-    if (v instanceof Array) return _setFromArray.call(this, v);
-    if (typeof v === 'number') return _setFromNumber.call(this, v);
-    return _setFromVector.call(this, v);
-};
+Vector.prototype.set = function set(v) {};
 
-Vector.prototype.setXYZ = function(x,y,z) {
-    return _setXYZ.apply(this, arguments);
-};
+Vector.prototype.setXYZ = function(x,y,z) {};
 
-Vector.prototype.set1D = function(x) {
-    return _setFromNumber.call(this, x);
-};
+Vector.prototype.set1D = function(x) {};
 
 /**
  * Put result of last internal register calculation in specified output vector.
@@ -4252,19 +4141,14 @@ Vector.prototype.set1D = function(x) {
  * @return {Vector} destination vector
  */
 
-Vector.prototype.put = function put(v) {
-    if (this === _register) _setFromVector.call(v, _register);
-    else _setFromVector.call(v, this);
-};
+Vector.prototype.put = function put(v) {};
 
 /**
  * Set this vector to [0,0,0]
  *
  * @method clear
  */
-Vector.prototype.clear = function clear() {
-    return _setXYZ.call(this,0,0,0);
-};
+Vector.prototype.clear = function clear() {};
 
 /**
  * Scale this Vector down to specified "cap" length.
@@ -4274,12 +4158,7 @@ Vector.prototype.clear = function clear() {
  * @method cap
  * @return {Vector} capped vector
  */
-Vector.prototype.cap = function cap(cap) {
-    if (cap === Infinity) return _setFromVector.call(_register, this);
-    var norm = this.norm();
-    if (norm > cap) return _setFromVector.call(_register, this.mult(cap / norm));
-    else return _setFromVector.call(_register, this);
-};
+Vector.prototype.cap = function cap(cap) {};
 
 /**
  * Return projection of this Vector onto another.
@@ -4289,9 +4168,7 @@ Vector.prototype.cap = function cap(cap) {
  * @param {Vector} n vector to project upon
  * @return {Vector} projected vector
  */
-Vector.prototype.project = function project(n) {
-    return n.mult(this.dot(n));
-};
+Vector.prototype.project = function project(n) {};
 
 /**
  * Reflect this Vector across provided vector.
@@ -4301,10 +4178,7 @@ Vector.prototype.project = function project(n) {
  * @param {Vector} n vector to reflect across
  * @return {Vector} reflected vector
  */
-Vector.prototype.reflectAcross = function reflectAcross(n) {
-    n.normalize().put(n);
-    return _setFromVector(_register, this.sub(this.project(n).mult(2)));
-};
+Vector.prototype.reflectAcross = function reflectAcross(n) {};
 
 /**
  * Convert Vector to three-element array.
@@ -4312,13 +4186,9 @@ Vector.prototype.reflectAcross = function reflectAcross(n) {
  * @method get
  * @return {array<number>} three-element array
  */
-Vector.prototype.get = function get() {
-    return [this.x, this.y, this.z];
-};
+Vector.prototype.get = function get() {};
 
-Vector.prototype.get1D = function() {
-    return this.x;
-};
+Vector.prototype.get1D = function() {};
 
 module.exports = Vector;
 },{}],42:[function(_dereq_,module,exports){
@@ -4375,7 +4245,6 @@ var _direction = {
 Draggable.DIRECTION_X = _direction.x;
 Draggable.DIRECTION_Y = _direction.y;
 
-var _clamp = Utilities.clamp;
 
 Draggable.DEFAULT_OPTIONS = {
     projection  : _direction.x | _direction.y,
@@ -4387,26 +4256,7 @@ Draggable.DEFAULT_OPTIONS = {
     transition  : {duration : 0}
 };
 
-function _mapDifferential(differential) {}
 
-function _handleStart() {
-    if (!this._active) return;
-    if (this._positionState.isActive()) this._positionState.halt();
-    this.eventOutput.emit('start', {position : this.getPosition()});
-}
-
-function _handleMove(event) {}
-
-function _handleEnd() {
-    if (!this._active) return;
-    this.eventOutput.emit('end', {position : this.getPosition()});
-}
-
-function _bindEvents() {
-    this.sync.on('start', _handleStart.bind(this));
-    this.sync.on('update', _handleMove.bind(this));
-    this.sync.on('end', _handleEnd.bind(this));
-}
 
 /**
  * Set internal options, overriding any default options
@@ -4777,21 +4627,7 @@ StateModifier.prototype.setOrigin = function setOrigin(origin, transition, callb
  * @param {Function} callback callback to call after transition completes
  * @return {StateModifier} this
  */
-StateModifier.prototype.setAlign = function setOrigin(align, transition, callback) {
-    if (align === null) {
-        if (this._hasAlign) {
-            this._modifier.alignFrom(null);
-            this._hasAlign = false;
-        }
-        return this;
-    }
-    else if (!this._hasAlign) {
-        this._hasAlign = true;
-        this._modifier.alignFrom(this._alignState);
-    }
-    this._alignState.set(align, transition, callback);
-    return this;
-};
+StateModifier.prototype.setAlign = function setOrigin(align, transition, callback) {};
 
 /**
  * Set the size of this modifier, either statically or
@@ -4806,21 +4642,7 @@ StateModifier.prototype.setAlign = function setOrigin(align, transition, callbac
  * @param {Function} callback callback to call after transition completes
  * @return {StateModifier} this
  */
-StateModifier.prototype.setSize = function setSize(size, transition, callback) {
-    if (size === null) {
-        if (this._hasSize) {
-            this._modifier.sizeFrom(null);
-            this._hasSize = false;
-        }
-        return this;
-    }
-    else if (!this._hasSize) {
-        this._hasSize = true;
-        this._modifier.sizeFrom(this._sizeState);
-    }
-    this._sizeState.set(size, transition, callback);
-    return this;
-};
+StateModifier.prototype.setSize = function setSize(size, transition, callback) {};
 
 /**
  * Set the proportions of this modifier, either statically or
@@ -4833,35 +4655,14 @@ StateModifier.prototype.setSize = function setSize(size, transition, callback) {
  * @param {Function} callback callback to call after transition completes
  * @return {StateModifier} this
  */
-StateModifier.prototype.setProportions = function setSize(proportions, transition, callback) {
-    if (proportions === null) {
-        if (this._hasProportions) {
-            this._modifier.proportionsFrom(null);
-            this._hasProportions = false;
-        }
-        return this;
-    }
-    else if (!this._hasProportions) {
-        this._hasProportions = true;
-        this._modifier.proportionsFrom(this._proportionsState);
-    }
-    this._proportionsState.set(proportions, transition, callback);
-    return this;
-};
+StateModifier.prototype.setProportions = function setSize(proportions, transition, callback) {};
 
 /**
  * Stop the transition.
  *
  * @method halt
  */
-StateModifier.prototype.halt = function halt() {
-    this._transformState.halt();
-    this._opacityState.halt();
-    this._originState.halt();
-    this._alignState.halt();
-    this._sizeState.halt();
-    this._proportionsState.halt();
-};
+StateModifier.prototype.halt = function halt() {};
 
 /**
  * Get the current state of the transform matrix component.
@@ -4869,9 +4670,7 @@ StateModifier.prototype.halt = function halt() {
  * @method getTransform
  * @return {Object} transform provider object
  */
-StateModifier.prototype.getTransform = function getTransform() {
-    return this._transformState.get();
-};
+StateModifier.prototype.getTransform = function getTransform() {};
 
 /**
  * Get the destination state of the transform component.
@@ -4879,9 +4678,7 @@ StateModifier.prototype.getTransform = function getTransform() {
  * @method getFinalTransform
  * @return {Transform} transform matrix
  */
-StateModifier.prototype.getFinalTransform = function getFinalTransform() {
-    return this._transformState.getFinal();
-};
+StateModifier.prototype.getFinalTransform = function getFinalTransform() {};
 
 /**
  * Get the current state of the opacity component.
@@ -4889,9 +4686,7 @@ StateModifier.prototype.getFinalTransform = function getFinalTransform() {
  * @method getOpacity
  * @return {Object} opacity provider object
  */
-StateModifier.prototype.getOpacity = function getOpacity() {
-    return this._opacityState.get();
-};
+StateModifier.prototype.getOpacity = function getOpacity() {};
 
 /**
  * Get the current state of the origin component.
@@ -4899,9 +4694,7 @@ StateModifier.prototype.getOpacity = function getOpacity() {
  * @method getOrigin
  * @return {Object} origin provider object
  */
-StateModifier.prototype.getOrigin = function getOrigin() {
-    return this._hasOrigin ? this._originState.get() : null;
-};
+StateModifier.prototype.getOrigin = function getOrigin() {};
 
 /**
  * Get the current state of the align component.
@@ -4909,9 +4702,7 @@ StateModifier.prototype.getOrigin = function getOrigin() {
  * @method getAlign
  * @return {Object} align provider object
  */
-StateModifier.prototype.getAlign = function getAlign() {
-    return this._hasAlign ? this._alignState.get() : null;
-};
+StateModifier.prototype.getAlign = function getAlign() {};
 
 /**
  * Get the current state of the size component.
@@ -4919,9 +4710,7 @@ StateModifier.prototype.getAlign = function getAlign() {
  * @method getSize
  * @return {Object} size provider object
  */
-StateModifier.prototype.getSize = function getSize() {
-    return this._hasSize ? this._sizeState.get() : null;
-};
+StateModifier.prototype.getSize = function getSize() {};
 
 /**
  * Get the current state of the propportions component.
@@ -4929,9 +4718,7 @@ StateModifier.prototype.getSize = function getSize() {
  * @method getProportions
  * @return {Object} size provider object
  */
-StateModifier.prototype.getProportions = function getProportions() {
-    return this._hasProportions ? this._proportionsState.get() : null;
-};
+StateModifier.prototype.getProportions = function getProportions() {};
 
 /**
  * Return render spec for this StateModifier, applying to the provided
@@ -4945,9 +4732,7 @@ StateModifier.prototype.getProportions = function getProportions() {
  * @return {Object} render spec for this StateModifier, including the
  *    provided target
  */
-StateModifier.prototype.modify = function modify(target) {
-    return this._modifier.modify(target);
-};
+StateModifier.prototype.modify = function modify(target) {};
 
 module.exports = StateModifier;
 },{"../core/Modifier":9,"../core/Transform":15,"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89}],47:[function(_dereq_,module,exports){
@@ -5032,9 +4817,7 @@ PhysicsEngine.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param opts {Object}
  */
-PhysicsEngine.prototype.setOptions = function setOptions(opts) {
-    for (var key in opts) if (this.options[key]) this.options[key] = opts[key];
-};
+PhysicsEngine.prototype.setOptions = function setOptions(opts) {};
 
 /**
  * Method to add a physics body to the engine. Necessary to update the
@@ -6046,20 +5829,7 @@ Snap.prototype.setOptions = function setOptions(options) {};
  * @param source {Body} source physics body
  * @return energy {Number}
  */
-Snap.prototype.getEnergy = function getEnergy(targets, source) {
-    var options     = this.options;
-    var restLength  = options.length;
-    var anchor      = options.anchor || source.position;
-    var strength    = Math.pow(2 * pi / options.period, 2);
-
-    var energy = 0.0;
-    for (var i = 0; i < targets.length; i++){
-        var target = targets[i];
-        var dist = anchor.sub(target.position).norm() - restLength;
-        energy += 0.5 * strength * dist * dist;
-    }
-    return energy;
-};
+Snap.prototype.getEnergy = function getEnergy(targets, source) {};
 
 /**
  * Adds a spring impulse to a physics body's velocity due to the constraint
@@ -6820,20 +6590,7 @@ RotationalSpring.prototype.applyForce = function applyForce(targets) {};
  * @method getEnergy
  * @param [targets] target The physics body attached to the spring
  */
-RotationalSpring.prototype.getEnergy = function getEnergy(targets) {
-    var options     = this.options;
-    var restLength  = options.length;
-    var anchor      = options.anchor;
-    var strength    = options.stiffness;
-
-    var energy = 0.0;
-    for (var i = 0; i < targets.length; i++) {
-        var target = targets[i];
-        var dist = anchor.sub(target.orientation).norm() - restLength;
-        energy += 0.5 * strength * dist * dist;
-    }
-    return energy;
-};
+RotationalSpring.prototype.getEnergy = function getEnergy(targets) {};
 
 module.exports = RotationalSpring;
 },{"../../math/Quaternion":38,"./Force":64,"./Spring":68}],68:[function(_dereq_,module,exports){
@@ -7208,15 +6965,7 @@ SymplecticEuler.integratePosition = function integratePosition(body, dt) {};
  * @param {Body} physics body (except a particle)
  * @param {Number} dt delta time
  */
-SymplecticEuler.integrateAngularMomentum = function integrateAngularMomentum(body, dt) {
-    var L = body.angularMomentum;
-    var t = body.torque;
-
-    if (t.isZero()) return;
-
-    L.add(t.mult(dt)).put(L);
-    t.clear();
-};
+SymplecticEuler.integrateAngularMomentum = function integrateAngularMomentum(body, dt) {};
 
 /*
  * Updates the orientation of a physics body from its angular velocity.
@@ -7226,14 +6975,7 @@ SymplecticEuler.integrateAngularMomentum = function integrateAngularMomentum(bod
  * @param {Body} physics body (except a particle)
  * @param {Number} dt delta time
  */
-SymplecticEuler.integrateOrientation = function integrateOrientation(body, dt) {
-    var q = body.orientation;
-    var w = body.angularVelocity;
-
-    if (w.isZero()) return;
-    q.add(q.multiply(w).scalarMultiply(0.5 * dt)).put(q);
-//        q.normalize.put(q);
-};
+SymplecticEuler.integrateOrientation = function integrateOrientation(body, dt) {};
 
 module.exports = SymplecticEuler;
 },{}],73:[function(_dereq_,module,exports){
@@ -7263,17 +7005,7 @@ var Surface = _dereq_('../core/Surface');
  * @param {Object} [options] overrides of default options
  * @param {Array.Number} [options.canvasSize] [width, height] for document element
  */
-function CanvasSurface(options) {
-    if (options && options.canvasSize) this._canvasSize = options.canvasSize;
-    Surface.apply(this, arguments);
-    if (!this._canvasSize) this._canvasSize = this.getSize();
-    this._backBuffer = document.createElement('canvas');
-    if (this._canvasSize) {
-        this._backBuffer.width = this._canvasSize[0];
-        this._backBuffer.height = this._canvasSize[1];
-    }
-    this._contextId = undefined;
-}
+function CanvasSurface(options) {}
 
 CanvasSurface.prototype = Object.create(Surface.prototype);
 CanvasSurface.prototype.constructor = CanvasSurface;
@@ -7296,17 +7028,7 @@ CanvasSurface.prototype.setContent = function setContent() {};
  * @method deploy
  * @param {Node} target document parent of this container
  */
-CanvasSurface.prototype.deploy = function deploy(target) {
-    if (this._canvasSize) {
-        target.width = this._canvasSize[0];
-        target.height = this._canvasSize[1];
-    }
-    if (this._contextId === '2d') {
-        target.getContext(this._contextId).drawImage(this._backBuffer, 0, 0);
-        this._backBuffer.width = 0;
-        this._backBuffer.height = 0;
-    }
-};
+CanvasSurface.prototype.deploy = function deploy(target) {};
 
 /**
  * Remove this component and contained content from the document
@@ -7316,18 +7038,7 @@ CanvasSurface.prototype.deploy = function deploy(target) {
  *
  * @param {Node} target node to which the component was deployed
  */
-CanvasSurface.prototype.recall = function recall(target) {
-    var size = this.getSize();
-
-    this._backBuffer.width = target.width;
-    this._backBuffer.height = target.height;
-
-    if (this._contextId === '2d') {
-        this._backBuffer.getContext(this._contextId).drawImage(target, 0, 0);
-        target.width = 0;
-        target.height = 0;
-    }
-};
+CanvasSurface.prototype.recall = function recall(target) {};
 
 /**
  * Returns the canvas element's context
@@ -7335,10 +7046,7 @@ CanvasSurface.prototype.recall = function recall(target) {
  * @method getContext
  * @param {string} contextId context identifier
  */
-CanvasSurface.prototype.getContext = function getContext(contextId) {
-    this._contextId = contextId;
-    return this._currentTarget ? this._currentTarget.getContext(contextId) : this._backBuffer.getContext(contextId);
-};
+CanvasSurface.prototype.getContext = function getContext(contextId) {};
 
 /**
  *  Set the size of the surface and canvas element.
@@ -7347,14 +7055,7 @@ CanvasSurface.prototype.getContext = function getContext(contextId) {
  *  @param {Array.number} size [width, height] of surface
  *  @param {Array.number} canvasSize [width, height] of canvas surface
  */
-CanvasSurface.prototype.setSize = function setSize(size, canvasSize) {
-    Surface.prototype.setSize.apply(this, arguments);
-    if (canvasSize) this._canvasSize = [canvasSize[0], canvasSize[1]];
-    if (this._currentTarget) {
-        this._currentTarget.width = this._canvasSize[0];
-        this._currentTarget.height = this._canvasSize[1];
-    }
-};
+CanvasSurface.prototype.setSize = function setSize(size, canvasSize) {};
 
 module.exports = CanvasSurface;
 },{"../core/Surface":14}],75:[function(_dereq_,module,exports){
@@ -7392,15 +7093,7 @@ var Context = _dereq_('../core/Context');
  * @param {Array} [options.properties] string dictionary of HTML attributes to set on target div
  * @param {string} [options.content] inner (HTML) content of surface (should not be used)
  */
-function ContainerSurface(options) {
-    Surface.call(this, options);
-    this._container = document.createElement('div');
-    this._container.classList.add('famous-group');
-    this._container.classList.add('famous-container-group');
-    this._shouldRecalculateSize = false;
-    this.context = new Context(this._container);
-    this.setContent(this._container);
-}
+function ContainerSurface(options) {}
 
 ContainerSurface.prototype = Object.create(Surface.prototype);
 ContainerSurface.prototype.constructor = ContainerSurface;
@@ -7415,9 +7108,7 @@ ContainerSurface.prototype.elementClass = 'famous-surface';
  * @param {Object} obj renderable object
  * @return {RenderNode} RenderNode wrapping this object, if not already a RenderNode
  */
-ContainerSurface.prototype.add = function add() {
-    return this.context.add.apply(this.context, arguments);
-};
+ContainerSurface.prototype.add = function add() {};
 
 /**
  * Return spec for this surface.  Note: Can result in a size recalculation.
@@ -7427,10 +7118,7 @@ ContainerSurface.prototype.add = function add() {
  *
  * @return {Object} render spec for this surface (spec id)
  */
-ContainerSurface.prototype.render = function render() {
-    if (this._sizeDirty) this._shouldRecalculateSize = true;
-    return Surface.prototype.render.apply(this, arguments);
-};
+ContainerSurface.prototype.render = function render() {};
 
 /**
  * Place the document element this component manages into the document.
@@ -7439,10 +7127,7 @@ ContainerSurface.prototype.render = function render() {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-ContainerSurface.prototype.deploy = function deploy() {
-    this._shouldRecalculateSize = true;
-    return Surface.prototype.deploy.apply(this, arguments);
-};
+ContainerSurface.prototype.deploy = function deploy() {};
 
 /**
  * Apply changes from this component to the corresponding document element.
@@ -7458,35 +7143,20 @@ ContainerSurface.prototype.deploy = function deploy() {
  * @param {Array.Number} size unused TODO
  * @return {undefined} TODO returns an undefined value
  */
-ContainerSurface.prototype.commit = function commit(context, transform, opacity, origin, size) {
-    var previousSize = this._size ? [this._size[0], this._size[1]] : null;
-    var result = Surface.prototype.commit.apply(this, arguments);
-    if (this._shouldRecalculateSize || (previousSize && (this._size[0] !== previousSize[0] || this._size[1] !== previousSize[1]))) {
-        this.context.setSize();
-        this._shouldRecalculateSize = false;
-    }
-    this.context.update();
-    return result;
-};
+ContainerSurface.prototype.commit = function commit(context, transform, opacity, origin, size) {};
 
 module.exports = ContainerSurface;
 },{"../core/Context":1,"../core/Surface":14}],76:[function(_dereq_,module,exports){
 var ContainerSurface = _dereq_('./ContainerSurface');
 
-function FormContainerSurface(options) {
-    if (options) this._method = options.method || '';
-    ContainerSurface.apply(this, arguments);
-}
+function FormContainerSurface(options) {}
 
 FormContainerSurface.prototype = Object.create(ContainerSurface.prototype);
 FormContainerSurface.prototype.constructor = FormContainerSurface;
 
 FormContainerSurface.prototype.elementType = 'form';
 
-FormContainerSurface.prototype.deploy = function deploy(target) {
-    if (this._method) target.method = this._method;
-    return ContainerSurface.prototype.deploy.apply(this, arguments);
-};
+FormContainerSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = FormContainerSurface;
 },{"./ContainerSurface":75}],77:[function(_dereq_,module,exports){
@@ -7511,37 +7181,20 @@ var Surface = _dereq_('../core/Surface');
  * @constructor
  * @param {Object} [options] overrides of default options
  */
-function ImageSurface(options) {
-    this._imageUrl = undefined;
-    Surface.apply(this, arguments);
-}
+function ImageSurface(options) {}
 
 var urlCache = [];
 var countCache = [];
 var nodeCache = [];
 var cacheEnabled = true;
 
-ImageSurface.enableCache = function enableCache() {
-    cacheEnabled = true;
-};
+ImageSurface.enableCache = function enableCache() {};
 
-ImageSurface.disableCache = function disableCache() {
-    cacheEnabled = false;
-};
+ImageSurface.disableCache = function disableCache() {};
 
-ImageSurface.clearCache = function clearCache() {
-    urlCache = [];
-    countCache = [];
-    nodeCache = [];
-};
+ImageSurface.clearCache = function clearCache() {};
 
-ImageSurface.getCache = function getCache() {
-    return {
-        urlCache: urlCache,
-        countCache: countCache,
-        nodeCache: countCache
-    };
-};
+ImageSurface.getCache = function getCache() {};
 
 ImageSurface.prototype = Object.create(Surface.prototype);
 ImageSurface.prototype.constructor = ImageSurface;
@@ -7553,30 +7206,7 @@ ImageSurface.prototype.elementClass = 'famous-surface';
  * @method setContent
  * @param {string} imageUrl
  */
-ImageSurface.prototype.setContent = function setContent(imageUrl) {
-    var urlIndex = urlCache.indexOf(this._imageUrl);
-    if (urlIndex !== -1) {
-        if (countCache[urlIndex] === 1) {
-            urlCache.splice(urlIndex, 1);
-            countCache.splice(urlIndex, 1);
-            nodeCache.splice(urlIndex, 1);
-        } else {
-            countCache[urlIndex]--;
-        }
-    }
-
-    urlIndex = urlCache.indexOf(imageUrl);
-    if (urlIndex === -1) {
-        urlCache.push(imageUrl);
-        countCache.push(1);
-    }
-    else {
-        countCache[urlIndex]++;
-    }
-
-    this._imageUrl = imageUrl;
-    this._contentDirty = true;
-};
+ImageSurface.prototype.setContent = function setContent(imageUrl) {};
 
 /**
  * Place the document element that this component manages into the document.
@@ -7585,16 +7215,7 @@ ImageSurface.prototype.setContent = function setContent(imageUrl) {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-ImageSurface.prototype.deploy = function deploy(target) {
-    var urlIndex = urlCache.indexOf(this._imageUrl);
-    if (nodeCache[urlIndex] === undefined && cacheEnabled) {
-        var img = new Image();
-        img.src = this._imageUrl || '';
-        nodeCache[urlIndex] = img;
-    }
-
-    target.src = this._imageUrl || '';
-};
+ImageSurface.prototype.deploy = function deploy(target) {};
 
 /**
  * Remove this component and contained content from the document
@@ -7604,9 +7225,7 @@ ImageSurface.prototype.deploy = function deploy(target) {
  *
  * @param {Node} target node to which the component was deployed
  */
-ImageSurface.prototype.recall = function recall(target) {
-    target.src = '';
-};
+ImageSurface.prototype.recall = function recall(target) {};
 
 module.exports = ImageSurface;
 },{"../core/Surface":14}],78:[function(_dereq_,module,exports){
@@ -7633,19 +7252,7 @@ var Surface = _dereq_('../core/Surface');
  * @param {string} [options.type] specifies the type of element to display (e.g. 'datetime', 'text', 'button', etc.)
  * @param {string} [options.value] value of text
  */
-function InputSurface(options) {
-    this._placeholder = options.placeholder || '';
-    this._value       = options.value || '';
-    this._type        = options.type || 'text';
-    this._name        = options.name || '';
-
-    Surface.apply(this, arguments);
-
-    this.on('click', this.focus.bind(this));
-    window.addEventListener('click', function(event) {
-        if (event.target !== this._currentTarget) this.blur();
-    }.bind(this));
-}
+function InputSurface(options) {}
 InputSurface.prototype = Object.create(Surface.prototype);
 InputSurface.prototype.constructor = InputSurface;
 
@@ -7659,11 +7266,7 @@ InputSurface.prototype.elementClass = 'famous-surface';
  * @param {string} str Value to set the placeholder to.
  * @return {InputSurface} this, allowing method chaining.
  */
-InputSurface.prototype.setPlaceholder = function setPlaceholder(str) {
-    this._placeholder = str;
-    this._contentDirty = true;
-    return this;
-};
+InputSurface.prototype.setPlaceholder = function setPlaceholder(str) {};
 
 /**
  * Focus on the current input, pulling up the keyboard on mobile.
@@ -7671,10 +7274,7 @@ InputSurface.prototype.setPlaceholder = function setPlaceholder(str) {
  * @method focus
  * @return {InputSurface} this, allowing method chaining.
  */
-InputSurface.prototype.focus = function focus() {
-    if (this._currentTarget) this._currentTarget.focus();
-    return this;
-};
+InputSurface.prototype.focus = function focus() {};
 
 /**
  * Blur the current input, hiding the keyboard on mobile.
@@ -7682,10 +7282,7 @@ InputSurface.prototype.focus = function focus() {
  * @method blur
  * @return {InputSurface} this, allowing method chaining.
  */
-InputSurface.prototype.blur = function blur() {
-    if (this._currentTarget) this._currentTarget.blur();
-    return this;
-};
+InputSurface.prototype.blur = function blur() {};
 
 /**
  * Set the placeholder conent.
@@ -7695,11 +7292,7 @@ InputSurface.prototype.blur = function blur() {
  * @param {string} str Value to set the main input value to.
  * @return {InputSurface} this, allowing method chaining.
  */
-InputSurface.prototype.setValue = function setValue(str) {
-    this._value = str;
-    this._contentDirty = true;
-    return this;
-};
+InputSurface.prototype.setValue = function setValue(str) {};
 
 /**
  * Set the type of element to display conent.
@@ -7709,11 +7302,7 @@ InputSurface.prototype.setValue = function setValue(str) {
  * @param {string} str type of the input surface (e.g. 'button', 'text')
  * @return {InputSurface} this, allowing method chaining.
  */
-InputSurface.prototype.setType = function setType(str) {
-    this._type = str;
-    this._contentDirty = true;
-    return this;
-};
+InputSurface.prototype.setType = function setType(str) {};
 
 /**
  * Get the value of the inner content of the element (e.g. the entered text)
@@ -7721,14 +7310,7 @@ InputSurface.prototype.setType = function setType(str) {
  * @method getValue
  * @return {string} value of element
  */
-InputSurface.prototype.getValue = function getValue() {
-    if (this._currentTarget) {
-        return this._currentTarget.value;
-    }
-    else {
-        return this._value;
-    }
-};
+InputSurface.prototype.getValue = function getValue() {};
 
 /**
  * Set the name attribute of the element.
@@ -7738,11 +7320,7 @@ InputSurface.prototype.getValue = function getValue() {
  * @param {string} str element name
  * @return {InputSurface} this, allowing method chaining.
  */
-InputSurface.prototype.setName = function setName(str) {
-    this._name = str;
-    this._contentDirty = true;
-    return this;
-};
+InputSurface.prototype.setName = function setName(str) {};
 
 /**
  * Get the name attribute of the element.
@@ -7750,9 +7328,7 @@ InputSurface.prototype.setName = function setName(str) {
  * @method getName
  * @return {string} name of element
  */
-InputSurface.prototype.getName = function getName() {
-    return this._name;
-};
+InputSurface.prototype.getName = function getName() {};
 
 /**
  * Place the document element this component manages into the document.
@@ -7761,34 +7337,20 @@ InputSurface.prototype.getName = function getName() {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-InputSurface.prototype.deploy = function deploy(target) {
-    if (this._placeholder !== '') target.placeholder = this._placeholder;
-    target.value = this._value;
-    target.type = this._type;
-    target.name = this._name;
-};
+InputSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = InputSurface;
 },{"../core/Surface":14}],79:[function(_dereq_,module,exports){
 var InputSurface = _dereq_('./InputSurface');
 
-function SubmitInputSurface(options) {
-    InputSurface.apply(this, arguments);
-    this._type = 'submit';
-    if (options && options.onClick) this.setOnClick(options.onClick);
-}
+function SubmitInputSurface(options) {}
 
 SubmitInputSurface.prototype = Object.create(InputSurface.prototype);
 SubmitInputSurface.prototype.constructor = SubmitInputSurface;
 
-SubmitInputSurface.prototype.setOnClick = function(onClick) {
-    this.onClick = onClick;
-};
+SubmitInputSurface.prototype.setOnClick = function(onClick) {};
 
-SubmitInputSurface.prototype.deploy = function deploy(target) {
-    if (this.onclick) target.onClick = this.onClick;
-    InputSurface.prototype.deploy.apply(this, arguments);
-};
+SubmitInputSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = SubmitInputSurface;
 },{"./InputSurface":78}],80:[function(_dereq_,module,exports){
@@ -7818,17 +7380,7 @@ var Surface = _dereq_('../core/Surface');
  * @param {number} [options.cols] number of columns in textarea
  * @param {number} [options.rows] number of rows in textarea
  */
-function TextareaSurface(options) {
-    this._placeholder = options.placeholder || '';
-    this._value       = options.value || '';
-    this._name        = options.name || '';
-    this._wrap        = options.wrap || '';
-    this._cols        = options.cols || '';
-    this._rows        = options.rows || '';
-
-    Surface.apply(this, arguments);
-    this.on('click', this.focus.bind(this));
-}
+function TextareaSurface(options) {}
 TextareaSurface.prototype = Object.create(Surface.prototype);
 TextareaSurface.prototype.constructor = TextareaSurface;
 
@@ -7842,11 +7394,7 @@ TextareaSurface.prototype.elementClass = 'famous-surface';
  * @param {string} str Value to set the placeholder to.
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.setPlaceholder = function setPlaceholder(str) {
-    this._placeholder = str;
-    this._contentDirty = true;
-    return this;
-};
+TextareaSurface.prototype.setPlaceholder = function setPlaceholder(str) {};
 
 /**
  * Focus on the current input, pulling up the keyboard on mobile.
@@ -7854,10 +7402,7 @@ TextareaSurface.prototype.setPlaceholder = function setPlaceholder(str) {
  * @method focus
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.focus = function focus() {
-    if (this._currentTarget) this._currentTarget.focus();
-    return this;
-};
+TextareaSurface.prototype.focus = function focus() {};
 
 /**
  * Blur the current input, hiding the keyboard on mobile.
@@ -7865,10 +7410,7 @@ TextareaSurface.prototype.focus = function focus() {
  * @method focus
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.blur = function blur() {
-    if (this._currentTarget) this._currentTarget.blur();
-    return this;
-};
+TextareaSurface.prototype.blur = function blur() {};
 
 /**
  * Set the value of textarea.
@@ -7878,11 +7420,7 @@ TextareaSurface.prototype.blur = function blur() {
  * @param {string} str Value to set the main textarea value to.
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.setValue = function setValue(str) {
-    this._value = str;
-    this._contentDirty = true;
-    return this;
-};
+TextareaSurface.prototype.setValue = function setValue(str) {};
 
 /**
  * Get the value of the inner content of the textarea (e.g. the entered text)
@@ -7890,14 +7428,7 @@ TextareaSurface.prototype.setValue = function setValue(str) {
  * @method getValue
  * @return {string} value of element
  */
-TextareaSurface.prototype.getValue = function getValue() {
-    if (this._currentTarget) {
-        return this._currentTarget.value;
-    }
-    else {
-        return this._value;
-    }
-};
+TextareaSurface.prototype.getValue = function getValue() {};
 
 /**
  * Set the name attribute of the element.
@@ -7907,11 +7438,7 @@ TextareaSurface.prototype.getValue = function getValue() {
  * @param {string} str element name
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.setName = function setName(str) {
-    this._name = str;
-    this._contentDirty = true;
-    return this;
-};
+TextareaSurface.prototype.setName = function setName(str) {};
 
 /**
  * Get the name attribute of the element.
@@ -7919,9 +7446,7 @@ TextareaSurface.prototype.setName = function setName(str) {
  * @method getName
  * @return {string} name of element
  */
-TextareaSurface.prototype.getName = function getName() {
-    return this._name;
-};
+TextareaSurface.prototype.getName = function getName() {};
 
 /**
  * Set the wrap of textarea.
@@ -7931,11 +7456,7 @@ TextareaSurface.prototype.getName = function getName() {
  * @param {string} str wrap of the textarea surface (e.g. 'soft', 'hard')
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.setWrap = function setWrap(str) {
-    this._wrap = str;
-    this._contentDirty = true;
-    return this;
-};
+TextareaSurface.prototype.setWrap = function setWrap(str) {};
 
 /**
  * Set the number of columns visible in the textarea.
@@ -7946,11 +7467,7 @@ TextareaSurface.prototype.setWrap = function setWrap(str) {
  * @param {number} num columns in textarea surface
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.setColumns = function setColumns(num) {
-    this._cols = num;
-    this._contentDirty = true;
-    return this;
-};
+TextareaSurface.prototype.setColumns = function setColumns(num) {};
 
 /**
  * Set the number of rows visible in the textarea.
@@ -7961,11 +7478,7 @@ TextareaSurface.prototype.setColumns = function setColumns(num) {
  * @param {number} num rows in textarea surface
  * @return {TextareaSurface} this, allowing method chaining.
  */
-TextareaSurface.prototype.setRows = function setRows(num) {
-    this._rows = num;
-    this._contentDirty = true;
-    return this;
-};
+TextareaSurface.prototype.setRows = function setRows(num) {};
 
 /**
  * Place the document element this component manages into the document.
@@ -7974,14 +7487,7 @@ TextareaSurface.prototype.setRows = function setRows(num) {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-TextareaSurface.prototype.deploy = function deploy(target) {
-    if (this._placeholder !== '') target.placeholder = this._placeholder;
-    if (this._value !== '') target.value = this._value;
-    if (this._name !== '') target.name = this._name;
-    if (this._wrap !== '') target.wrap = this._wrap;
-    if (this._cols !== '') target.cols = this._cols;
-    if (this._rows !== '') target.rows = this._rows;
-};
+TextareaSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = TextareaSurface;
 },{"../core/Surface":14}],81:[function(_dereq_,module,exports){
@@ -8013,12 +7519,7 @@ var Surface = _dereq_('../core/Surface');
  * @param {String} [options.src] videoUrl URL
  * @param {boolean} [options.autoplay] autoplay
  */
-function VideoSurface(options) {
-    Surface.apply(this, arguments);
-    this._videoUrl = undefined;
-    this.options = Object.create(VideoSurface.DEFAULT_OPTIONS);
-    if (options) this.setOptions(options);
-}
+function VideoSurface(options) {}
 
 VideoSurface.prototype = Object.create(Surface.prototype);
 VideoSurface.prototype.constructor = VideoSurface;
@@ -8038,16 +7539,7 @@ VideoSurface.prototype.elementClass = 'famous-surface';
  * @param {Object} [options] overrides of default options
  * @param {Boolean} [options.autoplay] HTML autoplay
  */
-VideoSurface.prototype.setOptions = function setOptions(options) {
-    if (options.size) this.setSize(options.size);
-    if (options.classes) this.setClasses(options.classes);
-    if (options.properties) this.setProperties(options.properties);
-    if (options.autoplay) this.options.autoplay = options.autoplay;
-    if (options.src) {
-        this._videoUrl = options.src;
-        this._contentDirty = true;
-    }
-};
+VideoSurface.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Set url of the video.
@@ -8055,10 +7547,7 @@ VideoSurface.prototype.setOptions = function setOptions(options) {
  * @method setContent
  * @param {string} videoUrl URL
  */
-VideoSurface.prototype.setContent = function setContent(videoUrl) {
-    this._videoUrl = videoUrl;
-    this._contentDirty = true;
-};
+VideoSurface.prototype.setContent = function setContent(videoUrl) {};
 
 /**
  * Place the document element this component manages into the document.
@@ -8068,10 +7557,7 @@ VideoSurface.prototype.setContent = function setContent(videoUrl) {
  * @method deploy
  * @param {Node} target document parent of this container
  */
-VideoSurface.prototype.deploy = function deploy(target) {
-    target.src = this._videoUrl;
-    target.autoplay = this.options.autoplay;
-};
+VideoSurface.prototype.deploy = function deploy(target) {};
 
 /**
  * Remove this component and contained content from the document.
@@ -8082,9 +7568,7 @@ VideoSurface.prototype.deploy = function deploy(target) {
  *
  * @param {Node} target node to which the component was deployed
  */
-VideoSurface.prototype.recall = function recall(target) {
-    target.src = '';
-};
+VideoSurface.prototype.recall = function recall(target) {};
 
 module.exports = VideoSurface;
 },{"../core/Surface":14}],82:[function(_dereq_,module,exports){
@@ -8117,11 +7601,7 @@ module.exports = {
  * @class CachedMap
  * @constructor
  */
-function CachedMap(mappingFunction) {
-    this._map = mappingFunction || null;
-    this._cachedOutput = null;
-    this._cachedInput = Number.NaN; //never valid as input
-}
+function CachedMap(mappingFunction) {}
 
 /**
  * Creates a mapping function with a cache.
@@ -8131,10 +7611,7 @@ function CachedMap(mappingFunction) {
  * @param {function} mappingFunction mapping
  * @return {function} memorized mapping function
  */
-CachedMap.create = function create(mappingFunction) {
-    var instance = new CachedMap(mappingFunction);
-    return instance.get.bind(instance);
-};
+CachedMap.create = function create(mappingFunction) {};
 
 /**
  * Retrieve items from cache or from mapping function.
@@ -8142,13 +7619,7 @@ CachedMap.create = function create(mappingFunction) {
  * @method get
  * @param {Object} input input key
  */
-CachedMap.prototype.get = function get(input) {
-    if (input !== this._cachedInput) {
-        this._cachedInput = input;
-        this._cachedOutput = this._map(input);
-    }
-    return this._cachedOutput;
-};
+CachedMap.prototype.get = function get(input) {};
 
 module.exports = CachedMap;
 },{}],84:[function(_dereq_,module,exports){
@@ -8466,11 +7937,7 @@ var Utility = _dereq_('../utilities/Utility');
  *
  * @param {Object} method Transionable class to multiplex
  */
-function MultipleTransition(method) {
-    this.method = method;
-    this._instances = [];
-    this.state = [];
-}
+function MultipleTransition(method) {}
 
 MultipleTransition.SUPPORTS_MULTIPLE = true;
 
@@ -8481,12 +7948,7 @@ MultipleTransition.SUPPORTS_MULTIPLE = true;
  *
  * @return state {Number|Array} state array
  */
-MultipleTransition.prototype.get = function get() {
-    for (var i = 0; i < this._instances.length; i++) {
-        this.state[i] = this._instances[i].get();
-    }
-    return this.state;
-};
+MultipleTransition.prototype.get = function get() {};
 
 /**
  * Set the end states with a shared transition, with optional callback.
@@ -8576,87 +8038,6 @@ SnapTransition.DEFAULT_OPTIONS = {
      */
     velocity : 0
 };
-
-function _getEnergy() {
-    return this.particle.getEnergy() + this.spring.getEnergy([this.particle]);
-}
-
-function _setAbsoluteRestTolerance() {
-    var distance = this.endState.sub(this.initState).normSquared();
-    this._absRestTolerance = (distance === 0)
-        ? this._restTolerance
-        : this._restTolerance * distance;
-}
-
-function _setTarget(target) {
-    this.endState.set(target);
-    _setAbsoluteRestTolerance.call(this);
-}
-
-function _wake() {
-    this.PE.wake();
-}
-
-function _sleep() {
-    this.PE.sleep();
-}
-
-function _setParticlePosition(p) {
-    this.particle.position.set(p);
-}
-
-function _setParticleVelocity(v) {
-    this.particle.velocity.set(v);
-}
-
-function _getParticlePosition() {
-    return (this._dimensions === 0)
-        ? this.particle.getPosition1D()
-        : this.particle.getPosition();
-}
-
-function _getParticleVelocity() {
-    return (this._dimensions === 0)
-        ? this.particle.getVelocity1D()
-        : this.particle.getVelocity();
-}
-
-function _setCallback(callback) {
-    this._callback = callback;
-}
-
-function _setupDefinition(definition) {
-    var defaults = SnapTransition.DEFAULT_OPTIONS;
-    if (definition.period === undefined)       definition.period       = defaults.period;
-    if (definition.dampingRatio === undefined) definition.dampingRatio = defaults.dampingRatio;
-    if (definition.velocity === undefined)     definition.velocity     = defaults.velocity;
-
-    //setup spring
-    this.spring.setOptions({
-        period       : definition.period,
-        dampingRatio : definition.dampingRatio
-    });
-
-    //setup particle
-    _setParticleVelocity.call(this, definition.velocity);
-}
-
-function _update() {
-    if (this.PE.isSleeping()) {
-        if (this._callback) {
-            var cb = this._callback;
-            this._callback = undefined;
-            cb();
-        }
-        return;
-    }
-
-    if (_getEnergy.call(this) < this._absRestTolerance) {
-        _setParticlePosition.call(this, this.endState);
-        _setParticleVelocity.call(this, [0,0,0]);
-        _sleep.call(this);
-    }
-}
 
 /**
  * Resets the state and velocity
@@ -8805,17 +8186,7 @@ SpringTransition.DEFAULT_OPTIONS = {
  * @param {Number|Array.Number} pos positional state
  * @param {Number|Array} vel velocity
  */
-SpringTransition.prototype.reset = function reset(pos, vel) {
-    this._dimensions = (pos instanceof Array)
-        ? pos.length
-        : 0;
-
-    this.initState.set(pos);
-    _setParticlePosition.call(this, pos);
-    _setTarget.call(this, pos);
-    if (vel) _setParticleVelocity.call(this, vel);
-    _setCallback.call(this, undefined);
-};
+SpringTransition.prototype.reset = function reset(pos, vel) {};
 
 /**
  * Getter for velocity
@@ -8876,22 +8247,7 @@ SpringTransition.prototype.get = function get() {
  * @param {Object}  definition  Transition definition
  * @param  {Function} callback Callback
  */
-SpringTransition.prototype.set = function set(endState, definition, callback) {
-    if (!definition) {
-        this.reset(endState);
-        if (callback) callback();
-        return;
-    }
-
-    this._dimensions = (endState instanceof Array)
-        ? endState.length
-        : 0;
-
-    _wake.call(this);
-    _setupDefinition.call(this, definition);
-    _setTarget.call(this, endState);
-    _setCallback.call(this, callback);
-};
+SpringTransition.prototype.set = function set(endState, definition, callback) {};
 
 module.exports = SpringTransition;
 },{"../math/Vector":41,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/forces/Spring":68}],88:[function(_dereq_,module,exports){
@@ -8928,46 +8284,15 @@ var TweenTransition = _dereq_('./TweenTransition');
  * @param {number|Array.Number|Object.<number|string, number>} start
  *    beginning state
  */
-function Transitionable(start) {
-    this.currentAction = null;
-    this.actionQueue = [];
-    this.callbackQueue = [];
-
-    this.state = 0;
-    this.velocity = undefined;
-    this._callback = undefined;
-    this._engineInstance = null;
-    this._currentMethod = null;
-
-    this.set(start);
-}
+function Transitionable(start) {}
 
 var transitionMethods = {};
 
-Transitionable.register = function register(methods) {
-    var success = true;
-    for (var method in methods) {
-        if (!Transitionable.registerMethod(method, methods[method]))
-            success = false;
-    }
-    return success;
-};
+Transitionable.register = function register(methods) {};
 
-Transitionable.registerMethod = function registerMethod(name, engineClass) {
-    if (!(name in transitionMethods)) {
-        transitionMethods[name] = engineClass;
-        return true;
-    }
-    else return false;
-};
+Transitionable.registerMethod = function registerMethod(name, engineClass) {};
 
-Transitionable.unregisterMethod = function unregisterMethod(name) {
-    if (name in transitionMethods) {
-        delete transitionMethods[name];
-        return true;
-    }
-    else return false;
-};
+Transitionable.unregisterMethod = function unregisterMethod(name) {};
 
 
 
@@ -8986,19 +8311,7 @@ Transitionable.unregisterMethod = function unregisterMethod(name) {
  * @param {function()=} callback Zero-argument function to call on observed
  *    completion (t=1)
  */
-Transitionable.prototype.set = function set(endState, transition, callback) {
-    if (!transition) {
-        this.reset(endState);
-        if (callback) callback();
-        return this;
-    }
-
-    var action = [endState, transition];
-    this.actionQueue.push(action);
-    this.callbackQueue.push(callback);
-    if (!this.currentAction) _loadNext.call(this);
-    return this;
-};
+Transitionable.prototype.set = function set(endState, transition, callback) {};
 
 /**
  * Cancel all transitions and reset to a stable state
@@ -9008,16 +8321,7 @@ Transitionable.prototype.set = function set(endState, transition, callback) {
  * @param {number|Array.Number|Object.<number, number>} startState
  *    stable state to set to
  */
-Transitionable.prototype.reset = function reset(startState, startVelocity) {
-    this._currentMethod = null;
-    this._engineInstance = null;
-    this._callback = undefined;
-    this.state = startState;
-    this.velocity = startVelocity;
-    this.currentAction = null;
-    this.actionQueue = [];
-    this.callbackQueue = [];
-};
+Transitionable.prototype.reset = function reset(startState, startVelocity) {};
 
 /**
  * Add delay action to the pending action queue queue.
@@ -9028,14 +8332,7 @@ Transitionable.prototype.reset = function reset(startState, startVelocity) {
  * @param {function} callback Zero-argument function to call on observed
  *    completion (t=1)
  */
-Transitionable.prototype.delay = function delay(duration, callback) {
-    this.set(this.get(), {duration: duration,
-        curve: function() {
-            return 0;
-        }},
-        callback
-    );
-};
+Transitionable.prototype.delay = function delay(duration, callback) {};
 
 /**
  * Get interpolated state of current action at provided time. If the last
@@ -9057,18 +8354,14 @@ Transitionable.prototype.get = function get(timestamp) {};
  *
  * @return {boolean}
  */
-Transitionable.prototype.isActive = function isActive() {
-    return !!this.currentAction;
-};
+Transitionable.prototype.isActive = function isActive() {};
 
 /**
  * Halt transition at current state and erase all pending actions.
  *
  * @method halt
  */
-Transitionable.prototype.halt = function halt() {
-    return this.set(this.get());
-};
+Transitionable.prototype.halt = function halt() {};
 
 module.exports = Transitionable;
 },{"./MultipleTransition":85,"./TweenTransition":90}],89:[function(_dereq_,module,exports){
