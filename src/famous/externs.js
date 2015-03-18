@@ -196,9 +196,7 @@ ElementAllocator.prototype.deallocate = function deallocate(element) {};
  *
  * @return {Number} total node count
  */
-ElementAllocator.prototype.getNodeCount = function getNodeCount() {
-    return this.nodeCount;
-};
+ElementAllocator.prototype.getNodeCount = function getNodeCount() {};
 
 module.exports = ElementAllocator;
 },{}],3:[function(_dereq_,module,exports){
@@ -724,9 +722,7 @@ EventEmitter.prototype.removeListener = function removeListener(type, handler) {
  *
  * @param {Object} owner object this EventEmitter belongs to
  */
-EventEmitter.prototype.bindThis = function bindThis(owner) {
-    this._owner = owner;
-};
+EventEmitter.prototype.bindThis = function bindThis(owner) {};
 
 module.exports = EventEmitter;
 },{}],7:[function(_dereq_,module,exports){
@@ -741,7 +737,7 @@ var EventEmitter = _dereq_('./EventEmitter');
  * @extends EventEmitter
  * @constructor
  */
-function EventHandler() {}
+function EventHandler() {};
 EventHandler.prototype = Object.create(EventEmitter.prototype);
 EventHandler.prototype.constructor = EventHandler;
 
@@ -1140,9 +1136,6 @@ Modifier.prototype.getSize = function getSize() {};
  * @return {Object} proportions provider object
  */
 Modifier.prototype.getProportions = function getProportions() {};
-
-// call providers on tick to receive render spec elements to apply
-function _update() {}
 
 /**
  * Return render spec for this Modifier, applying to the provided
@@ -2097,7 +2090,7 @@ var Utility = _dereq_('../utilities/Utility');
  * @uses RenderNode
  * @constructor
  */
-function View(options) {}
+function View(options) {};
 
 View.DEFAULT_OPTIONS = {}; // no defaults
 
@@ -2573,7 +2566,6 @@ GenericSync.prototype.pipeSync = function pipeToSync(key) {};
  */
 GenericSync.prototype.unpipeSync = function unpipeFromSync(key) {};
 
-function _addSingleSync(key, options) {}
 
 /**
  * Add a sync class to from the registered classes
@@ -2881,9 +2873,7 @@ var MINIMUM_TICK_TIME = 8;
  * @method getOptions
  * @return {Object} configuration options
  */
-ScrollSync.prototype.getOptions = function getOptions() {
-    return this.options;
-};
+ScrollSync.prototype.getOptions = function getOptions() {};
 
 /**
  * Set internal options, overriding any default options
@@ -2898,9 +2888,7 @@ ScrollSync.prototype.getOptions = function getOptions() {
  *    pay attention to one specific direction.
  * @param {Number} [options.scale] constant factor to scale velocity output
  */
-ScrollSync.prototype.setOptions = function setOptions(options) {
-    return this._optionsManager.setOptions(options);
-};
+ScrollSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = ScrollSync;
 },{"../core/Engine":4,"../core/EventHandler":7,"../core/OptionsManager":10}],33:[function(_dereq_,module,exports){
@@ -2991,9 +2979,7 @@ TouchSync.prototype.setOptions = function setOptions(options) {};
  * @method getOptions
  * @return {Object} configuration options
  */
-TouchSync.prototype.getOptions = function getOptions() {
-    return this.options;
-};
+TouchSync.prototype.getOptions = function getOptions() {};
 
 module.exports = TouchSync;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"./TouchTracker":34}],34:[function(_dereq_,module,exports){
@@ -3020,9 +3006,7 @@ function TouchTracker(options) {}
  * @method track
  * @param {Object} data touch data
  */
-TouchTracker.prototype.track = function track(data) {
-    this.touchHistory[data.identifier] = [data];
-};
+TouchTracker.prototype.track = function track(data) {};
 
 module.exports = TouchTracker;
 },{"../core/EventHandler":7}],35:[function(_dereq_,module,exports){
@@ -3104,9 +3088,7 @@ Matrix.prototype.get = function get() {};
  *
  * @param {Array.array} values matrix values as array of rows.
  */
-Matrix.prototype.set = function set(values) {
-    this.values = values;
-};
+Matrix.prototype.set = function set(values) {};
 
 /**
  * Take this matrix as A, input vector V as a column vector, and return matrix product (A)(V).
@@ -5201,9 +5183,7 @@ Surface.DEFAULT_OPTIONS = {
  * @method setOptions
  * @param options {Objects}
  */
-Surface.prototype.setOptions = function setOptions(options) {
-    for (var key in options) this.options[key] = options[key];
-};
+Surface.prototype.setOptions = function setOptions(options) {};
 
 /**
  * Adds a surface impulse to a physics body.
@@ -6868,9 +6848,7 @@ var Easing = {
      * @property inOutSine
      * @static
      */
-    inOutSine: function(t) {
-        return -.5*(Math.cos(Math.PI*t) - 1);
-    },
+    inOutSine: function(t) {},
 
     /**
      * @property inExpo
@@ -6960,10 +6938,7 @@ var Easing = {
      * @property inOutBounce
      * @static
      */
-    inOutBounce: function(t) {
-        if (t < .5) return Easing.inBounce(t*2) * .5;
-        return Easing.outBounce(t*2-1.0) * .5 + .5;
-    }
+    inOutBounce: function(t) {}
 };
 
 module.exports = Easing;
@@ -7397,8 +7372,6 @@ var Utility = _dereq_('../utilities/Utility');
  */
 function TransitionableTransform(transform) {}
 
-
-
 /**
  * An optimized way of setting only the translation component of a Transform
  *
@@ -7546,25 +7519,12 @@ function TweenTransition(options) {}
  * @final
  */
 TweenTransition.Curves = {
-    linear: function(t) {
-        return t;
-    },
-    easeIn: function(t) {
-        return t*t;
-    },
-    easeOut: function(t) {
-        return t*(2-t);
-    },
-    easeInOut: function(t) {
-        if (t <= 0.5) return 2*t*t;
-        else return -2*t*t + 4*t - 1;
-    },
-    easeOutBounce: function(t) {
-        return t*(3 - 2*t);
-    },
-    spring: function(t) {
-        return (1 - t) * Math.sin(6 * Math.PI * t) + t;
-    }
+    linear: function(t) {},
+    easeIn: function(t) {},
+    easeOut: function(t) {},
+    easeInOut: function(t) {},
+    easeOutBounce: function(t) {},
+    spring: function(t) {}
 };
 
 TweenTransition.SUPPORTS_MULTIPLE = true;
@@ -7630,10 +7590,6 @@ TweenTransition.getCurve = function getCurve(curveName) {};
  *    to range inside [0,1]
  */
 TweenTransition.getCurves = function getCurves() {};
-
-
-
-
 
 /**
  * Set internal options, overriding any default options.
@@ -7998,12 +7954,8 @@ var FamousEngine = _dereq_('../core/Engine');
 
 
 var getTime = (window.performance && window.performance.now) ?
-    function() {
-        return window.performance.now();
-    }
-    : function() {
-        return Date.now();
-    };
+    function() {}
+    : function() {};
 
 /**
  * Add a function to be run on every prerender
@@ -8962,12 +8914,8 @@ RenderController.prototype.constructor = RenderController;
 RenderController.DEFAULT_OPTIONS = {};
 
 RenderController.DefaultMap = {
-    transform: function() {
-        return Transform.identity;
-    },
-    opacity: function(progress) {
-        return progress;
-    },
+    transform: function() {},
+    opacity: function(progress) {},
     origin: null,
     align: null
 };
@@ -9631,9 +9579,7 @@ NavigationBar.DEFAULT_OPTIONS = {
  *
  * @return {undefined}
  */
-NavigationBar.prototype.setContent = function setContent(content) {
-    return this.title.setContent(content);
-};
+NavigationBar.prototype.setContent = function setContent(content) {};
 
 module.exports = NavigationBar;
 },{"../core/Scene":12,"../core/Surface":14,"../core/Transform":15,"../core/View":16}],113:[function(_dereq_,module,exports){
@@ -9732,10 +9678,7 @@ function _updateOptions(data) {}
  *
  * @return {array} the dimensions of the tab section
  */
-function _resolveGridDimensions(count, direction) {
-    if (direction === Utility.Direction.X) return [count, 1];
-    else return [1, count];
-}
+function _resolveGridDimensions(count, direction) {}
 
 /**
  * Create a new button with the specified id.  If one already exists with
@@ -9840,9 +9783,7 @@ ToggleButton.prototype.getSize = function getSize() {};
  * @method render
  * @return {number} Render spec for this component
  */
-ToggleButton.prototype.render = function render() {
-    return this.arbiter.render();
-};
+ToggleButton.prototype.render = function render() {};
 
 module.exports = ToggleButton;
 },{"../core/EventHandler":7,"../core/Surface":14,"../views/RenderController":106}],116:[function(_dereq_,module,exports){
