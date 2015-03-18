@@ -287,34 +287,6 @@ ElementOutput.prototype.render = function render() {};
 
 
 /**
- * Return a Matrix's webkit css representation to be used with the
- *    CSS3 -webkit-transform style.
- *    Example: -webkit-transform: matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,716,243,0,1)
- *
- * @method _formatCSSTransform
- * @private
- * @param {FamousMatrix} m matrix
- * @return {string} matrix3d CSS style representation of the transform
- */
-function _formatCSSTransform(m) {}
-
-/**
- * Directly apply given FamousMatrix to the document element as the
- *   appropriate webkit CSS style.
- *
- * @method setMatrix
- *
- * @static
- * @private
- * @param {Element} element document element
- * @param {FamousMatrix} matrix
- */
-
-var _setMatrix = function(element, matrix) {};
-
-
-
-/**
  * Apply changes from this component to the corresponding document element.
  * This includes changes to classes, styles, size, content, opacity, origin,
  * and matrix transforms.
@@ -1737,7 +1709,7 @@ var Transform = {};
 // WARNING: these matrices correspond to WebKit matrices, which are
 //    transposed from their math counterparts
 Transform.precision = 1e-6;
-Transform.identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+Transform.identity = [];
 
 /**
  * Multiply two or more Transform matrix types to return a Transform matrix.
@@ -2058,7 +2030,7 @@ Transform.normalizeRotation = function normalizeRotation(rotation) {};
  * @static
  * @final
  */
-Transform.inFront = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1e-3, 1];
+Transform.inFront = [];
 
 /**
  * (Property) Array defining a translation backwards in z by 1
@@ -2067,7 +2039,7 @@ Transform.inFront = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1e-3, 1];
  * @static
  * @final
  */
-Transform.behind = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1e-3, 1];
+Transform.behind = [];
 
 module.exports = Transform;
 },{}],16:[function(_dereq_,module,exports){
@@ -2621,38 +2593,6 @@ MouseSync.DIRECTION_Y = 1;
 var MINIMUM_TICK_TIME = 8;
 
 /**
- *  Triggered by mousedown.
- *
- *  @method _handleStart
- *  @private
- */
-function _handleStart(event) {}
-
-/**
- *  Triggered by mousemove.
- *
- *  @method _handleMove
- *  @private
- */
-function _handleMove(event) {}
-
-/**
- *  Triggered by mouseup on the element or document body if propagation is enabled, or
- *  mouseleave if propagation is off.
- *
- *  @method _handleEnd
- *  @private
- */
-function _handleEnd(event) {}
-
-/**
- *  Switches the mousemove listener to the document body, if propagation is enabled.
- *  @method _handleLeave
- *  @private
- */
-function _handleLeave(event) {}
-
-/**
  * Return entire options dictionary, including defaults.
  *
  * @method getOptions
@@ -2940,26 +2880,6 @@ TouchSync.DIRECTION_Y = 1;
 
 var MINIMUM_TICK_TIME = 8;
 
-/**
- *  Triggered by trackstart.
- *  @method _handleStart
- *  @private
- */
-function _handleStart(data) {}
-
-/**
- *  Triggered by trackmove.
- *  @method _handleMove
- *  @private
- */
-function _handleMove(data) {}
-
-/**
- *  Triggered by trackend.
- *  @method _handleEnd
- *  @private
- */
-function _handleEnd(data) {}
 
 /**
  * Set internal options, overriding any default options
@@ -3029,7 +2949,7 @@ TwoFingerSync.calculateDistance = function(posA, posB) {};
 
 TwoFingerSync.calculateCenter = function(posA, posB) {};
 
-var _now = Date.now;
+w;
 
 // private
 TwoFingerSync.prototype.handleStart = function handleStart(event) {};
@@ -4446,8 +4366,8 @@ var Integrator = _dereq_('../integrators/SymplecticEuler');
 function Body(options) {}
 
 Body.DEFAULT_OPTIONS = Particle.DEFAULT_OPTIONS;
-Body.DEFAULT_OPTIONS.orientation = [0, 0, 0, 1];
-Body.DEFAULT_OPTIONS.angularVelocity = [0, 0, 0];
+Body.DEFAULT_OPTIONS.orientation = [];
+Body.DEFAULT_OPTIONS.angularVelocity = [];
 
 Body.prototype = Object.create(Particle.prototype);
 Body.prototype.constructor = Body;
@@ -4632,8 +4552,8 @@ var Integrator = _dereq_('../integrators/SymplecticEuler');
  function Particle(options) {}
 
 Particle.DEFAULT_OPTIONS = {
-    position : [0, 0, 0],
-    velocity : [0, 0, 0],
+    position : [],
+    velocity : [],
     mass : 1
 };
 
@@ -5261,7 +5181,7 @@ Wall.DEFAULT_OPTIONS = {
     restitution : 0.5,
     drift : 0.5,
     slop : 0,
-    normal : [1, 0, 0],
+    normal : [],
     distance : 0,
     onContact : Wall.ON_CONTACT.REFLECT
 };
@@ -5337,8 +5257,8 @@ Walls.SIDES = {
     BOTTOM : 3,
     FRONT  : 4,
     BACK   : 5,
-    TWO_DIMENSIONAL : [0, 1, 2, 3],
-    THREE_DIMENSIONAL : [0, 1, 2, 3, 4, 5]
+    TWO_DIMENSIONAL : [],
+    THREE_DIMENSIONAL : []
 };
 
 Walls.DEFAULT_OPTIONS = {
@@ -9124,12 +9044,6 @@ Scroller.DEFAULT_OPTIONS = {
 
 var EDGE_TOLERANCE = 0; //slop for detecting passing the edge
 
-function _sizeForDir(size) {}
-
-function _output(node, offset, target) {}
-
-function _getClipSize() {}
-
 /**
 * Returns the cumulative size of the renderables in the view sequence
 * @method getCumulativeSize
@@ -9659,26 +9573,6 @@ TabBar.DEFAULT_OPTIONS = {
     }
 };
 
-/**
- * Update the options for all components of the view
- *
- * @method _updateOptions
- *
- * @param {object} data component options
- */
-function _updateOptions(data) {}
-
-/**
- * Return an array of the proper dimensions for the tabs
- *
- * @method _resolveGridDimensions
- *
- * @param {number} count number of buttons
- * @param {number} direction direction of the layout
- *
- * @return {array} the dimensions of the tab section
- */
-function _resolveGridDimensions(count, direction) {}
 
 /**
  * Create a new button with the specified id.  If one already exists with
