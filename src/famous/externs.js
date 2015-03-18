@@ -1,12 +1,5 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.famous=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var RenderNode = _dereq_('./RenderNode');
 var EventHandler = _dereq_('./EventHandler');
@@ -151,17 +144,6 @@ Context.prototype.unpipe = function unpipe(target) {};
 
 module.exports = Context;
 },{"../transitions/Transitionable":88,"./ElementAllocator":2,"./EventHandler":7,"./RenderNode":11,"./Transform":15}],2:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
-
 
 /**
  * Internal helper object to Context that handles the process of
@@ -220,14 +202,6 @@ ElementAllocator.prototype.getNodeCount = function getNodeCount() {
 
 module.exports = ElementAllocator;
 },{}],3:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Entity = _dereq_('./Entity');
 var EventHandler = _dereq_('./EventHandler');
@@ -338,34 +312,8 @@ function _formatCSSTransform(m) {}
  * @param {FamousMatrix} matrix
  */
 
-var _setMatrix;
-if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-    _setMatrix = function(element, matrix) {
-        element.style.zIndex = (matrix[14] * 1000000) | 0;    // fix for Firefox z-buffer issues
-        element.style.transform = _formatCSSTransform(matrix);
-    };
-}
-else if (usePrefix) {
-    _setMatrix = function(element, matrix) {
-        element.style.webkitTransform = _formatCSSTransform(matrix);
-    };
-}
-else {
-    _setMatrix = function(element, matrix) {
-        element.style.transform = _formatCSSTransform(matrix);
-    };
-}
+var _setMatrix = function(element, matrix) {};
 
-
-
-// Shrink given document element until it is effectively invisible.
-var _setInvisible = usePrefix ? function(element) {
-    element.style.webkitTransform = 'scale3d(0.0001,0.0001,0.0001)';
-    element.style.opacity = 0;
-} : function(element) {
-    element.style.transform = 'scale3d(0.0001,0.0001,0.0001)';
-    element.style.opacity = 0;
-};
 
 
 /**
@@ -401,14 +349,6 @@ ElementOutput.prototype.detach = function detach() {};
 
 module.exports = ElementOutput;
 },{"./Entity":5,"./EventHandler":7,"./Transform":15}],4:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 /**
  * The singleton object initiated upon process
@@ -474,14 +414,7 @@ var MAX_DEFER_FRAME_TIME = 10;
 Engine.step = function step() {};
 
 // engage requestAnimationFrame
-function loop() {
-    if (options.runLoop) {
-        Engine.step();
-        window.requestAnimationFrame(loop);
-    }
-    else loopEnabled = false;
-}
-window.requestAnimationFrame(loop);
+function loop() {}
 
 //
 // Upon main document window resize (unless on an "input" HTML element):
@@ -489,14 +422,7 @@ window.requestAnimationFrame(loop);
 //   and for each managed Context: emit the 'resize' event and update its size.
 // @param {Object=} event document event
 //
-function handleResize(event) {
-    for (var i = 0; i < contexts.length; i++) {
-        contexts[i].emit('resize');
-    }
-    eventHandler.emit('resize');
-}
-window.addEventListener('resize', handleResize, false);
-handleResize();
+function handleResize(event) {}
 
 /**
  * Initialize famous for app mode
@@ -555,9 +481,7 @@ function addEngineListener(type, forwarder) {}
  * @param {Object} event event data
  * @return {EventHandler} this
  */
-Engine.emit = function emit(type, event) {
-    return eventHandler.emit(type, event);
-};
+Engine.emit = function emit(type, event) {};
 
 /**
  * Unbind an event by type and handler.
@@ -570,9 +494,7 @@ Engine.emit = function emit(type, event) {
  * @param {function} handler function object to remove
  * @return {EventHandler} internal event handler object (for chaining)
  */
-Engine.removeListener = function removeListener(type, handler) {
-    return eventHandler.removeListener(type, handler);
-};
+Engine.removeListener = function removeListener(type, handler) {};
 
 /**
  * Return the current calculated frames per second of the Engine.
@@ -582,9 +504,7 @@ Engine.removeListener = function removeListener(type, handler) {
  *
  * @return {Number} calculated fps
  */
-Engine.getFPS = function getFPS() {
-    return 1000 / frameTime;
-};
+Engine.getFPS = function getFPS() {};
 
 /**
  * Set the maximum fps at which the system should run. If internal render
@@ -694,16 +614,6 @@ optionsManager.on('change', function(data) {});
 
 module.exports = Engine;
 },{"./Context":1,"./EventHandler":7,"./OptionsManager":10}],5:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
 
 /**
  * A singleton that maintains a global registry of Surfaces.
@@ -757,16 +667,6 @@ function unregister(id) {}
 
 module.exports = {};
 },{}],6:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
 
 /**
  * EventEmitter represents a channel for events.
@@ -830,14 +730,6 @@ EventEmitter.prototype.bindThis = function bindThis(owner) {
 
 module.exports = EventEmitter;
 },{}],7:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var EventEmitter = _dereq_('./EventEmitter');
 
@@ -953,14 +845,6 @@ EventHandler.prototype.unsubscribe = function unsubscribe(source) {};
 
 module.exports = EventHandler;
 },{"./EventEmitter":6}],8:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Context = _dereq_('./Context');
 var Transform = _dereq_('./Transform');
@@ -1037,14 +921,6 @@ Group.prototype.commit = function commit(context) {};
 
 module.exports = Group;
 },{"./Context":1,"./Surface":14,"./Transform":15}],9:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Transform = _dereq_('./Transform');
 var Transitionable = _dereq_('../transitions/Transitionable');
@@ -1215,9 +1091,7 @@ Modifier.prototype.halt = function halt() {};
  * @method getTransform
  * @return {Object} transform provider object
  */
-Modifier.prototype.getTransform = function getTransform() {
-    return this._transformGetter();
-};
+Modifier.prototype.getTransform = function getTransform() {};
 
 /**
  * Deprecated: Prefer to determine the end state of your transform from your transform provider
@@ -1286,14 +1160,7 @@ Modifier.prototype.modify = function modify(target) {};
 
 module.exports = Modifier;
 },{"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89,"./Transform":15}],10:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var EventHandler = _dereq_('./EventHandler');
 
@@ -1437,14 +1304,6 @@ OptionsManager.prototype.unpipe = function unpipe() {};
 
 module.exports = OptionsManager;
 },{"./EventHandler":7}],11:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Entity = _dereq_('./Entity');
 var SpecParser = _dereq_('./SpecParser');
@@ -1497,8 +1356,6 @@ RenderNode.prototype.set = function set(child) {};
  */
 RenderNode.prototype.getSize = function getSize() {};
 
-// apply results of rendering this subtree to the document
-function _applyCommit(spec, context, cacheStorage) {}
 
 /**
  * Commit the content change from this node to the document.
@@ -1522,14 +1379,6 @@ RenderNode.prototype.render = function render() {};
 
 module.exports = RenderNode;
 },{"./Entity":5,"./SpecParser":13}],12:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Transform = _dereq_('./Transform');
 var Modifier = _dereq_('./Modifier');
@@ -1597,14 +1446,6 @@ Scene.prototype.render = function render() {};
 
 module.exports = Scene;
 },{"./Modifier":9,"./RenderNode":11,"./Transform":15}],13:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Transform = _dereq_('./Transform');
 
@@ -1660,10 +1501,6 @@ SpecParser.prototype.parse = function parse(spec, context) {};
  */
 SpecParser.prototype.reset = function reset() {};
 
-// Multiply matrix M by vector v
-function _vecInContext(v, m) {}
-
-var _zeroZero = [0, 0];
 
 // From the provided renderSpec tree, recursively compose opacities,
 //    origins, transforms, and sizes corresponding to each surface id from
@@ -1674,14 +1511,6 @@ SpecParser.prototype._parseSpec = function _parseSpec(spec, parentContext, sizeC
 
 module.exports = SpecParser;
 },{"./Transform":15}],14:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var ElementOutput = _dereq_('./ElementOutput');
 
@@ -1889,17 +1718,6 @@ Surface.prototype.setSize = function setSize(size) {};
 
 module.exports = Surface;
 },{"./ElementOutput":3}],15:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
-
 
 /**
  *  A high-performance static matrix math library used to calculate
@@ -2165,9 +1983,6 @@ Transform.inverse = function inverse(m) {};
  */
 Transform.transpose = function transpose(m) {};
 
-function _normSquared(v) {}
-function _norm(v) {}
-function _sign(n) {}
 
 /**
  * Decompose Transform into separate .translate, .rotate, .scale,
@@ -2263,14 +2078,7 @@ Transform.behind = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1e-3, 1];
 
 module.exports = Transform;
 },{}],16:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var EventHandler = _dereq_('./EventHandler');
 var OptionsManager = _dereq_('./OptionsManager');
@@ -2347,16 +2155,6 @@ View.prototype.getSize = function getSize() {};
 
 module.exports = View;
 },{"../utilities/Utility":95,"./EventHandler":7,"./OptionsManager":10,"./RenderNode":11}],17:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
 
 
 /**
@@ -2518,14 +2316,6 @@ module.exports = {
 };
 
 },{"./Context":1,"./ElementAllocator":2,"./ElementOutput":3,"./Engine":4,"./Entity":5,"./EventEmitter":6,"./EventHandler":7,"./Group":8,"./Modifier":9,"./OptionsManager":10,"./RenderNode":11,"./Scene":12,"./SpecParser":13,"./Surface":14,"./Transform":15,"./View":16,"./ViewSequence":17}],19:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var EventHandler = _dereq_('../core/EventHandler');
 
@@ -2580,14 +2370,6 @@ EventArbiter.prototype.emit = function emit(eventType, event) {};
 
 module.exports = EventArbiter;
 },{"../core/EventHandler":7}],20:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var EventHandler = _dereq_('../core/EventHandler');
 
@@ -2630,14 +2412,7 @@ EventFilter.prototype.trigger = EventFilter.prototype.emit;
 
 module.exports = EventFilter;
 },{"../core/EventHandler":7}],21:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var EventHandler = _dereq_('../core/EventHandler');
 
@@ -2811,14 +2586,7 @@ GenericSync.prototype.addSync = function addSync(syncs) {};
 
 module.exports = GenericSync;
 },{"../core/EventHandler":7}],28:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 var EventHandler = _dereq_('../core/EventHandler');
 var OptionsManager = _dereq_('../core/OptionsManager');
 
@@ -2914,14 +2682,7 @@ MouseSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = MouseSync;
 },{"../core/EventHandler":7,"../core/OptionsManager":10}],29:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 var TwoFingerSync = _dereq_('./TwoFingerSync');
 var OptionsManager = _dereq_('../core/OptionsManager');
 
@@ -2969,14 +2730,8 @@ PinchSync.prototype.setOptions = function setOptions(options) {
 
 module.exports = PinchSync;
 },{"../core/OptionsManager":10,"./TwoFingerSync":35}],30:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
+
 var TwoFingerSync = _dereq_('./TwoFingerSync');
 var OptionsManager = _dereq_('../core/OptionsManager');
 
@@ -3024,14 +2779,8 @@ RotateSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = RotateSync;
 },{"../core/OptionsManager":10,"./TwoFingerSync":35}],31:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
+
 var TwoFingerSync = _dereq_('./TwoFingerSync');
 var OptionsManager = _dereq_('../core/OptionsManager');
 
@@ -3082,14 +2831,8 @@ ScaleSync.prototype.setOptions = function setOptions(options) {};
 
 module.exports = ScaleSync;
 },{"../core/OptionsManager":10,"./TwoFingerSync":35}],32:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
+
 var EventHandler = _dereq_('../core/EventHandler');
 var Engine = _dereq_('../core/Engine');
 var OptionsManager = _dereq_('../core/OptionsManager');
@@ -3161,14 +2904,7 @@ ScrollSync.prototype.setOptions = function setOptions(options) {
 
 module.exports = ScrollSync;
 },{"../core/Engine":4,"../core/EventHandler":7,"../core/OptionsManager":10}],33:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 var TouchTracker = _dereq_('./TouchTracker');
 var EventHandler = _dereq_('../core/EventHandler');
 var OptionsManager = _dereq_('../core/OptionsManager');
@@ -3261,14 +2997,8 @@ TouchSync.prototype.getOptions = function getOptions() {
 
 module.exports = TouchSync;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"./TouchTracker":34}],34:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
+
 var EventHandler = _dereq_('../core/EventHandler');
 
 /**
@@ -3296,14 +3026,7 @@ TouchTracker.prototype.track = function track(data) {
 
 module.exports = TouchTracker;
 },{"../core/EventHandler":7}],35:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 var EventHandler = _dereq_('../core/EventHandler');
 
 /**
@@ -3351,14 +3074,7 @@ module.exports = {
 };
 
 },{"./Accumulator":24,"./DesktopEmulationMode":25,"./FastClick":26,"./GenericSync":27,"./MouseSync":28,"./PinchSync":29,"./RotateSync":30,"./ScaleSync":31,"./ScrollSync":32,"./TouchSync":33,"./TouchTracker":34,"./TwoFingerSync":35}],37:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Vector = _dereq_('./Vector');
 
@@ -3437,14 +3153,7 @@ Matrix.prototype.clone = function clone() {};
 
 module.exports = Matrix;
 },{"./Vector":41}],38:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Matrix = _dereq_('./Matrix');
 
@@ -3679,16 +3388,6 @@ Quaternion.prototype.slerp = function slerp(q, t) {};
 
 module.exports = Quaternion;
 },{"./Matrix":37}],39:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
 
 
 var RAND = Math.random;
@@ -3750,15 +3449,6 @@ Random.bool = function bool(prob) {};
 
 module.exports = Random;
 },{}],40:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
 
 
 /**
@@ -3777,9 +3467,7 @@ var Utilities = {};
  * @param {Array.Number} range [min, max]
  * @static
  */
-Utilities.clamp = function clamp(value, range) {
-    return Math.max(Math.min(value, range[1]), range[0]);
-};
+Utilities.clamp = function clamp(value, range) {};
 
 /**
  * Euclidean length of numerical array.
@@ -3792,17 +3480,6 @@ Utilities.length = function length(array) {};
 
 module.exports = Utilities;
 },{}],41:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
-
 
 /**
  * Three-element floating point vector.
@@ -3815,8 +3492,6 @@ module.exports = Utilities;
  * @param {number} z z element value
  */
 function Vector(x,y,z) {}
-
-var _register = new Vector(0,0,0);
 
 /**
  * Add this element-wise to another Vector, element-wise.
@@ -3858,9 +3533,7 @@ Vector.prototype.mult = function mult(r) {};
  * @param {number} r scalar
  * @return {Vector} vector result
  */
-Vector.prototype.div = function div(r) {
-    return this.mult(1 / r);
-};
+Vector.prototype.div = function div(r) {};
 
 /**
  * Given another vector v, return cross product (v)x(this).
@@ -3878,9 +3551,7 @@ Vector.prototype.cross = function cross(v) {};
  * @param {Vector} v vector to compare
  * @return {boolean}
  */
-Vector.prototype.equals = function equals(v) {
-    return (v.x === this.x && v.y === this.y && v.z === this.z);
-};
+Vector.prototype.equals = function equals(v) {};
 
 /**
  * Rotate clockwise around x-axis by theta radians.
@@ -4043,14 +3714,6 @@ module.exports = {
 };
 
 },{"./Matrix":37,"./Quaternion":38,"./Random":39,"./Utilities":40,"./Vector":41}],43:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Transform = _dereq_('../core/Transform');
 var Transitionable = _dereq_('../transitions/Transitionable');
@@ -4271,17 +3934,6 @@ Fader.prototype.modify = function modify(target) {};
 
 module.exports = Fader;
 },{"../core/OptionsManager":10,"../transitions/Transitionable":88}],45:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
-
 
 /**
  * A class to add and remove a chain of modifiers
@@ -4326,14 +3978,6 @@ ModifierChain.prototype.modify = function modify(input) {};
 
 module.exports = ModifierChain;
 },{}],46:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Modifier = _dereq_('../core/Modifier');
 var Transform = _dereq_('../core/Transform');
@@ -4389,10 +4033,7 @@ StateModifier.prototype.setTransform = function setTransform(transform, transiti
  * @param {Function} callback callback to call after transition completes
  * @return {StateModifier} this
  */
-StateModifier.prototype.setOpacity = function setOpacity(opacity, transition, callback) {
-    this._opacityState.set(opacity, transition, callback);
-    return this;
-};
+StateModifier.prototype.setOpacity = function setOpacity(opacity, transition, callback) {};
 
 /**
  * Set the origin of this modifier, either statically or
@@ -4539,13 +4180,7 @@ module.exports = {
 };
 
 },{"./Draggable":43,"./Fader":44,"./ModifierChain":45,"./StateModifier":46}],48:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 var EventHandler = _dereq_('../core/EventHandler');
 
 /**
@@ -4563,8 +4198,6 @@ var EventHandler = _dereq_('../core/EventHandler');
  * @param options {Object} options
  */
 function PhysicsEngine(options) {}
-
-
 
 
 /**
@@ -4810,14 +4443,6 @@ PhysicsEngine.prototype.on = function on(event, fn) {};
 
 module.exports = PhysicsEngine;
 },{"../core/EventHandler":7}],49:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Particle = _dereq_('./Particle');
 var Transform = _dereq_('../../core/Transform');
@@ -4973,14 +4598,6 @@ Body.prototype.integrateOrientation = function integrateOrientation(dt) {};
 
 module.exports = Body;
 },{"../../core/Transform":15,"../../math/Matrix":37,"../../math/Quaternion":38,"../../math/Vector":41,"../integrators/SymplecticEuler":72,"./Particle":51}],50:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Body = _dereq_('./Body');
 var Matrix = _dereq_('../../math/Matrix');
@@ -5009,14 +4626,6 @@ Circle.prototype.setMomentsOfInertia = function setMomentsOfInertia() {};
 
 module.exports = Circle;
 },{"../../math/Matrix":37,"./Body":49}],51:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Vector = _dereq_('../../math/Vector');
 var Transform = _dereq_('../../core/Transform');
@@ -5254,14 +4863,6 @@ Particle.prototype.unpipe = function unpipe() {};
 
 module.exports = Particle;
 },{"../../core/EventHandler":7,"../../core/Transform":15,"../../math/Vector":41,"../integrators/SymplecticEuler":72}],52:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Body = _dereq_('./Body');
 var Matrix = _dereq_('../../math/Matrix');
@@ -5298,14 +4899,6 @@ module.exports = {
 };
 
 },{"./Body":49,"./Circle":50,"./Particle":51,"./Rectangle":52}],54:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Constraint = _dereq_('./Constraint');
 var Vector = _dereq_('../../math/Vector');
@@ -5353,14 +4946,6 @@ Collision.prototype.applyConstraint = function applyConstraint(targets, source, 
 
 module.exports = Collision;
 },{"../../math/Vector":41,"./Constraint":55}],55:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var EventHandler = _dereq_('../../core/EventHandler');
 
@@ -5399,14 +4984,6 @@ Constraint.prototype.getEnergy = function getEnergy() {};
 
 module.exports = Constraint;
 },{"../../core/EventHandler":7}],56:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Constraint = _dereq_('./Constraint');
 var Vector = _dereq_('../../math/Vector');
@@ -5462,15 +5039,6 @@ Curve.prototype.applyConstraint = function applyConstraint(targets, source, dt) 
 
 module.exports = Curve;
 },{"../../math/Vector":41,"./Constraint":55}],57:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
 var Constraint = _dereq_('./Constraint');
 var Vector = _dereq_('../../math/Vector');
 
@@ -5533,14 +5101,6 @@ Distance.prototype.applyConstraint = function applyConstraint(targets, source, d
 
 module.exports = Distance;
 },{"../../math/Vector":41,"./Constraint":55}],58:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Constraint = _dereq_('./Constraint');
 var Vector = _dereq_('../../math/Vector');
@@ -5605,14 +5165,6 @@ Snap.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
 
 module.exports = Snap;
 },{"../../math/Vector":41,"./Constraint":55}],59:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Constraint = _dereq_('./Constraint');
 var Vector = _dereq_('../../math/Vector');
@@ -5665,14 +5217,6 @@ Surface.prototype.applyConstraint = function applyConstraint(targets, source, dt
 
 module.exports = Surface;
 },{"../../math/Vector":41,"./Constraint":55}],60:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Constraint = _dereq_('./Constraint');
 var Vector = _dereq_('../../math/Vector');
@@ -5762,15 +5306,6 @@ Wall.prototype.applyConstraint = function applyConstraint(targets, source, dt) {
 
 module.exports = Wall;
 },{"../../math/Vector":41,"./Constraint":55}],61:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
 var Constraint = _dereq_('./Constraint');
 var Wall = _dereq_('./Wall');
 var Vector = _dereq_('../../math/Vector');
@@ -5916,14 +5451,6 @@ module.exports = {
 };
 
 },{"./Collision":54,"./Constraint":55,"./Curve":56,"./Distance":57,"./Snap":58,"./Surface":59,"./Wall":60,"./Walls":61}],63:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Force = _dereq_('./Force');
 
@@ -6013,14 +5540,6 @@ Drag.prototype.setOptions = function setOptions(options) {
 
 module.exports = Drag;
 },{"./Force":64}],64:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Vector = _dereq_('../../math/Vector');
 var EventHandler = _dereq_('../../core/EventHandler');
@@ -6060,14 +5579,6 @@ Force.prototype.getEnergy = function getEnergy() {};
 
 module.exports = Force;
 },{"../../core/EventHandler":7,"../../math/Vector":41}],65:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Force = _dereq_('./Force');
 var Vector = _dereq_('../../math/Vector');
@@ -6209,14 +5720,6 @@ Repulsion.prototype.applyForce = function applyForce(targets, source) {};
 
 module.exports = Repulsion;
 },{"../../math/Vector":41,"./Force":64}],66:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Drag = _dereq_('./Drag');
 
@@ -6282,14 +5785,6 @@ RotationalDrag.prototype.setOptions = function setOptions(options) {};
 
 module.exports = RotationalDrag;
 },{"./Drag":63}],67:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 //TODO: test inheritance
 var Force = _dereq_('./Force');
@@ -6338,14 +5833,7 @@ RotationalSpring.prototype.getEnergy = function getEnergy(targets) {};
 
 module.exports = RotationalSpring;
 },{"../../math/Quaternion":38,"./Force":64,"./Spring":68}],68:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 /*global console */
 
@@ -6493,14 +5981,6 @@ Spring.prototype.getEnergy = function getEnergy(targets, source) {};
 
 module.exports = Spring;
 },{"../../math/Vector":41,"./Force":64}],69:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Force = _dereq_('./Force');
 var Vector = _dereq_('../../math/Vector');
@@ -6635,17 +6115,6 @@ module.exports = {
 };
 
 },{"./PhysicsEngine":48,"./bodies":53,"./constraints":62,"./forces":70,"./integrators":73}],72:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
-
 
 /**
  * Ordinary Differential Equation (ODE) Integrator.
@@ -6714,14 +6183,6 @@ module.exports = {
 };
 
 },{"./SymplecticEuler":72}],74:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Surface = _dereq_('../core/Surface');
 
@@ -6789,14 +6250,7 @@ CanvasSurface.prototype.setSize = function setSize(size, canvasSize) {};
 
 module.exports = CanvasSurface;
 },{"../core/Surface":14}],75:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Surface = _dereq_('../core/Surface');
 var Context = _dereq_('../core/Context');
@@ -6890,14 +6344,7 @@ FormContainerSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = FormContainerSurface;
 },{"./ContainerSurface":75}],77:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Surface = _dereq_('../core/Surface');
 
@@ -6959,14 +6406,6 @@ ImageSurface.prototype.recall = function recall(target) {};
 
 module.exports = ImageSurface;
 },{"../core/Surface":14}],78:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Surface = _dereq_('../core/Surface');
 
@@ -7084,14 +6523,6 @@ SubmitInputSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = SubmitInputSurface;
 },{"./InputSurface":78}],80:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Surface = _dereq_('../core/Surface');
 
@@ -7221,14 +6652,7 @@ TextareaSurface.prototype.deploy = function deploy(target) {};
 
 module.exports = TextareaSurface;
 },{"../core/Surface":14}],81:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Surface = _dereq_('../core/Surface');
 
@@ -7314,14 +6738,6 @@ module.exports = {
 };
 
 },{"./CanvasSurface":74,"./ContainerSurface":75,"./FormContainerSurface":76,"./ImageSurface":77,"./InputSurface":78,"./SubmitInputSurface":79,"./TextareaSurface":80,"./VideoSurface":81}],83:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 
 
@@ -7353,14 +6769,6 @@ CachedMap.prototype.get = function get(input) {};
 
 module.exports = CachedMap;
 },{}],84:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 
 
@@ -7560,14 +6968,6 @@ var Easing = {
 
 module.exports = Easing;
 },{}],85:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Utility = _dereq_('../utilities/Utility');
 
@@ -7616,14 +7016,7 @@ MultipleTransition.prototype.reset = function reset(startState) {};
 
 module.exports = MultipleTransition;
 },{"../utilities/Utility":95}],86:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var PE = _dereq_('../physics/PhysicsEngine');
 var Particle = _dereq_('../physics/bodies/Particle');
@@ -7749,14 +7142,6 @@ SnapTransition.prototype.set = function set(state, definition, callback) {};
 
 module.exports = SnapTransition;
 },{"../math/Vector":41,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/constraints/Snap":58}],87:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 /*global console*/
 
@@ -7888,14 +7273,7 @@ SpringTransition.prototype.set = function set(endState, definition, callback) {}
 
 module.exports = SpringTransition;
 },{"../math/Vector":41,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/forces/Spring":68}],88:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var MultipleTransition = _dereq_('./MultipleTransition');
 var TweenTransition = _dereq_('./TweenTransition');
@@ -8002,14 +7380,7 @@ Transitionable.prototype.halt = function halt() {};
 
 module.exports = Transitionable;
 },{"./MultipleTransition":85,"./TweenTransition":90}],89:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Transitionable = _dereq_('./Transitionable');
 var Transform = _dereq_('../core/Transform');
@@ -8139,16 +7510,6 @@ TransitionableTransform.prototype.halt = function halt() {};
 
 module.exports = TransitionableTransform;
 },{"../core/Transform":15,"../utilities/Utility":95,"./Transitionable":88}],90:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
 
 
 /**
@@ -8384,14 +7745,7 @@ TweenTransition.customCurve = function customCurve(v1, v2) {};
 
 module.exports = TweenTransition;
 },{}],91:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var PE = _dereq_('../physics/PhysicsEngine');
 var Particle = _dereq_('../physics/bodies/Particle');
@@ -8544,16 +7898,6 @@ module.exports = {
 };
 
 },{"./CachedMap":83,"./Easing":84,"./MultipleTransition":85,"./SnapTransition":86,"./SpringTransition":87,"./Transitionable":88,"./TransitionableTransform":89,"./TweenTransition":90,"./WallTransition":91}],93:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
-
-
 
 
 /**
@@ -8637,14 +7981,7 @@ var KeyCodes = {
 
 module.exports = KeyCodes;
 },{}],94:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 // TODO fix func-style
 /*eslint func-style: [0, "declaration"] */
 
@@ -8764,14 +8101,6 @@ module.exports = {
     clear : clear
 };
 },{"../core/Engine":4}],95:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 
 
@@ -8847,14 +8176,7 @@ module.exports = {
 };
 
 },{"./KeyCodes":93,"./Timer":94,"./Utility":95}],97:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mike@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Entity = _dereq_('../core/Entity');
 var Transform = _dereq_('../core/Transform');
@@ -8913,14 +8235,7 @@ ContextualView.prototype.commit = function commit(context) {};
 
 module.exports = ContextualView;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/OptionsManager":10,"../core/Transform":15}],98:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Transform = _dereq_('../core/Transform');
 var OptionsManager = _dereq_('../core/OptionsManager');
@@ -9004,14 +8319,7 @@ Deck.prototype.toggle = function toggle(callback) {};
 
 module.exports = Deck;
 },{"../core/OptionsManager":10,"../core/Transform":15,"../transitions/Transitionable":88,"../utilities/Utility":95,"./SequentialLayout":110}],99:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: david@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var RenderNode = _dereq_('../core/RenderNode');
 var Transform = _dereq_('../core/Transform');
@@ -9161,14 +8469,6 @@ DrawerLayout.prototype.render = function render() {};
 
 module.exports = DrawerLayout;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../transitions/Transitionable":88}],100:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var CachedMap = _dereq_('../transitions/CachedMap');
 var Entity = _dereq_('../core/Entity');
@@ -9225,14 +8525,7 @@ EdgeSwapper.prototype.commit = function commit(context) {};
 
 module.exports = EdgeSwapper;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Transform":15,"../transitions/CachedMap":83,"./RenderController":106}],101:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mike@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Entity = _dereq_('../core/Entity');
 var Transform = _dereq_('../core/Transform');
@@ -9321,14 +8614,7 @@ FlexibleLayout.prototype.commit = function commit(context) {};
 
 module.exports = FlexibleLayout;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/OptionsManager":10,"../core/Transform":15,"../transitions/Transitionable":88}],102:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Transform = _dereq_('../core/Transform');
 var Transitionable = _dereq_('../transitions/Transitionable');
@@ -9411,14 +8697,7 @@ Flipper.prototype.render = function render() {};
 
 module.exports = Flipper;
 },{"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../transitions/Transitionable":88}],103:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Entity = _dereq_('../core/Entity');
 var RenderNode = _dereq_('../core/RenderNode');
@@ -9494,14 +8773,6 @@ GridLayout.prototype.commit = function commit(context) {};
 
 module.exports = GridLayout;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Modifier":9,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../core/ViewSequence":17,"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89}],104:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
 
 var Entity = _dereq_('../core/Entity');
 var RenderNode = _dereq_('../core/RenderNode');
@@ -9664,14 +8935,7 @@ Lightbox.prototype.render = function render() {};
 
 module.exports = Lightbox;
 },{"../core/Modifier":9,"../core/OptionsManager":10,"../core/RenderNode":11,"../core/Transform":15,"../transitions/Transitionable":88,"../transitions/TransitionableTransform":89,"../utilities/Utility":95}],106:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Modifier = _dereq_('../core/Modifier');
 var RenderNode = _dereq_('../core/RenderNode');
@@ -9818,14 +9082,7 @@ RenderController.prototype.render = function render() {};
 
 module.exports = RenderController;
 },{"../core/Modifier":9,"../core/RenderNode":11,"../core/Transform":15,"../core/View":16,"../transitions/Transitionable":88}],107:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var ContainerSurface = _dereq_('../surfaces/ContainerSurface');
 var EventHandler = _dereq_('../core/EventHandler');
@@ -10005,14 +9262,7 @@ Scroller.prototype.commit = function commit(context) {};
 
 module.exports = Scroller;
 },{"../core/Entity":5,"../core/EventHandler":7,"../core/Group":8,"../core/OptionsManager":10,"../core/Transform":15,"../core/ViewSequence":17,"../utilities/Utility":95}],109:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var PhysicsEngine = _dereq_('../physics/PhysicsEngine');
 var Particle = _dereq_('../physics/bodies/Particle');
@@ -10232,14 +9482,7 @@ Scrollview.prototype.render = function render() {};
 
 module.exports = Scrollview;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"../core/ViewSequence":17,"../inputs/GenericSync":27,"../inputs/ScrollSync":32,"../inputs/TouchSync":33,"../physics/PhysicsEngine":48,"../physics/bodies/Particle":51,"../physics/forces/Drag":63,"../physics/forces/Spring":68,"../utilities/Utility":95,"../views/Scroller":108}],110:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: felix@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var OptionsManager = _dereq_('../core/OptionsManager');
 var Entity = _dereq_('../core/Entity');
@@ -10339,14 +9582,7 @@ module.exports = {
 };
 
 },{"./ContextualView":97,"./Deck":98,"./DrawerLayout":99,"./EdgeSwapper":100,"./FlexibleLayout":101,"./Flipper":102,"./GridLayout":103,"./HeaderFooterLayout":104,"./Lightbox":105,"./RenderController":106,"./ScrollContainer":107,"./Scroller":108,"./Scrollview":109,"./SequentialLayout":110}],112:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Scene = _dereq_('../core/Scene');
 var Surface = _dereq_('../core/Surface');
@@ -10401,14 +9637,7 @@ NavigationBar.prototype.setContent = function setContent(content) {
 
 module.exports = NavigationBar;
 },{"../core/Scene":12,"../core/Surface":14,"../core/Transform":15,"../core/View":16}],113:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Surface = _dereq_('../core/Surface');
 var CanvasSurface = _dereq_('../surfaces/CanvasSurface');
@@ -10452,14 +9681,7 @@ Slider.prototype.render = function render() {};
 
 module.exports = Slider;
 },{"../core/EventHandler":7,"../core/OptionsManager":10,"../core/Surface":14,"../core/Transform":15,"../inputs/GenericSync":27,"../inputs/MouseSync":28,"../inputs/TouchSync":33,"../math/Utilities":40,"../surfaces/CanvasSurface":74}],114:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Utility = _dereq_('../utilities/Utility');
 var View = _dereq_('../core/View');
@@ -10538,14 +9760,7 @@ TabBar.prototype.select = function select(id) {};
 
 module.exports = TabBar;
 },{"../core/View":16,"../utilities/Utility":95,"../views/GridLayout":103,"./ToggleButton":115}],115:[function(_dereq_,module,exports){
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Owner: mark@famo.us
- * @license MPL 2.0
- * @copyright Famous Industries, Inc. 2014
- */
+
 
 var Surface = _dereq_('../core/Surface');
 var EventHandler = _dereq_('../core/EventHandler');
