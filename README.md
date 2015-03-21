@@ -1,4 +1,4 @@
-![](https://clojars.org/famous-cljs/latest-version.svg)
+![](https://clojars.org/com.famous/famous/latest-version.svg)
 
 
 ## Use
