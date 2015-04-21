@@ -38,4 +38,4 @@
 (defn msg []
       [:h1 "hello world"])
 
-(reagent/render [msg] (.. js/document (getElementById "clock")))
+(reagent/render [msg] (.. js/document (getElementById "msg")))
