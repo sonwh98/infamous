@@ -25,7 +25,7 @@
            (clj->js {"origin"    [0.5 0.5]
                      "align"     [0.5 0.5]
                      "transform" (fn []
-                                     (let [theta (* .002 (- (.now js/Date) initialTime))]
+                                     (let [theta (* .002 (- (.. js/Date now) initialTime))]
                                           (.. Transform (rotateY theta))))})))
 
 
