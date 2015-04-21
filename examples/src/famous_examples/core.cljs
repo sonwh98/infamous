@@ -6,18 +6,18 @@
 
 ;; translated from https://github.com/Famous/global-seed/blob/master/src/main.js
 
-(defonce ImageSurface (.-ImageSurface (.-surfaces js/famous)))
-(defonce Modifier     (.-Modifier(.-core js/famous)))
-(defonce Transform    (.-Transform (.-core js/famous)))
+(defonce ImageSurface (.. js/famous -surfaces -ImageSurface))
+(defonce Modifier     (.. js/famous -core -Modifier))
+(defonce Transform    (.. js/famous -core -Transform))
 
 (defonce logo
   (ImageSurface.
     (clj->js {"size" [200,200]
-              "content" "http://code.famo.us/assets/famous_logo.png"
+              "content" "https://pbs.twimg.com/profile_images/559761425766158336/Uq5W8iWA.jpeg"
               "classes" ["double-sided"]})))
 
 
-(defonce initialTime (.now js/Date))
+(defonce initialTime (.. js/Date now)) 
 
 
 (defonce center-spin-modifier
@@ -27,6 +27,7 @@
              "transform" (fn[] (.rotateY Transform (* .002 (- (.now js/Date) initialTime))))})))
 
 
-(let [Engine         (.-Engine (.-core js/famous))
-      mainContext    (.createContext Engine)]
-  (.add (.add mainContext center-spin-modifier) logo))
+(let [Engine         (.. js/famous -core -Engine)
+      mainContext    (.. Engine createContext)]
+  (.. mainContext (add center-spin-modifier) (add logo)))
+
