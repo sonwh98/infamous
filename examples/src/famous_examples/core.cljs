@@ -1,5 +1,6 @@
 (ns ^:figwheel-always famous-examples.core
-  (:require [com.famous.Famous]))
+  (:require [com.famous.Famous]
+            [reagent.core :as reagent :refer [atom]]))
 
 (enable-console-print!)
 
@@ -33,3 +34,8 @@
       mainContext (.. Engine createContext)]
      (.. mainContext (add center-spin-modifier) (add logo)))
 
+
+(defn msg []
+      [:h1 "hello world"])
+
+(reagent/render [msg] (.. js/document (getElementById "clock")))
