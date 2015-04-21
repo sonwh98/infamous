@@ -24,7 +24,7 @@
   (Modifier.
    (clj->js {"origin" [0.5 0.5]
              "align" [0.5 0.5]
-             "transform" (fn[] (.rotateY Transform (* .002 (- (.now js/Date) initialTime))))})))
+             "transform" (fn[] (.. Transform (rotateY  (* .002 (- (.now js/Date) initialTime))) ))})))
 
 
 (let [Engine         (.. js/famous -core -Engine)
