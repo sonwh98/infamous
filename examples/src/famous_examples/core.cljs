@@ -5,37 +5,26 @@
 (enable-console-print!)
 
 
-;; translated from https://github.com/Famous/global-seed/blob/master/src/main.js
+(def famous js/famous)
+(def DOMElement (.. famous -domRenderables -DOMElement))
+(def FamousEngine (.. famous -core -FamousEngine))
 
-(defonce ImageSurface (.. js/famous -surfaces -ImageSurface))
-(defonce Modifier (.. js/famous -core -Modifier))
-(defonce Transform (.. js/famous -core -Transform))
+(def logo (.. FamousEngine createScene addChild))
+(.. (DOMElement. logo (clj->js {"tagName" 'img})) (setAttribute "src" "./images/famous_logo.png"))
 
-(defonce logo
-         (ImageSurface.
-           (clj->js {"size"    [200, 200]
-                     "content" "https://pbs.twimg.com/profile_images/559761425766158336/Uq5W8iWA.jpeg"
-                     "classes" ["double-sided"]})))
+(.. logo
+    (setSizeMode "absolute" "absolute" "absolute")
+    (setAbsoluteSize 250 250)
+    (setAlign 0.5 0.5)
+    (setMountPoint 0.5 0.5)
+    (setOrigin 0.5 0.5)
+    )
 
+(def spinner (.. logo (addComponent (clj->js {"onUpdate" (fn [time]
+                                                               (.. logo (setRotation 0 (/ time 1000.0))
+                                                                   (requestUpdateOnNextTick spinner)))}))))
 
-(defonce initialTime (.. js/Date now))
+(.. logo (requestUpdate spinner))
+(.. FamousEngine init)
 
-
-(defonce center-spin-modifier
-         (Modifier.
-           (clj->js {"origin"    [0.5 0.5]
-                     "align"     [0.5 0.5]
-                     "transform" (fn []
-                                     (let [theta (* .002 (- (.. js/Date now) initialTime))]
-                                          (.. Transform (rotateY theta))))})))
-
-
-(let [Engine (.. js/famous -core -Engine)
-      mainContext (.. Engine createContext)]
-     (.. mainContext (add center-spin-modifier) (add logo)))
-
-
-(defn msg []
-      [:h1 "hello world"])
-
-(reagent/render [msg] (.. js/document (getElementById "msg")))
+;(reagent/render [msg] (.. js/document (getElementById "msg")))
