@@ -1,6 +1,5 @@
 (ns ^:figwheel-always famous-examples.core
-  (:require [com.famous.Famous]
-            [reagent.core :as reagent :refer [atom]]))
+  (:require [com.famous.Famous]))
 
 (enable-console-print!)
 
@@ -20,6 +19,7 @@
     (setOrigin 0.5 0.5)
     )
 
+(declare spinner-id)
 (defonce spinner (clj->js {:onUpdate          (fn [time]
                                                   (.. logo
                                                       (setRotation 0 (/ time 1000.0))
@@ -28,11 +28,9 @@
                                                   (println "onMount called: " (.. node getLocation))
                                                   )
                            :onTransformChange (fn []
-                                                  (println "onTransformChange called")
+                                                  ;(println "onTransformChange called")
                                                   )}
                           ))
 (defonce spinner-id (.. logo (addComponent spinner)))
 (.. logo (requestUpdateOnNextTick spinner-id))
 (.. FamousEngine init)
-
-;(reagent/render [msg] (.. js/document (getElementById "msg")))
