@@ -7,8 +7,7 @@ This is not available on clojars yet so you must install it to your local maven 
 lein install
 ```
 
-Then in your project
-In your project.clj dependencies
+Then in your project.clj dependencies
 ```
 [com.famous/famous "0.5.1"]
 ```
