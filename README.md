@@ -2,10 +2,15 @@
 
 
 ## Use
+This is not available on clojars yet so you must install it to your local maven repo with
+```
+lein install
+```
 
+Then in your project
 In your project.clj dependencies
 ```
-[com.famous/famous "0.3"]
+[com.famous/famous "0.5.1"]
 ```
 
 In your namespaces
@@ -14,14 +19,6 @@ In your namespaces
     (:require [com.famous.Famous]))
 
 ```
-
-You also need to include the famous.css stylesheet. I do not think this can be utilized from a Jar so you can use the copy included in /examples/resources/public/css or add a link in your markup
- ```
- <link href="http://code.famo.us/famous/0.3/famous.css" rel="stylesheet" type="text/css">
- ```
-
-
-
 
 ##Todo: EXTERNS!!
 The externs file is nowhere near finished. PRs greatly appreciated
