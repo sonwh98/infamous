@@ -1,0 +1,982 @@
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.065 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/dev.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.181 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for com.famous.Famous
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.12 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for com.famous.Famous
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.098 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for com.famous.Famous
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.133 seconds.[0m
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+java.lang.AssertionError: Assert failed: (symbol? sym)
+ at cljs.analyzer.api$find_ns.invoke (api.clj:32)
+    figwheel_sidecar.core$expand_to_all_ns$fn__15800.invoke (core.clj:305)
+    clojure.core$keep$fn__6402.invoke (core.clj:6713)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.lang.RT.countFrom (RT.java:537)
+    clojure.lang.RT.count (RT.java:530)
+    clojure.set$union.invoke (set.clj:25)
+    figwheel_sidecar.core$expand_to_all_ns.invoke (core.clj:306)
+    figwheel_sidecar.core$notify_cljs_ns_changes.invoke (core.clj:352)
+    figwheel_sidecar.core$check_for_changes.invoke (core.clj:376)
+    figwheel_sidecar.auto_builder$check_changes.invoke (auto_builder.clj:43)
+    clojure.lang.AFn.applyToHelper (AFn.java:156)
+    clojure.lang.AFn.applyTo (AFn.java:144)
+    clojure.core$apply.invoke (core.clj:626)
+    clojure.core$partial$fn__4228.doInvoke (core.clj:2468)
+    clojure.lang.RestFn.invoke (RestFn.java:408)
+    clojurescript_build.auto$after$fn__16080.invoke (auto.clj:65)
+    clojurescript_build.auto$after$fn__16080.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16083.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16077.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16095.invoke (auto.clj:103)
+    clojure.core$mapv$fn__6311.invoke (core.clj:6353)
+    clojure.lang.ArrayChunk.reduce (ArrayChunk.java:58)
+    clojure.core.protocols/fn (protocols.clj:98)
+    clojure.core.protocols$fn__6057$G__6052__6066.invoke (protocols.clj:19)
+    clojure.core.protocols$seq_reduce.invoke (protocols.clj:31)
+    clojure.core.protocols/fn (protocols.clj:60)
+    clojure.core.protocols$fn__6031$G__6026__6044.invoke (protocols.clj:13)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for com.famous.Famous
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.123 seconds.[0m
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.099 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:dev_src/famous_examples/dev.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for reagent.core
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.066 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for reagent.core
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.149 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.114 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.127 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.128 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/dev.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for reagent.core
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.147 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Required namespace not provided for reagent.core
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.211 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.131 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.468 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.103 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.103 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.11 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.11 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.075 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.099 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/createScene at line 12 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.106 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.091 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/cljs->js at line 13 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.13 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Wrong number of args (0) passed to cljs.core/clj->js at line 13 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.096 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.087 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.124 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.427 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.105 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/FamouseEngine at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.109 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.09 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.084 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.083 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.092 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.094 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.089 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.085 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.102 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.096 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.074 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.079 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.068 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.073 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.079 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.087 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.087 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.077 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.09 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.168 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/onUpdate at line 23 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.086 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.072 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.085 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.076 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.092 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.078 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.096 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/requestUpdateOnNextTick at line 27 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.09 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/requestUpdateOnNextTick at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.121 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.074 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.082 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.082 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.085 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.072 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.113 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner at line 29 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.104 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.083 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.117 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.257 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.083 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.078 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 36 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.083 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 36 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.187 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 36 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.207 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.126 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.102 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 36 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.1 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 38 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.152 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 38 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.147 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 38 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.098 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.12 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 38 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.107 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.12 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 38 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.101 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.099 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.158 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.178 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.175 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.1 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.168 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.11 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: spinner at line 23 is being replaced at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.155 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.131 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.071 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.071 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.073 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.07 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.089 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.078 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.11 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.21 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.116 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.197 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 26 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.12 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 5.994 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.089 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.081 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/Transitionable at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.093 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/Transitionable at line 39 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/Transitionable at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.127 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 27 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/Transitionable at line 39 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/Transitionable at line 39 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.112 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.09 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.093 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[31mCompiling "resources/public/js/compiled/famous_examples.js" failed.[0m
+clojure.lang.ExceptionInfo: failed compiling file:src/famous_examples/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4403)
+    cljs.compiler$compile_file$fn__3100.invoke (compiler.clj:1142)
+    cljs.compiler$compile_file.invoke (compiler.clj:1105)
+    cljs.compiler$compile_root.invoke (compiler.clj:1177)
+    cljs.closure$compile_dir.invoke (closure.clj:378)
+    cljs.closure$eval3516$fn__3517.invoke (closure.clj:418)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    cljs.closure$eval3503$fn__3504.invoke (closure.clj:432)
+    cljs.closure$eval3452$fn__3453$G__3443__3460.invoke (closure.clj:325)
+    clojurescript_build.core.CompilableSourcePaths/fn (core.clj:18)
+    clojure.core$map$fn__4245.invoke (core.clj:2557)
+    clojure.lang.LazySeq.sval (LazySeq.java:40)
+    clojure.lang.LazySeq.seq (LazySeq.java:49)
+    clojure.lang.RT.seq (RT.java:484)
+    clojure.core$seq.invoke (core.clj:133)
+    clojure.core$apply.invoke (core.clj:624)
+    clojure.core$mapcat.doInvoke (core.clj:2586)
+    clojure.lang.RestFn.invoke (RestFn.java:423)
+    clojurescript_build.core.CompilableSourcePaths._compile (core.clj:18)
+    cljs.closure$build.invoke (closure.clj:1446)
+    clojurescript_build.core$build_source_paths_STAR_.invoke (core.clj:150)
+    figwheel_sidecar.auto_builder$default_build_options$fn__16523.invoke (auto_builder.clj:66)
+    figwheel_sidecar.auto_builder$warning$fn__16520.invoke (auto_builder.clj:61)
+    clojurescript_build.auto$time_build$fn__16333.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__16339.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__16342.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__16336.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__16354.invoke (auto.clj:103)
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 45 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.096 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 45 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.095 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 45 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.177 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.118 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.101 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.134 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.098 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 49 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.133 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 49 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.119 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 47 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.141 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 28 src/famous_examples/core.cljs
+WARNING: Use of undeclared Var famous-examples.core/animate-id at line 47 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.204 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
+[0mCompiling "resources/public/js/compiled/famous_examples.js" from ["src" "dev_src"]...
+WARNING: Use of undeclared Var famous-examples.core/spinner-id at line 26 src/famous_examples/core.cljs
+[32mSuccessfully compiled "resources/public/js/compiled/famous_examples.js" in 0.175 seconds.[0m
+notifying browser that file changed:  /famous_examples/core.js
+notifying browser that file changed:  /famous_examples/core.js
