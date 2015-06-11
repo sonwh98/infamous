@@ -1,6 +1,3 @@
-![](https://clojars.org/com.famous/famous/latest-version.svg)
-
-
 ## Use
 This is not available on clojars yet so you must install it to your local maven repo with
 ```
