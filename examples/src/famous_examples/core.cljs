@@ -20,9 +20,18 @@
     (setOrigin 0.5 0.5)
     )
 
-(def spinner (.. logo (addComponent (clj->js {"onUpdate" (fn [time]
-                                                               (.. logo (setRotation 0 (/ time 1000.0))
-                                                                   (requestUpdateOnNextTick spinner)))}))))
+(def spinner (.. logo (addComponent (clj->js {:onUpdate          (fn [time]
+                                                                     (.. logo
+                                                                         (setRotation 0 (/ time 1000.0))
+                                                                         (requestUpdateOnNextTick spinner))
+                                                                     (println "time=" time))
+                                              :onMount           (fn [node]
+                                                                     (println "onMount called: " (.. node getLocation))
+                                                                     )
+                                              :onTransformChange (fn []
+                                                                     (println "onTransformChange called")
+                                                                     )}
+                                             ))))
 
 (.. logo (requestUpdate spinner))
 (.. FamousEngine init)
