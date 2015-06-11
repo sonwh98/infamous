@@ -5,11 +5,11 @@
 (enable-console-print!)
 
 
-(def famous js/famous)
-(def DOMElement (.. famous -domRenderables -DOMElement))
-(def FamousEngine (.. famous -core -FamousEngine))
+(defonce famous js/famous)
+(defonce DOMElement (.. famous -domRenderables -DOMElement))
+(defonce FamousEngine (.. famous -core -FamousEngine))
 
-(def logo (.. FamousEngine createScene addChild))
+(defonce logo (.. FamousEngine createScene addChild))
 (.. (DOMElement. logo (clj->js {"tagName" 'img})) (setAttribute "src" "./images/famous_logo.png"))
 
 (.. logo
@@ -20,20 +20,19 @@
     (setOrigin 0.5 0.5)
     )
 
-(def spinner (.. logo (addComponent (clj->js {:onUpdate          (fn [time]
-                                                                     (.. logo
-                                                                         (setRotation 0 (/ time 1000.0))
-                                                                         (requestUpdateOnNextTick spinner))
-                                                                     (println "time=" time))
-                                              :onMount           (fn [node]
-                                                                     (println "onMount called: " (.. node getLocation))
-                                                                     )
-                                              :onTransformChange (fn []
-                                                                     (println "onTransformChange called")
-                                                                     )}
-                                             ))))
-
-(.. logo (requestUpdate spinner))
+(defonce spinner (clj->js {:onUpdate          (fn [time]
+                                                  (.. logo
+                                                      (setRotation 0 (/ time 1000.0))
+                                                      (requestUpdateOnNextTick spinner-id)))
+                           :onMount           (fn [node]
+                                                  (println "onMount called: " (.. node getLocation))
+                                                  )
+                           :onTransformChange (fn []
+                                                  (println "onTransformChange called")
+                                                  )}
+                          ))
+(defonce spinner-id (.. logo (addComponent spinner)))
+(.. logo (requestUpdateOnNextTick spinner-id))
 (.. FamousEngine init)
 
 ;(reagent/render [msg] (.. js/document (getElementById "msg")))
