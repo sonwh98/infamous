@@ -1,4 +1,4 @@
-(defproject famous-examples "0.1.0-SNAPSHOT"
+(defproject hello-famous "0.1.0-SNAPSHOT"
             :description "FIXME: write this!"
             :url "http://example.com/FIXME"
             :license {:name "Eclipse Public License"
