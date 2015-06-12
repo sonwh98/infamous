@@ -1,36 +1,81 @@
 (ns ^:figwheel-always carousel.core
-  (:require [com.famous.Famous]))
+    (:require [com.famous.Famous]))
 
 (enable-console-print!)
-
 
 (defonce famous js/famous)
 (defonce DOMElement (.. famous -domRenderables -DOMElement))
 (defonce FamousEngine (.. famous -core -FamousEngine))
+(defonce GestureHandler (.. famous -components -GestureHandler))
 
-(defonce logo (.. FamousEngine createScene addChild))
-(.. (DOMElement. logo (clj->js {"tagName" 'img})) (setAttribute "src" "./images/famous_logo.png"))
+(defn Arrow [node options]
+  (let [el (DOMElement. node)
+        gestures (GestureHandler. node)
+        direction (.. options -direction)
+        arrow-direction (if (= direction 1)
+                          ">"
+                          "<")]
+    (.. el (setProperty "color" "white"))
+    (.. el (setContent arrow-direction))
+    (.. el (setProperty "fontSize" "40px"))
+    (.. el (setProperty "lineHeight" "40px"))
+    (.. el (setProperty "cursor" "pointer"))
+    (.. el (setProperty "textHighlight" "none"))
+    (.. el (setProperty "zIndex" "2"))
 
-(.. logo
-    (setSizeMode "absolute" "absolute" "absolute")
-    (setAbsoluteSize 250 250)
-    (setAlign 0.5 0.5)
-    (setMountPoint 0.5 0.5)
-    (setOrigin 0.5 0.5)
-    )
+    (.. gestures (on "tap" (fn []
+                             (.. node (emit "pageChange" (clj->js {:direction direction})))
+                             )))
+    {:node      node
+     :el        el
+     :direction direction
+     :gestures  gestures})
 
-(declare spinner-id)
-(defonce spinner (clj->js {:onUpdate          (fn [time]
-                                                  (.. logo
-                                                      (setRotation 0 (/ time 1000.0))
-                                                      (requestUpdateOnNextTick spinner-id)))
-                           :onMount           (fn [node]
-                                                  (println "onMount called: " (.. node getLocation))
-                                                  )
-                           :onTransformChange (fn []
-                                                  ;(println "onTransformChange called")
-                                                  )}
-                          ))
-(defonce spinner-id (.. logo (addComponent spinner)))
-(.. logo (requestUpdate spinner-id))
+  )
+
+(defn Dot [node]
+  (let [el (DOMElement. node)]
+    (.. el (setProperty "borderRadius" "5px"))
+    (.. el (setProperty "border" "2px solid white"))
+    (.. el (setProperty "boxSizing" "border-box"))
+
+    {:node node
+     :el el
+     :select (fn []
+               (.. el (setProperty "backgroundColor" "white")))
+     :deselect (fn []
+                 (.. el (setProperty "backgroundColor" "transparent")))}))
+
+(defn Dots [node options]
+  (let [numPages (:numPages options)
+        dotWidth (or (:dotWidth options) 10)
+        dots (for [i (range numPages)
+                   :let [dotNode (.. node addChild)]]
+               (do
+                 (.. dotNode (setSizeMode 1 1))
+                 (.. dotNode (setAbsoluteSize dotWidth dotWidth))
+                 (Dot dotNode)
+                 ))
+        resizeComponent {:onSizeChange (fn [size]
+                                         )}]
+    (.. (first dots) select)
+    (.. node (addComponent resizeComponent))
+    
+    {:node node
+     :dots dots
+     :dotWidth dotWidth
+     :spacing  (or (:spacing options) 5)
+     :numPages numPages
+     :layoutDots (fn [size]
+                   )
+     })
+  )
+
+(defn Carousel [selector data]
+  (let [context (.. FamousEngine (createScene selector))
+        root (.. context addChild)]
+    {:context  context
+     :root     root
+     :pageData data}))
+
 (.. FamousEngine init)
