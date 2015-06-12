@@ -1,6 +1,6 @@
-(ns famous-examples.dev
+(ns hello-famous.dev
     (:require
-     [famous-examples.core]
+     [hello-famous.core]
      [figwheel.client :as fw]))
 
 (fw/start {

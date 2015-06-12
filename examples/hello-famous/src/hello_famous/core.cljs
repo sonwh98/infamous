@@ -1,4 +1,4 @@
-(ns ^:figwheel-always famous-examples.core
+(ns ^:figwheel-always hello-famous.core
   (:require [com.famous.Famous]))
 
 (enable-console-print!)
