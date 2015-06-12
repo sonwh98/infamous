@@ -32,5 +32,5 @@
                                                   )}
                           ))
 (defonce spinner-id (.. logo (addComponent spinner)))
-(.. logo (requestUpdateOnNextTick spinner-id))
+(.. logo (requestUpdate spinner-id))
 (.. FamousEngine init)
