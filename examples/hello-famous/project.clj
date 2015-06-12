@@ -11,8 +11,8 @@
                            [com.famous/famous "0.5.1"]
                            [reagent "0.5.0"]]
 
-            :plugins [[lein-cljsbuild "1.0.4"]
-                      [lein-figwheel "0.2.5"]]
+            :plugins [[lein-cljsbuild "1.0.6"]
+                      [lein-figwheel "0.3.3"]]
 
             :source-paths ["src"]
             :resource-paths ["/home/ssd2/sto/workspace/reagent/target/reagent-0.5.1-SNAPSHOT-standalone.jar" "resources"]
