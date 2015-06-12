@@ -21,7 +21,7 @@
             :cljsbuild {
                         :builds [{:id           "dev"
                                   :source-paths ["src" "dev_src"]
-                                  :compiler     {:output-to            "resources/public/js/compiled/famous_examples.js"
+                                  :compiler     {:output-to            "resources/public/js/compiled/hello-famous.js"
                                                  :output-dir           "resources/public/js/compiled/out"
                                                  :optimizations        :none
                                                  :main                 famous-examples.dev
@@ -31,7 +31,7 @@
                                                  :cache-analysis       true}}
                                  {:id           "min"
                                   :source-paths ["src"]
-                                  :compiler     {:output-to     "resources/public/js/compiled/famous_examples.js"
+                                  :compiler     {:output-to     "resources/public/js/compiled/hello-famous.js"
                                                  :main          famous-examples.core
                                                  :optimizations :advanced
                                                  :pretty-print  false}}]}
