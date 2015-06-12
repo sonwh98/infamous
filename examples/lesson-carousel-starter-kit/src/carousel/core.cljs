@@ -73,9 +73,15 @@
 
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
-        root (.. context addChild)]
-    {:context  context
-     :root     root
-     :pageData data}))
+        root (.. context addChild)
+        carousel-obj {:context  context
+                      :root     root
+                      :pageData data
+                      :arrows {:back (Arrow (.. root addChild) {:direction -1})
+                               :next (Arrow (.. root addChild) {:direction 1})}}
+        ]
+    
+    carousel-obj
+    ))
 
 (.. FamousEngine init)
