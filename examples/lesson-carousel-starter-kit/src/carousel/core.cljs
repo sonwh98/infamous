@@ -11,10 +11,10 @@
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
         root (.. context addChild)
-        el (DOMElement. root)
-        _ (.. el (setContent "Hello World")
-              (setProperty "font-size" "40px")
-              (setProperty "color" "white"))
+        el (.. (DOMElement. root)
+               (setContent "Hello Famous")
+               (setProperty "font-size" "40px")
+               (setProperty "color" "white"))
         carousel-obj {:context  context
                       :root     root
                       :el el}]    
