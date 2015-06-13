@@ -40,27 +40,34 @@
 (defn Dots [node options]
   (let [numPages (:numPages options)
         dotWidth (or (:dotWidth options) 10)
+        spacing (or (:spacing options) 5)
         dots (for [i (range numPages)
                    :let [dotNode (.. node addChild)]]
                (do
-                 (.. dotNode (setSizeMode 1 1))
-                 (.. dotNode (setAbsoluteSize dotWidth dotWidth))
-                 (Dot dotNode)
-                 ))
+                 (.. dotNode
+                     (setSizeMode 1 1)
+                     (setAbsoluteSize dotWidth dotWidth))
+                 (Dot dotNode)))
+        layoutDots (fn [size]
+                     (let [totalDotSize (+ (* dotWidth numPages)
+                                           (* spacing (- numPages 1)))
+                           start (->  (- (first size) totalDotSize) (/ 2))
+                           ]
+                       (doseq [i (range numbPages)
+                               :let [x (+ start (* i (+ dotWidth spacing)))
+                                     dot (nth dots i)]]
+                         (..  (:node dot) (setPosition x 0 0 )))))
+        dots-obj {:node node
+                  :dots dots
+                  :dotWidth dotWidth
+                  :spacing  spacing
+                  :numPages numPages}
         resizeComponent {:onSizeChange (fn [size]
-                                         )}]
+                                         (layoutDots size))}
+        ]
     (.. (first dots) select)
     (.. node (addComponent resizeComponent))
-    
-    {:node node
-     :dots dots
-     :dotWidth dotWidth
-     :spacing  (or (:spacing options) 5)
-     :numPages numPages
-     :layoutDots (fn [size]
-                   )
-     })
-  )
+    dots-obj))
 
 
 (defn Carousel [selector data]
