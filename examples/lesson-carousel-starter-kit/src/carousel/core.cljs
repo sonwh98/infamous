@@ -26,22 +26,35 @@
      :direction direction}))
 
 
+(defn decorate-arrow-node [arrow-node text]
+  (.. (DOMElement. arrow-node)
+               (setProperty "color" "white")
+               (setContent text)
+               (setProperty "fontSize" "40px")
+               (setProperty "lineHeight" "40px")
+               (setProperty "cursor" "pointer")
+               (setProperty "textHighlight" "none")
+               (setProperty "zIndex" "2")))
+
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
         root (.. context addChild)
-        back (Arrow. (.. root addChild) {:direction -1})
-        next (Arrow. (.. root addChild) {:direction 1})
+        back-node (.. root addChild)
+        next-node (.. root addChild)
+        
+        back (decorate-arrow-node back-node "<")
+        next (decorate-arrow-node next-node ">")
         carousel-obj {:context  context
                       :root     root
                       :back back
                       :next next}]
-    (.. (:node back)
+    (.. back-node
         (setSizeMode 1 1)
         (setAbsoluteSize 40 40)
         (setPosition 40 0 0)
         (setAlign 0 0.5 0)
         (setMountPoint 0 0.5 0))
-    (.. (:node next)
+    (.. next-node
         (setSizeMode 1 1)
         (setAbsoluteSize 40 40)
         (setPosition -40 0 0)
