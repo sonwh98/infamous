@@ -25,53 +25,28 @@
      :el        el
      :direction direction}))
 
-(defn Dot [node]
-  (let [el (.. (DOMElement. node)
-               (setProperty "borderRadius" "5px")
-               (setProperty "border" "2px solid white")
-               (setProperty "boxSizing" "border-box"))]
-    {:node node
-     :el el
-     :select (fn []
-               (.. el (setProperty "backgroundColor" "white")))
-     :deslect (fn []
-                (.. el (setProperty "backgroundColor" "transparent")))}))
-
-(defn Dots [node options]
-  (let [numPages (:numPages options)
-        dotWidth (or (:dotWidth options) 10)
-        dots (for [i (range numPages)
-                   :let [dotNode (.. node addChild)]]
-               (do
-                 (.. dotNode (setSizeMode 1 1))
-                 (.. dotNode (setAbsoluteSize dotWidth dotWidth))
-                 (Dot dotNode)
-                 ))
-        resizeComponent {:onSizeChange (fn [size]
-                                         )}]
-    (.. (first dots) select)
-    (.. node (addComponent resizeComponent))
-    
-    {:node node
-     :dots dots
-     :dotWidth dotWidth
-     :spacing  (or (:spacing options) 5)
-     :numPages numPages
-     :layoutDots (fn [size]
-                   )
-     })
-  )
-
 
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
         root (.. context addChild)
-        arrows {:back (Arrow. (.. root addChild) {:direction -1})
-                :next (Arrow. (.. root addChild) {:direction 1})}
+        back (Arrow. (.. root addChild) {:direction -1})
+        next (Arrow. (.. root addChild) {:direction 1})
         carousel-obj {:context  context
                       :root     root
-                      :arrows arrows}]
-
+                      :back back
+                      :next next}]
+    (.. (:node back)
+        (setSizeMode 1 1)
+        (setAbsoluteSize 40 40)
+        (setPosition 40 0 0)
+        (setAlign 0 0.5 0)
+        (setMountPoint 0 0.5 0))
+    (.. (:node next)
+        (setSizeMode 1 1)
+        (setAbsoluteSize 40 40)
+        (setPosition -40 0 0)
+        (setAlign 1 0.5 0)
+        (setMountPoint 1 0.5 0))
     carousel-obj))
 
 (Carousel "body" {})
