@@ -19,6 +19,10 @@
                (setProperty "zIndex" "2")))
 
 (defn decorate-dots [dots-node]
+  (let [resize (clj->js {:onSizeChange (fn [size]
+                                         (println "onSizeChange " size))})]
+    (.. dots-node (addComponent resize)))
+  
   (let [dot-nodes (.. dots-node getChildren)]
     (doseq [dot-node dot-nodes]
       (.. (DOMElement. dot-node)
@@ -35,6 +39,7 @@
   (let [root-dot (.. root-node addChild)]
     (doseq [i (range 5)]
       (.. root-dot addChild))
+    
     root-dot))
 
 (defn Carousel [selector data]
