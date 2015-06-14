@@ -19,8 +19,23 @@
                (setProperty "zIndex" "2")))
 
 (defn decorate-dots [dots-node]
-  (let [resize (clj->js {:onSizeChange (fn [size]
-                                         (println "onSizeChange " size))})]
+  (let [dot-nodes (.. dots-node getChildren)
+        resize (clj->js {:onSizeChange (fn [size]
+                                         (println "onSizeChange " size)
+                                         (let [dotWidth 10
+                                               numPages 5
+                                               spacing 5
+                                               totalDotSize (+ (* numPages dotWidth)
+                                                               (* spacing (dec numPages)))
+                                               start-x (/ (- (nth size 0) totalDotSize)
+                                                          2)]
+                                           (doseq [n (range (count dot-nodes))
+                                                   :let [dot-node (nth dot-nodes n)]]
+                                             (.. dot-node (setPosition (+ start-x
+                                                                          (* n
+                                                                             (+ dotWidth spacing)))
+                                                                       0
+                                                                       0)))))})]
     (.. dots-node (addComponent resize)))
   
   (let [dot-nodes (.. dots-node getChildren)]
@@ -30,10 +45,7 @@
           (setProperty "border"  "2px solid white")
           (setProperty "boxSizing"  "border-box")))
 
-    (doseq [n (range (count dot-nodes))
-            :let [dot-node (nth dot-nodes n)
-                  start-x 100]]
-      (.. dot-node (setPosition (+ start-x (* n 10)) 0 0 )))))
+    ))
 
 (defn create-dots [root-node]
   (let [root-dot (.. root-node addChild)]
