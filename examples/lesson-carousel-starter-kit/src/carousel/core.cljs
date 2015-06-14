@@ -19,11 +19,17 @@
                (setProperty "zIndex" "2")))
 
 (defn decorate-dots [dots-node]
-  (doseq [dot-node (.. dots-node getChildren)]
-    (.. (DOMElement. dot-node)
-        (setProperty "borderRadius"  "5px")
-        (setProperty "border"  "2px solid white")
-        (setProperty "boxSizing"  "border-box"))))
+  (let [dot-nodes (.. dots-node getChildren)]
+    (doseq [dot-node dot-nodes]
+      (.. (DOMElement. dot-node)
+          (setProperty "borderRadius"  "5px")
+          (setProperty "border"  "2px solid white")
+          (setProperty "boxSizing"  "border-box")))
+
+    (doseq [n (range (count dot-nodes))
+            :let [dot-node (nth dot-nodes n)
+                  start-x 100]]
+      (.. dot-node (setPosition (+ start-x (* n 10)) 0 0 )))))
 
 (defn create-dots [root-node]
   (let [root-dot (.. root-node addChild)]
