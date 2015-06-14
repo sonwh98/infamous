@@ -20,15 +20,16 @@
 
 (defn decorate-dots [dots-node]
   (let [dot-nodes (.. dots-node getChildren)
-        resize (clj->js {:onSizeChange (fn [size]
-                                         (println "onSizeChange " size)
-                                         (let [dotWidth 10
+        resize (clj->js {:onSizeChange (fn [^Float32Array size]
+                                         (let [size (IndexedSeq. size 0)
+                                               dotWidth 10
                                                numPages 5
                                                spacing 5
                                                totalDotSize (+ (* numPages dotWidth)
                                                                (* spacing (dec numPages)))
                                                start-x (/ (- (nth size 0) totalDotSize)
                                                           2)]
+                                           (println size)
                                            (doseq [n (range (count dot-nodes))
                                                    :let [dot-node (nth dot-nodes n)]]
                                              (.. dot-node (setPosition (+ start-x
