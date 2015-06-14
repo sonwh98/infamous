@@ -37,22 +37,27 @@
                                                                              (+ dotWidth spacing)))
                                                                        0
                                                                        0)))))})]
-    (.. dots-node (addComponent resize)))
-  
-  (let [dot-nodes (.. dots-node getChildren)]
     (doseq [dot-node dot-nodes]
       (.. (DOMElement. dot-node)
           (setProperty "borderRadius"  "5px")
           (setProperty "border"  "2px solid white")
           (setProperty "boxSizing"  "border-box")))
-
-    ))
+    
+    (.. dots-node (addComponent resize))))
 
 (defn create-dots [root-node]
   (let [root-dot (.. root-node addChild)]
-    (doseq [i (range 5)]
-      (.. root-dot addChild))
-    
+    (doseq [i (range 5)
+            :let [dot-node (.. root-dot addChild)]]
+      (.. dot-node
+          (setSizeMode 1 1)
+          (setAbsoluteSize 5 5)))
+    (.. root-dot
+        (setSizeMode 1 1)
+        (setAbsoluteSize nil 20)
+        (setPosition 0 -50 0)
+        (setAlign 0.5 1 0)
+        (setMountPoint .5, 1, 0))
     root-dot))
 
 (defn Carousel [selector data]
