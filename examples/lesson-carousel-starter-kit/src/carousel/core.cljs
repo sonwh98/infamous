@@ -18,11 +18,18 @@
                (setProperty "textHighlight" "none")
                (setProperty "zIndex" "2")))
 
+(defn create-dots [root-node]
+  (let [root-dot (.. root-node addChild)]
+    (doseq [i (range 5)]
+      (.. root-dot addChild)))
+  root-dot)
+
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
         root (.. context addChild)
         back-node (.. root addChild)
         next-node (.. root addChild)
+        dots (create-dots root)
         
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
