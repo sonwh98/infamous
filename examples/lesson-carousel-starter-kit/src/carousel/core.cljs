@@ -21,22 +21,22 @@
 (defn create-dots [root-node]
   (let [root-dot (.. root-node addChild)]
     (doseq [i (range 5)]
-      (.. root-dot addChild)))
-  root-dot)
+      (.. root-dot addChild))
+    root-dot))
 
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
-        root (.. context addChild)
-        back-node (.. root addChild)
-        next-node (.. root addChild)
-        dots (create-dots root)
-        
+        root-node (.. context addChild)
+        back-node (.. root-node addChild)
+        next-node (.. root-node addChild)
+        dots (create-dots root-node)
+
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
         carousel-obj {:context  context
-                      :root     root
-                      :back back
-                      :next next}]
+                      :root     root-node
+                      :back back-node
+                      :next next-node}]
     (.. back-node
         (setSizeMode 1 1)
         (setAbsoluteSize 40 40)
