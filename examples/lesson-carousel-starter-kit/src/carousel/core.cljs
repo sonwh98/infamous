@@ -18,6 +18,13 @@
                (setProperty "textHighlight" "none")
                (setProperty "zIndex" "2")))
 
+(defn decorate-dots [dots-node]
+  (doseq [dot-node (.. dots-node getChildren)]
+    (.. (DOMElement. dot-node)
+        (setProperty "borderRadius"  "5px")
+        (setProperty "border"  "2px solid white")
+        (setProperty "boxSizing"  "border-box"))))
+
 (defn create-dots [root-node]
   (let [root-dot (.. root-node addChild)]
     (doseq [i (range 5)]
@@ -29,14 +36,16 @@
         root-node (.. context addChild)
         back-node (.. root-node addChild)
         next-node (.. root-node addChild)
-        dots (create-dots root-node)
+        dots-node (create-dots root-node)
 
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
+        dots (decorate-dots dots-node)
         carousel-obj {:context  context
                       :root     root-node
                       :back back-node
-                      :next next-node}]
+                      :next next-node
+                      :dots dots}]
     (.. back-node
         (setSizeMode 1 1)
         (setAbsoluteSize 40 40)
