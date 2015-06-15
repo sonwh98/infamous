@@ -11,19 +11,23 @@
 
 (defn decorate-arrow-node [arrow-node text]
   (.. (DOMElement. arrow-node)
-               (setProperty "color" "white")
-               (setContent text)
-               (setProperty "fontSize" "40px")
-               (setProperty "lineHeight" "40px")
-               (setProperty "cursor" "pointer")
-               (setProperty "textHighlight" "none")
-               (setProperty "zIndex" "2")))
+      (setProperty "color" "white")
+      (setContent text)
+      (setProperty "fontSize" "40px")
+      (setProperty "lineHeight" "40px")
+      (setProperty "cursor" "pointer")
+      (setProperty "textHighlight" "none")
+      (setProperty "zIndex" "2"))
+  (.. (GestureHandler. arrow-node) (on "tap" (fn []
+                                               (println text))))
+  
+  )
 
 (defn decorate-dots [dots-node]
   (let [dot-nodes (.. dots-node getChildren)
         resize (clj->js {:onSizeChange (fn [^Float32Array size]
-                                           "NOTE: this call back is called only once because root-dot setSizeMode is ABSOLUTE (value of 1)"
-                                           (let [size (IndexedSeq. size 0)
+                                         "NOTE: this call back is called only once because root-dot setSizeMode is ABSOLUTE (value of 1)"
+                                         (let [size (IndexedSeq. size 0)
                                                dotWidth 10
                                                numPages 5
                                                spacing 5
@@ -31,7 +35,6 @@
                                                                (* spacing (dec numPages)))
                                                start-x (/ (- (nth size 0) totalDotSize)
                                                           2)]
-                                           (println size)
                                            (doseq [n (range (count dot-nodes))
                                                    :let [dot-node (nth dot-nodes n)]]
                                              (.. dot-node (setPosition (+ start-x
@@ -62,12 +65,19 @@
         (setMountPoint .5, 1, 0))
     root-dot))
 
+(defn create-pager [root-node]
+  (let [pager-node (.. root-node addChild)]
+    pager-node
+    )
+  )
+
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
         root-node (.. context addChild)
         back-node (.. root-node addChild)
         next-node (.. root-node addChild)
         dots-node (create-dots root-node)
+        pager-node (create-pager root-node)
 
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
