@@ -7,6 +7,7 @@
 (defonce DOMElement (.. famous -domRenderables -DOMElement))
 (defonce FamousEngine (.. famous -core -FamousEngine))
 (defonce GestureHandler (.. famous -components -GestureHandler))
+(defonce Size (.. famous -core -Size))
 
 (defn decorate-arrow-node [arrow-node text]
   (.. (DOMElement. arrow-node)
@@ -21,7 +22,8 @@
 (defn decorate-dots [dots-node]
   (let [dot-nodes (.. dots-node getChildren)
         resize (clj->js {:onSizeChange (fn [^Float32Array size]
-                                         (let [size (IndexedSeq. size 0)
+                                           "NOTE: this call back is called only once because root-dot setSizeMode is ABSOLUTE (value of 1)"
+                                           (let [size (IndexedSeq. size 0)
                                                dotWidth 10
                                                numPages 5
                                                spacing 5
@@ -50,11 +52,11 @@
     (doseq [i (range 5)
             :let [dot-node (.. root-dot addChild)]]
       (.. dot-node
-          (setSizeMode 1 1)
+          (setSizeMode (.. Size -ABSOLUTE) (.. Size -ABSOLUTE))
           (setAbsoluteSize 5 5)))
     (.. root-dot
-        (setSizeMode 1 1)
-        (setAbsoluteSize nil 20)
+        (setSizeMode (.. Size -ABSOLUTE) (.. Size -ABSOLUTE))
+        (setAbsoluteSize 20 20)
         (setPosition 0 -50 0)
         (setAlign 0.5 1 0)
         (setMountPoint .5, 1, 0))
