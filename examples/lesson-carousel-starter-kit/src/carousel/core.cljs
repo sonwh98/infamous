@@ -9,6 +9,18 @@
 (defonce GestureHandler (.. famous -components -GestureHandler))
 (defonce Size (.. famous -core -Size))
 
+(defonce PhysicsEngine (.. famous -physics -PhysicsEngine))
+(defonce physics (.. famous -physics))
+(defonce math (.. famous -math))
+(defonce Box (.. physics -Box))
+(defonce Spring (.. physics -Spring))
+(defonce RotationalSpring (.. physics -RotationalSpring))
+(defonce RotationalDrag (.. physics -RotationalDrag))
+(defonce Quaternion (.. math -Quaternion))
+(defonce Vec3 (.. math -Vec3))
+
+(defonce ABSOLUTE (.. Size -ABSOLUTE))
+
 (defn decorate-arrow-node [arrow-node text]
   (.. (DOMElement. arrow-node)
       (setProperty "color" "white")
@@ -20,7 +32,7 @@
       (setProperty "zIndex" "2"))
   (.. (GestureHandler. arrow-node) (on "tap" (fn []
                                                (println text))))
-  
+
   )
 
 (defn decorate-dots [dots-node]
@@ -47,7 +59,7 @@
           (setProperty "borderRadius"  "5px")
           (setProperty "border"  "2px solid white")
           (setProperty "boxSizing"  "border-box")))
-    
+
     (.. dots-node (addComponent resize))))
 
 (defn create-dots [root-node]
@@ -55,10 +67,10 @@
     (doseq [i (range 5)
             :let [dot-node (.. root-dot addChild)]]
       (.. dot-node
-          (setSizeMode (.. Size -ABSOLUTE) (.. Size -ABSOLUTE))
+          (setSizeMode ABSOLUTE  ABSOLUTE)
           (setAbsoluteSize 5 5)))
     (.. root-dot
-        (setSizeMode (.. Size -ABSOLUTE) (.. Size -ABSOLUTE))
+        (setSizeMode ABSOLUTE ABSOLUTE)
         (setAbsoluteSize 20 20)
         (setPosition 0 -50 0)
         (setAlign 0.5 1 0)
@@ -66,7 +78,50 @@
     root-dot))
 
 (defn create-pager [root-node]
-  (let [pager-node (.. root-node addChild)]
+  (let [pager-node (.. root-node addChild)
+        simulation (PhysicsEngine.)
+        url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
+        image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
+                "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
+                "03_-_Que_viene_el_Coco_thumb.jpg"
+                "04_-_El_de_la_rollona_thumb.jpg"
+                "05_-_Tal_para_qual_thumb.jpg"
+                "06_-_Nadie_se_conoce_thumb.jpg"
+                "07_-_Ni_asi_la_distingue_thumb.jpg"
+                "09_-_Tantalo_thumb.jpg"
+                "10_-_El_amor_y_la_muerte_thumb.jpg"
+                "11_-_Muchachos_al_avC3ADo_thumb.jpg"
+                "12_-_A_caza_de_dientes_thumb.jpg"
+                "13_-_Estan_calientes_thumb.jpg"]
+        image-elements (map (fn [image-name]
+                              (let [_image-url (str url-base image-name)
+                                    image-url (str "url('" _image-url "')")
+                                    image-node (.. root-node addChild)
+                                    el (DOMElement. image-node)
+                                    box (Box. {:mass 100 :size [100 100 100]})
+                                    anchor (Vec3. 1 0 0)
+                                    spring (Spring. nil box {:period 0.5 :dampingRatio 0.5 :anchor anchor})
+                                    quaternion (.. (Quaternion.) (fromEuler 0  (/ (.. js/Math -PI) -2) 0))
+                                    rotational-spring (RotationalSpring nil  box {:period 1 :dampingRatio 0.2 :anchor quaternion})]
+                                (.. image-node
+                                    (setSizeMode ABSOLUTE ABSOLUTE ABSOLUTE)
+                                    (setAbsoluteSize 500 500 0)
+                                    (setAlign 0.5 0.5)
+                                    (setMountPoint 0.5 0.5)
+                                    (setOrigin 0.5 0.5))
+                                (.. el
+                                    (setProperty "backgroundImage"  image-url)
+                                    (setProperty "background-repeat" "no-repeat")
+                                    (setProperty "background-size" "cover"))
+                                ))
+                            image-names)
+
+        pager {:node pager-node
+               :onUpdate (fn [time]
+                           (.. simulation (update time))
+
+                           )
+               }]
     pager-node
     )
   )
