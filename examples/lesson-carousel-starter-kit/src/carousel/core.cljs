@@ -7,7 +7,7 @@
 (defonce DOMElement (.. famous -domRenderables -DOMElement))
 (defonce FamousEngine (.. famous -core -FamousEngine))
 (defonce GestureHandler (.. famous -components -GestureHandler))
-(defonce Size (.. famous -core -Size))
+(defonce Size (.. famous -components -Size))
 
 (defonce PhysicsEngine (.. famous -physics -PhysicsEngine))
 (defonce physics (.. famous -physics))
