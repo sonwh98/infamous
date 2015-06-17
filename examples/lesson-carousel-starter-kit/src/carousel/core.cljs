@@ -12,7 +12,7 @@
 (defonce PhysicsEngine (.. famous -physics -PhysicsEngine))
 (defonce physics (.. famous -physics))
 (defonce math (.. famous -math))
-(defonce Box (.. physics -Box))
+(defonce FamousBox (.. physics -Box))
 (defonce Spring (.. physics -Spring))
 (defonce RotationalSpring (.. physics -RotationalSpring))
 (defonce RotationalDrag (.. physics -RotationalDrag))
@@ -29,13 +29,9 @@
       (setProperty "lineHeight" "40px")
       (setProperty "cursor" "pointer")
       (setProperty "textHighlight" "none")
-      (setProperty "zIndex" "2")
-      (setProperty "backgroundImage" "url('http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg')")
-      )
+      (setProperty "zIndex" "2"))
   (.. (GestureHandler. arrow-node) (on "tap" (fn []
-                                               (println text))))
-
-  )
+                                               (println text)))))
 
 (defn decorate-dots [dots-node]
   (let [dot-nodes (.. dots-node getChildren)
@@ -100,11 +96,11 @@
                                     image-url (str "url('" _image-url "')")
                                     image-node (.. root-node addChild)
                                     el (DOMElement. image-node)
-                                    box (Box. {:mass 100 :size [100 100 100]})
+                                    box (FamousBox. {:mass 100 :size [100 100 100]})
                                     anchor (Vec3. 1 0 0)
                                     spring (Spring. nil box {:period 0.5 :dampingRatio 0.5 :anchor anchor})
                                     quaternion (.. (Quaternion.) (fromEuler 0  (/ (.. js/Math -PI) -2) 0))
-                                    rotational-spring (RotationalSpring nil  box {:period 1 :dampingRatio 0.2 :anchor quaternion})]
+                                    rotational-spring (RotationalSpring. nil  box {:period 1 :dampingRatio 0.2 :anchor quaternion})]
                                 (.. image-node
                                     (setSizeMode ABSOLUTE ABSOLUTE ABSOLUTE)
                                     (setAbsoluteSize 500 500 0)
@@ -117,7 +113,7 @@
                                     (setProperty "background-size" "cover"))
                                 ))
                             image-names)
-
+        _ (doall image-elements)
         pager {:node pager-node
                :onUpdate (fn [time]
                            (.. simulation (update time))
@@ -146,13 +142,13 @@
                       :dots dots}]
     (.. back-node
         (setSizeMode 1 1)
-        (setAbsoluteSize 240 240)
+        (setAbsoluteSize 40 40)
         (setPosition 40 0 0)
         (setAlign 0 0.5 0)
         (setMountPoint 0 0.5 0))
     (.. next-node
         (setSizeMode 1 1)
-        (setAbsoluteSize 240 240)
+        (setAbsoluteSize 40 40)
         (setPosition -40 0 0)
         (setAlign 1 0.5 0)
         (setMountPoint 1 0.5 0))
