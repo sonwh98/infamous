@@ -29,7 +29,9 @@
       (setProperty "lineHeight" "40px")
       (setProperty "cursor" "pointer")
       (setProperty "textHighlight" "none")
-      (setProperty "zIndex" "2"))
+      (setProperty "zIndex" "2")
+      (setProperty "backgroundImage" "url('http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg')")
+      )
   (.. (GestureHandler. arrow-node) (on "tap" (fn []
                                                (println text))))
 
@@ -144,13 +146,13 @@
                       :dots dots}]
     (.. back-node
         (setSizeMode 1 1)
-        (setAbsoluteSize 40 40)
+        (setAbsoluteSize 240 240)
         (setPosition 40 0 0)
         (setAlign 0 0.5 0)
         (setMountPoint 0 0.5 0))
     (.. next-node
         (setSizeMode 1 1)
-        (setAbsoluteSize 40 40)
+        (setAbsoluteSize 240 240)
         (setPosition -40 0 0)
         (setAlign 1 0.5 0)
         (setMountPoint 1 0.5 0))
