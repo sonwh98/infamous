@@ -96,7 +96,7 @@
                      "11_-_Muchachos_al_avC3ADo_thumb.jpg"
                      "12_-_A_caza_de_dientes_thumb.jpg"
                      "13_-_Estan_calientes_thumb.jpg"]
-        image-elements (map (fn [image-name]
+        pages (map (fn [image-name]
                               (let [_image-url (str url-base image-name)
                                     image-url (str "url('" _image-url "')")
                                     image-node (.. root-node addChild)
@@ -116,18 +116,17 @@
                                     (setProperty "backgroundImage" image-url)
                                     (setProperty "background-repeat" "no-repeat")
                                     (setProperty "background-size" "cover"))
-                                ))
+                                [image-node el]))
                             image-names)
-        _ (doall image-elements)
+        _ (doall pages)
         pager {:node     pager-node
-               :onUpdate (fn [time]
-                           (.. simulation (update time))
-
-                           )
+               :currentIndex 0
+               :threashold 4000
+               :pages pages
+               :pageWidth 0
                }]
-    pager
-    )
-  )
+    
+    pager))
 
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
@@ -141,11 +140,10 @@
         
         dots-node (create-dots root-node)
         pager (create-pager root-node)
-
+            
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
-        dots (decorate-dots dots-node)
-        ]
+        dots (decorate-dots dots-node)]
     (.. back-node
         (setAlign 0 0.5 0)
         (setPosition 40 0 0)
@@ -154,14 +152,18 @@
         (setAlign 1 0.5 0)
         (setPosition -40 0 0)
         (setMountPoint 1 0.5 0))
+
+    (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
+                                                          (println time)
+                                                          (this-as this
+                                                                   (.. FamousEngine (requestUpdateOnNextTick this)))
+                                                          )})))
     (go
       (while true
         (let [[v channel] (alts! [back-clicks next-clicks])]
           (cond
             (= channel back-clicks) (println "back")
-            (= channel next-clicks) (println "next")))))
-    
-    ))
+            (= channel next-clicks) (println "next")))))))
 
 (Carousel "body" {})
 (.. FamousEngine init)
