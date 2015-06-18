@@ -82,7 +82,6 @@
 
 (defn create-pager [root-node]
   (let [pager-node (.. root-node addChild)
-        simulation (PhysicsEngine.)
         url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
         image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
                      "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
@@ -97,35 +96,38 @@
                      "12_-_A_caza_de_dientes_thumb.jpg"
                      "13_-_Estan_calientes_thumb.jpg"]
         pages (map (fn [image-name]
-                              (let [_image-url (str url-base image-name)
-                                    image-url (str "url('" _image-url "')")
-                                    image-node (.. root-node addChild)
-                                    el (DOMElement. image-node)
-                                    box (FamousBox. {:mass 100 :size [100 100 100]})
-                                    anchor (Vec3. 1 0 0)
-                                    spring (Spring. nil box {:period 0.5 :dampingRatio 0.5 :anchor anchor})
-                                    quaternion (.. (Quaternion.) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
-                                    rotational-spring (RotationalSpring. nil box {:period 1 :dampingRatio 0.2 :anchor quaternion})]
-                                (.. image-node
-                                    (setSizeMode ABSOLUTE ABSOLUTE ABSOLUTE)
-                                    (setAbsoluteSize 500 500 0)
-                                    (setAlign 0.5 0.5)
-                                    (setMountPoint 0.5 0.5)
-                                    (setOrigin 0.5 0.5))
-                                (.. el
-                                    (setProperty "backgroundImage" image-url)
-                                    (setProperty "background-repeat" "no-repeat")
-                                    (setProperty "background-size" "cover"))
-                                [image-node el]))
-                            image-names)
-        _ (doall pages)
+                     (let [_image-url (str url-base image-name)
+                           image-url (str "url('" _image-url "')")
+                           image-node (.. root-node addChild)
+                           el (DOMElement. image-node)
+                           box (FamousBox. (clj->js {:mass 100 :size [100 100 100]}))
+                           anchor (Vec3. 1 0 0)
+                           spring (Spring. nil box (clj->js {:period 0.5 :dampingRatio 0.5 :anchor anchor}))
+                           quaternion (.. (Quaternion.) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+                           rotational-spring (RotationalSpring. nil box (clj->js {:period 1 :dampingRatio 0.2 :anchor quaternion}))]
+                       (.. image-node
+                           (setSizeMode ABSOLUTE ABSOLUTE ABSOLUTE)
+                           (setAbsoluteSize 500 500 0)
+                           (setAlign 0.5 0.5)
+                           (setMountPoint 0.5 0.5)
+                           (setOrigin 0.5 0.5))
+                       (.. el
+                           (setProperty "backgroundImage" image-url)
+                           (setProperty "background-repeat" "no-repeat")
+                           (setProperty "background-size" "cover"))
+                       {:node image-node
+                        :el el
+                        :box box
+                        :spring spring
+                        :quaternion quaternion
+                        :rotationalSpring rotational-spring
+                        :anchor anchor}))
+                   image-names)
         pager {:node     pager-node
                :currentIndex 0
                :threashold 4000
                :pages pages
-               :pageWidth 0
-               }]
-    
+               :pageWidth 0}]
     pager))
 
 (defn Carousel [selector data]
@@ -140,7 +142,7 @@
         
         dots-node (create-dots root-node)
         pager (create-pager root-node)
-            
+        
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
         dots (decorate-dots dots-node)]
