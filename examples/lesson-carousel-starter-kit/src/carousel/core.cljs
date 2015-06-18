@@ -124,7 +124,7 @@
                         :anchor anchor}))
                    image-names)
         pager {:node     pager-node
-               :currentIndex 0
+               :currentIndex (atom 0) 
                :threashold 4000
                :pages pages
                :pageWidth 0}]
@@ -158,14 +158,27 @@
     (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
                                                           (println time)
                                                           (this-as this
-                                                                   (.. FamousEngine (requestUpdateOnNextTick this)))
+                                                                   ;(.. FamousEngine (requestUpdateOnNextTick this))
+                                                                   )
                                                           )})))
+    (add-watch (:currentIndex pager) :watcher (fn [key atom old-state new-state]
+                                                (prn "-- Atom Changed --")
+                                                (prn "key" key)
+                                                (prn "atom" atom)
+                                                (prn "old-state" old-state)
+                                                (prn "new-state" new-state)))
     (go
       (while true
         (let [[v channel] (alts! [back-clicks next-clicks])]
           (cond
-            (= channel back-clicks) (println "back")
-            (= channel next-clicks) (println "next")))))))
+            (= channel back-clicks) (let [current-index (:currentIndex pager)]
+                                      (println "back" @current-index)
+                                      (swap! current-index dec)
+                                      )
+            (= channel next-clicks) (let [current-index (:currentIndex pager)]
+                                      (println "back" @current-index)
+                                      (swap! current-index inc)
+                                      )))))))
 
 (Carousel "body" {})
 (.. FamousEngine init)
