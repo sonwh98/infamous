@@ -81,7 +81,8 @@
     root-dot))
 
 (defn create-pager [root-node]
-  (let [pager-node (.. root-node addChild)
+  (let [simulation (PhysicsEngine.)
+        pager-node (.. root-node addChild)
         url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
         image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
                      "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
@@ -115,6 +116,7 @@
                            (setProperty "backgroundImage" image-url)
                            (setProperty "background-repeat" "no-repeat")
                            (setProperty "background-size" "cover"))
+                       (.. simulation (add box spring rotational-spring))
                        {:node image-node
                         :el el
                         :box box
@@ -127,9 +129,43 @@
                :currentIndex (atom 0) 
                :threashold 4000
                :pages pages
-               :pageWidth 0}]
-    pager))
+               :pageWidth (atom 0)}
+       ]
 
+    (.. pager-node (addComponent (clj->js {:onSizeChange (fn [^Float32Array size]
+                                                           (reset! (:pageWidth pager) size))})))
+
+    (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
+                                                          (.. simulation (update time))
+                                                          (doseq [page (:pages pager)
+                                                                  :let [physics-transform (.. simulation (getTransform (:box page)))
+                                                                        p (.. physics-transform -position)
+                                                                        r (.. physics-transform -rotation)
+                                                                        node (:node page)]]
+                                                            (.. node
+                                                                (setPosition (* 0 1446) 0 0)
+                                                                (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
+                                                                )
+                                                            )
+                                                          
+                                                          (this-as this
+                                                                   (.. FamousEngine (requestUpdateOnNextTick this)))
+                                                          )})))
+
+    (add-watch (:currentIndex pager) :watcher (fn [key atom old-index new-index]
+                                                (let [pages (:pages pager)
+                                                      old-page (nth pages old-index)
+                                                      new-page (nth pages new-index)]
+                                                  (.. (:anchor old-page) (set 1 0 0))
+                                                  (.. (:quaternion old-page) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+                                                  (.. (:anchor new-page) (set 0 0 0))
+                                                  (.. (:quaternion new-page) (set 1 0 0 0))
+                                                  ) 
+                                                
+                                                ))
+    
+    pager))
+  
 (defn Carousel [selector data]
   (let [context (.. FamousEngine (createScene selector))
         root-node (.. context addChild)
@@ -145,7 +181,8 @@
         
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
-        dots (decorate-dots dots-node)]
+        dots (decorate-dots dots-node)
+        ]
     (.. back-node
         (setAlign 0 0.5 0)
         (setPosition 40 0 0)
@@ -154,19 +191,6 @@
         (setAlign 1 0.5 0)
         (setPosition -40 0 0)
         (setMountPoint 1 0.5 0))
-
-    (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
-                                                          (println time)
-                                                          (this-as this
-                                                                   ;(.. FamousEngine (requestUpdateOnNextTick this))
-                                                                   )
-                                                          )})))
-    (add-watch (:currentIndex pager) :watcher (fn [key atom old-state new-state]
-                                                (prn "-- Atom Changed --")
-                                                (prn "key" key)
-                                                (prn "atom" atom)
-                                                (prn "old-state" old-state)
-                                                (prn "new-state" new-state)))
     (go
       (while true
         (let [[v channel] (alts! [back-clicks next-clicks])]
@@ -176,7 +200,7 @@
                                       (swap! current-index dec)
                                       )
             (= channel next-clicks) (let [current-index (:currentIndex pager)]
-                                      (println "back" @current-index)
+                                      (println "next" @current-index)
                                       (swap! current-index inc)
                                       )))))))
 
