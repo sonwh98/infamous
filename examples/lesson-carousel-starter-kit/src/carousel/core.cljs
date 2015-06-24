@@ -124,45 +124,10 @@
                         :anchor anchor}))
                    image-names)]
     pages))
-
-(defn create-pager [root-node]
-  (let [simulation (PhysicsEngine.)
-        pager-node (.. root-node addChild)
-        pages (create-pages root-node)
-        pager {:node     pager-node
-               :pages pages
-               :pageWidth (atom 0)}
-       ]
-
-    (doseq [ {:keys [box spring rotationalSpring]} pages]
-      (.. simulation (add box spring rotationalSpring)))
-    
-    (.. pager-node (addComponent (clj->js {:onSizeChange (fn [^Float32Array size]
-                                                           (reset! (:pageWidth pager) size))})))
-
-    (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
-                                                          (.. simulation (update time))
-                                                          (doseq [page (:pages pager)
-                                                                  :let [physics-transform (.. simulation (getTransform (:box page)))
-                                                                        p (.. physics-transform -position)
-                                                                        r (.. physics-transform -rotation)
-                                                                        node (:node page)]]
-                                                            (.. node
-                                                                (setPosition (* 0 1446) 0 0)
-                                                                (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
-                                                                )
-                                                            )
-                                                          
-                                                          (this-as this
-                                                                   (.. FamousEngine (requestUpdateOnNextTick this)))
-                                                          )})))
-
-    
-    
-    pager))
   
 (defn Carousel [selector data]
-  (let [context (.. FamousEngine (createScene selector))
+  (let [simulation (PhysicsEngine.)
+        context (.. FamousEngine (createScene selector))
         root-node (.. context addChild)
 
         back-node (.. root-node addChild)
@@ -172,8 +137,9 @@
         next-clicks (events->chan next-node "tap")
         
         dots-node (create-dots root-node)
-        pager (create-pager root-node)
-        pages (:pages pager)
+        pages (create-pages root-node)
+        _ (doseq [ {:keys [box spring rotationalSpring]} pages]
+            (.. simulation (add box spring rotationalSpring)))
         current-index (atom 0)
         
         back (decorate-arrow-node back-node "<")
@@ -208,7 +174,27 @@
             (= channel next-clicks) (do
                                       (println "next" @current-index)
                                       (swap! current-index inc)
-                                      )))))))
+                                      )))))
+
+    (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
+                                                        (.. simulation (update time))
+                                                        (doseq [page pages
+                                                                :let [physics-transform (.. simulation (getTransform (:box page)))
+                                                                      p (.. physics-transform -position)
+                                                                      r (.. physics-transform -rotation)
+                                                                      node (:node page)]]
+                                                          (.. node
+                                                              (setPosition (* 0 1446) 0 0)
+                                                              (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
+                                                              )
+                                                          )
+                                                        
+                                                        (this-as this
+                                                                 (.. FamousEngine (requestUpdateOnNextTick this)))
+                                                        )})))
+    )
+  
+  )
 
 (Carousel "body" {})
 (.. FamousEngine init)
