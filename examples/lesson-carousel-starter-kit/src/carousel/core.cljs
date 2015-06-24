@@ -80,10 +80,8 @@
         (setMountPoint .5, 1, 0))
     root-dot))
 
-(defn create-pager [root-node]
-  (let [simulation (PhysicsEngine.)
-        pager-node (.. root-node addChild)
-        url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
+(defn create-pages [root-node]
+  (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
         image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
                      "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
                      "03_-_Que_viene_el_Coco_thumb.jpg"
@@ -116,7 +114,7 @@
                            (setProperty "backgroundImage" image-url)
                            (setProperty "background-repeat" "no-repeat")
                            (setProperty "background-size" "cover"))
-                       (.. simulation (add box spring rotational-spring))
+                       
                        {:node image-node
                         :el el
                         :box box
@@ -124,13 +122,22 @@
                         :quaternion quaternion
                         :rotationalSpring rotational-spring
                         :anchor anchor}))
-                   image-names)
+                   image-names)]
+    pages))
+
+(defn create-pager [root-node]
+  (let [simulation (PhysicsEngine.)
+        pager-node (.. root-node addChild)
+        pages (create-pages root-node)
         pager {:node     pager-node
                :currentIndex (atom 0) 
                :pages pages
                :pageWidth (atom 0)}
        ]
 
+    (doseq [ {:keys [box spring rotationalSpring]} pages]
+      (.. simulation (add box spring rotationalSpring)))
+    
     (.. pager-node (addComponent (clj->js {:onSizeChange (fn [^Float32Array size]
                                                            (reset! (:pageWidth pager) size))})))
 
