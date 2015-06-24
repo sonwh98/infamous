@@ -130,7 +130,6 @@
         pager-node (.. root-node addChild)
         pages (create-pages root-node)
         pager {:node     pager-node
-               :currentIndex (atom 0) 
                :pages pages
                :pageWidth (atom 0)}
        ]
@@ -158,17 +157,7 @@
                                                                    (.. FamousEngine (requestUpdateOnNextTick this)))
                                                           )})))
 
-    (add-watch (:currentIndex pager) :watcher (fn [key atom old-index new-index]
-                                                (let [pages (:pages pager)
-                                                      old-page (nth pages old-index)
-                                                      new-page (nth pages new-index)]
-                                                  (.. (:anchor old-page) (set 1 0 0))
-                                                  (.. (:quaternion old-page) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
-                                                  (.. (:anchor new-page) (set 0 0 0))
-                                                  (.. (:quaternion new-page) (set 1 0 0 0))
-                                                  ) 
-                                                
-                                                ))
+    
     
     pager))
   
@@ -184,6 +173,8 @@
         
         dots-node (create-dots root-node)
         pager (create-pager root-node)
+        pages (:pages pager)
+        current-index (atom 0)
         
         back (decorate-arrow-node back-node "<")
         next (decorate-arrow-node next-node ">")
@@ -197,15 +188,24 @@
         (setAlign 1 0.5 0)
         (setPosition -40 0 0)
         (setMountPoint 1 0.5 0))
+
+    (add-watch current-index :watcher (fn [key atom old-index new-index]
+                                        (let [old-page (nth pages old-index)
+                                              new-page (nth pages new-index)]
+                                          (.. (:anchor old-page) (set 1 0 0))
+                                          (.. (:quaternion old-page) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+                                          (.. (:anchor new-page) (set 0 0 0))
+                                          (.. (:quaternion new-page) (set 1 0 0 0)))))
+    
     (go
       (while true
         (let [[v channel] (alts! [back-clicks next-clicks])]
           (cond
-            (= channel back-clicks) (let [current-index (:currentIndex pager)]
+            (= channel back-clicks) (do
                                       (println "back" @current-index)
                                       (swap! current-index dec)
                                       )
-            (= channel next-clicks) (let [current-index (:currentIndex pager)]
+            (= channel next-clicks) (do
                                       (println "next" @current-index)
                                       (swap! current-index inc)
                                       )))))))
