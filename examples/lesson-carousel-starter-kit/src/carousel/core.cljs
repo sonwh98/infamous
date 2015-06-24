@@ -127,7 +127,6 @@
                    image-names)
         pager {:node     pager-node
                :currentIndex (atom 0) 
-               :threashold 4000
                :pages pages
                :pageWidth (atom 0)}
        ]
