@@ -80,7 +80,7 @@
         (setMountPoint .5, 1, 0))
     root-dot))
 
-(defn create-pages [root-node]
+(defn create-pages [root-node simulation]
   (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
         image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
                      "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
@@ -120,9 +120,12 @@
                         :box box
                         :spring spring
                         :quaternion quaternion
-                        :rotationalSpring rotational-spring
+                        :rotational-spring rotational-spring
                         :anchor anchor}))
                    image-names)]
+    (doseq [ {:keys [box spring rotational-spring]} pages]
+      (.. simulation (add box spring rotational-spring)))
+    
     pages))
   
 (defn Carousel [selector data]
@@ -137,9 +140,8 @@
         next-clicks (events->chan next-node "tap")
         
         dots-node (create-dots root-node)
-        pages (create-pages root-node)
-        _ (doseq [ {:keys [box spring rotationalSpring]} pages]
-            (.. simulation (add box spring rotationalSpring)))
+        pages (create-pages root-node simulation)
+        
         current-index (atom 0)
         
         back (decorate-arrow-node back-node "<")
