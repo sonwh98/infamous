@@ -128,9 +128,9 @@
     
     pages))
   
-(defn Carousel [selector data]
+(defn Carousel []
   (let [simulation (PhysicsEngine.)
-        context (.. FamousEngine (createScene selector))
+        context (.. FamousEngine (createScene "body"))
         root-node (.. context addChild)
 
         back-node (.. root-node addChild)
@@ -198,5 +198,5 @@
   
   )
 
-(Carousel "body" {})
+(Carousel)
 (.. FamousEngine init)
