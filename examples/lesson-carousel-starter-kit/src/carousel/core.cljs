@@ -190,9 +190,9 @@
         next-node (second children)
         next-clicks (events->chan next-node "tap")
 
-                                        ;pages (create-pages root-node simulation)
-
-                                        ;current-index (atom 0)
+        pages (.. children (slice 2 (count children)))
+        _ (println "count= "(count children))
+        
         dot-container-node (last children)
         dot-nodes (.. dot-container-node getChildren)
         resize (clj->js {:onSizeChange (fn [^Float32Array size]
