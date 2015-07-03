@@ -158,10 +158,10 @@
         context (.. FamousEngine (createScene "body"))
 
         back-node (first children)
-                                        ;back-clicks (events->chan back-node "tap")
+        back-clicks (events->chan back-node "tap")
 
         next-node (second children)
-                                        ;next-clicks (events->chan next-node "tap")
+        next-clicks (events->chan next-node "tap")
 
                                         ;pages (create-pages root-node simulation)
 
@@ -185,7 +185,7 @@
                                                                              (+ dotWidth spacing)))
                                                                        0
                                                                        0)))))})
-        ]
+        current-index (atom 0)]
     (.. dot-container-node (addComponent resize))
     (.. context (addChild root-node))
 
@@ -198,35 +198,35 @@
                                         ;                                           (.. (:anchor new-page) (set 0 0 0))
                                         ;                                           (.. (:quaternion new-page) (set 1 0 0 0)))))
 
-                                        ;(go
-                                        ;  (while true
-                                        ;         (let [[v channel] (alts! [back-clicks next-clicks])]
-                                        ;              (cond
-                                        ;                (= channel back-clicks) (do
-                                        ;                                          (println "back" @current-index)
-                                        ;                                          (swap! current-index dec)
-                                        ;                                          )
-                                        ;                (= channel next-clicks) (do
-                                        ;                                          (println "next" @current-index)
-                                        ;                                          (swap! current-index inc)
-                                        ;                                          )))))
+    (go
+      (while true
+        (let [[v channel] (alts! [back-clicks next-clicks])]
+          (cond
+            (= channel back-clicks) (do
+                                      (println "back" @current-index)
+                                      (swap! current-index dec)
+                                      )
+            (= channel next-clicks) (do
+                                      (println "next" @current-index)
+                                      (swap! current-index inc)
+                                      )))))
 
-                                        ;(.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
-                                        ;                                                        (.. simulation (update time))
-                                        ;                                                        (doseq [page pages
-                                        ;                                                                :let [physics-transform (.. simulation (getTransform (:box page)))
-                                        ;                                                                      p (.. physics-transform -position)
-                                        ;                                                                      r (.. physics-transform -rotation)
-                                        ;                                                                      node (:node page)]]
-                                        ;                                                               (.. node
-                                        ;                                                                   (setPosition (* 0 1446) 0 0)
-                                        ;                                                                   (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
-                                        ;                                                                   )
-                                        ;                                                               )
-                                        ;
-                                        ;                                                        (this-as this
-                                        ;                                                                 (.. FamousEngine (requestUpdateOnNextTick this)))
-                                        ;                                                        )})))
+    ;; (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
+    ;;                                                       (.. simulation (update time))
+    ;;                                                       (doseq [page pages
+    ;;                                                               :let [physics-transform (.. simulation (getTransform (:box page)))
+    ;;                                                                     p (.. physics-transform -position)
+    ;;                                                                     r (.. physics-transform -rotation)
+    ;;                                                                     node (:node page)]]
+    ;;                                                         (.. node
+    ;;                                                             (setPosition (* 0 1446) 0 0)
+    ;;                                                             (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
+    ;;                                                             )
+    ;;                                                         )
+                                                          
+    ;;                                                       (this-as this
+    ;;                                                                (.. FamousEngine (requestUpdateOnNextTick this)))
+    ;;                                                       )})))
     )
 
   )
