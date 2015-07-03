@@ -101,6 +101,32 @@
                                            :textHighlight "none"
                                            :zIndex "2"
                                            :content ">"}]]}]
+
+      (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
+            image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
+                         "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
+                         "03_-_Que_viene_el_Coco_thumb.jpg"
+                         "04_-_El_de_la_rollona_thumb.jpg"
+                         "05_-_Tal_para_qual_thumb.jpg"
+                         "06_-_Nadie_se_conoce_thumb.jpg"
+                         "07_-_Ni_asi_la_distingue_thumb.jpg"
+                         "09_-_Tantalo_thumb.jpg"
+                         "10_-_El_amor_y_la_muerte_thumb.jpg"
+                         "11_-_Muchachos_al_avC3ADo_thumb.jpg"
+                         "12_-_A_caza_de_dientes_thumb.jpg"
+                         "13_-_Estan_calientes_thumb.jpg"]]
+        (for [image-name image-names
+              :let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
+                    image-url (str url-base image-name)
+                    url (str "url('" image-url "')")]]
+          [:node {:size-mode [ABSOLUTE ABSOLUTE ABSOLUTE]
+                  :absolute-size [500 500 0]
+                  :align [0.5 0.5]
+                  :mount-point [0.5 0.5]
+                  :origin [0.5 0.5]
+                  :components [ [:DOMElement {:backgroundImage url
+                                              :background-repeat "no-repeat"
+                                              :background-size "cover"}]]}]))
       [:node {:id "dots"
               :size-mode [ABSOLUTE ABSOLUTE]
               :absolute-size [20 20]
@@ -123,14 +149,15 @@
         position (clj->js (:position attributes))
         components (:components attributes)
         mount-point (clj->js (:mount-point attributes))
-        
+        origin (clj->js (:origin attributes))
         children (get-children node-as-vec)]
     (.apply (.-setSizeMode node) node size-mode)
     (.apply (.-setAbsoluteSize node) node absolute-size)
     (.apply (.-setAlign node) node align)
     (.apply (.-setPosition node) node position)
     (.apply (.-setMountPoint node) node mount-point)
-    (println components)
+    (.apply (.-setOrigin node) node origin)
+    
     (if-not (empty? components)
       (doseq [component components
               :let [dom-element (DOMElement. node)
