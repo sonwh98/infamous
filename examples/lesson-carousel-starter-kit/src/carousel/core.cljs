@@ -117,36 +117,44 @@
 
 (defn make-tree []
   [:node {:id "root"}
-   [[:node {:id          "back"
-            :size-mode   [ABSOLUTE ABSOLUTE]
-            :absolute-size [40 40]
-            :align       [0 0.5 0]
-            :position    [40 0 0]
-            :mount-point [0 0.5 0]
-            :components  [ [:DOMElement {:color "white"
-                                         :fontSize "40px"
-                                         :lineHeight "40px"
-                                         :cursor "pointer"
-                                         :textHighlight "none"
-                                         :zIndex "2"
-                                         :content "<"}]
-                           ]
-            }
-
-     ]
-    [:node {:id          "next"
-            :size-mode   [ABSOLUTE ABSOLUTE]
-            :absolute-size [40 40]
-            :align       [1 0.5 0]
-            :position    [-40 0 0]
-            :mount-point [1 0.5 0]
-            :components  [ [:DOMElement {:color "white"
-                                         :fontSize "40px"
-                                         :lineHeight "40px"
-                                         :cursor "pointer"
-                                         :textHighlight "none"
-                                         :zIndex "2"
-                                         :content ">"}]]}]]])
+     [[:node {:id          "back"
+              :size-mode   [ABSOLUTE ABSOLUTE]
+              :absolute-size [40 40]
+              :align       [0 0.5 0]
+              :position    [40 0 0]
+              :mount-point [0 0.5 0]
+              :components  [[:DOMElement {:color "white"
+                                          :fontSize "40px"
+                                          :lineHeight "40px"
+                                          :cursor "pointer"
+                                          :textHighlight "none"
+                                          :zIndex "2"
+                                          :content "<"}]]}]
+      [:node {:id          "next"
+              :size-mode   [ABSOLUTE ABSOLUTE]
+              :absolute-size [40 40]
+              :align       [1 0.5 0]
+              :position    [-40 0 0]
+              :mount-point [1 0.5 0]
+              :components  [ [:DOMElement {:color "white"
+                                           :fontSize "40px"
+                                           :lineHeight "40px"
+                                           :cursor "pointer"
+                                           :textHighlight "none"
+                                           :zIndex "2"
+                                           :content ">"}]]}]
+      [:node {:id "dots"
+              :size-mode [ABSOLUTE ABSOLUTE]
+              :absolute-size [20 20]
+              :position [0 -50 0]
+              :align [0.5 1 0]
+              :mount-point [0.5 1 0]}
+       (for [i (range 5)]
+         [:node {:size-mode [ABSOLUTE ABSOLUTE]
+                 :absolute-size [5 5]
+                 :components [[:DOMElement {:borderRadius "5px"
+                                            :border "2px solid white"
+                                            :boxSizing "border-box"}]]}])]]])
 
 (defn make-nodes [node-as-vec]
   (let [attributes (nth node-as-vec 1)
@@ -191,11 +199,9 @@
         children (.. root-node getChildren)
         context (.. FamousEngine (createScene "body"))
 
-                                        ;back-node (.. root-node addChild)
         back-node (first children)
                                         ;back-clicks (events->chan back-node "tap")
 
-                                        ;next-node (.. root-node addChild)
         next-node (second children)
                                         ;next-clicks (events->chan next-node "tap")
 
