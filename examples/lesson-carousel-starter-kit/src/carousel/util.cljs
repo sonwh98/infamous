@@ -14,3 +14,16 @@
         (.. (GestureHandler. node) (on event (fn []
                                                  (put! c event))))
         c))
+
+(defmulti get-children
+  (fn [v]
+    (if (and (= (type v) PersistentVector)
+             (> (count v) 2))
+      (type v))))
+
+(defmethod get-children PersistentVector [params]
+  (nth params 2)
+  )
+
+(defmethod get-children :default [_]
+  [])
