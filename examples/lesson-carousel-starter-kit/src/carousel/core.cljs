@@ -25,48 +25,6 @@
 
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 
-(defn decorate-dots [dots-node]
-  (let [dot-nodes (.. dots-node getChildren)
-        resize (clj->js {:onSizeChange (fn [^Float32Array size]
-                                         "NOTE: this call back is called only once because root-dot setSizeMode is ABSOLUTE (value of 1)"
-                                         (let [size (IndexedSeq. size 0)
-                                               dotWidth 10
-                                               numPages 5
-                                               spacing 5
-                                               totalDotSize (+ (* numPages dotWidth)
-                                                               (* spacing (dec numPages)))
-                                               start-x (/ (- (nth size 0) totalDotSize)
-                                                          2)]
-                                           (doseq [n (range (count dot-nodes))
-                                                   :let [dot-node (nth dot-nodes n)]]
-                                             (.. dot-node (setPosition (+ start-x
-                                                                          (* n
-                                                                             (+ dotWidth spacing)))
-                                                                       0
-                                                                       0)))))})]
-    (doseq [dot-node dot-nodes]
-      (.. (DOMElement. dot-node)
-          (setProperty "borderRadius" "5px")
-          (setProperty "border" "2px solid white")
-          (setProperty "boxSizing" "border-box")))
-
-    (.. dots-node (addComponent resize))))
-
-(defn create-dots [root-node]
-  (let [root-dot (.. root-node addChild)]
-    (doseq [i (range 5)
-            :let [dot-node (.. root-dot addChild)]]
-      (.. dot-node
-          (setSizeMode ABSOLUTE ABSOLUTE)
-          (setAbsoluteSize 5 5)))
-    (.. root-dot
-        (setSizeMode ABSOLUTE ABSOLUTE)
-        (setAbsoluteSize 20 20)
-        (setPosition 0 -50 0)
-        (setAlign 0.5 1 0)
-        (setMountPoint .5, 1, 0))
-    root-dot))
-
 (defn create-pages [root-node simulation]
   (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
         image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
@@ -205,7 +163,6 @@
         next-node (second children)
                                         ;next-clicks (events->chan next-node "tap")
 
-                                        ;dots-node (create-dots root-node)
                                         ;pages (create-pages root-node simulation)
 
                                         ;current-index (atom 0)
