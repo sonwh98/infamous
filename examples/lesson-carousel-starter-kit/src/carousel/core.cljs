@@ -75,70 +75,70 @@
 
 (defn make-tree []
   [:node {:id "root"}
-     [[:node {:id          "back"
-              :size-mode   [ABSOLUTE ABSOLUTE]
-              :absolute-size [40 40]
-              :align       [0 0.5 0]
-              :position    [40 0 0]
-              :mount-point [0 0.5 0]
-              :components  [[:DOMElement {:color "white"
-                                          :fontSize "40px"
-                                          :lineHeight "40px"
-                                          :cursor "pointer"
-                                          :textHighlight "none"
-                                          :zIndex "2"
-                                          :content "<"}]]}]
-      [:node {:id          "next"
-              :size-mode   [ABSOLUTE ABSOLUTE]
-              :absolute-size [40 40]
-              :align       [1 0.5 0]
-              :position    [-40 0 0]
-              :mount-point [1 0.5 0]
-              :components  [ [:DOMElement {:color "white"
-                                           :fontSize "40px"
-                                           :lineHeight "40px"
-                                           :cursor "pointer"
-                                           :textHighlight "none"
-                                           :zIndex "2"
-                                           :content ">"}]]}]
+   [[:node {:id          "back"
+            :size-mode   [ABSOLUTE ABSOLUTE]
+            :absolute-size [40 40]
+            :align       [0 0.5 0]
+            :position    [40 0 0]
+            :mount-point [0 0.5 0]
+            :components  [[:DOMElement {:color "white"
+                                        :fontSize "40px"
+                                        :lineHeight "40px"
+                                        :cursor "pointer"
+                                        :textHighlight "none"
+                                        :zIndex "2"
+                                        :content "<"}]]}]
+    [:node {:id          "next"
+            :size-mode   [ABSOLUTE ABSOLUTE]
+            :absolute-size [40 40]
+            :align       [1 0.5 0]
+            :position    [-40 0 0]
+            :mount-point [1 0.5 0]
+            :components  [[:DOMElement {:color "white"
+                                        :fontSize "40px"
+                                        :lineHeight "40px"
+                                        :cursor "pointer"
+                                        :textHighlight "none"
+                                        :zIndex "2"
+                                        :content ">"}]]}]
 
-      (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
-            image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
-                         "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
-                         "03_-_Que_viene_el_Coco_thumb.jpg"
-                         "04_-_El_de_la_rollona_thumb.jpg"
-                         "05_-_Tal_para_qual_thumb.jpg"
-                         "06_-_Nadie_se_conoce_thumb.jpg"
-                         "07_-_Ni_asi_la_distingue_thumb.jpg"
-                         "09_-_Tantalo_thumb.jpg"
-                         "10_-_El_amor_y_la_muerte_thumb.jpg"
-                         "11_-_Muchachos_al_avC3ADo_thumb.jpg"
-                         "12_-_A_caza_de_dientes_thumb.jpg"
-                         "13_-_Estan_calientes_thumb.jpg"]]
-        (for [image-name image-names
-              :let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
-                    image-url (str url-base image-name)
-                    url (str "url('" image-url "')")]]
-          [:node {:size-mode [ABSOLUTE ABSOLUTE ABSOLUTE]
-                  :absolute-size [500 500 0]
-                  :align [0.5 0.5]
-                  :mount-point [0.5 0.5]
-                  :origin [0.5 0.5]
-                  :components [ [:DOMElement {:backgroundImage url
-                                              :background-repeat "no-repeat"
-                                              :background-size "cover"}]]}]))
-      [:node {:id "dots"
-              :size-mode [ABSOLUTE ABSOLUTE]
-              :absolute-size [20 20]
-              :position [0 -50 0]
-              :align [0.5 1 0]
-              :mount-point [0.5 1 0]}
-       (for [i (range 5)]
-         [:node {:size-mode [ABSOLUTE ABSOLUTE]
-                 :absolute-size [5 5]
-                 :components [[:DOMElement {:borderRadius "5px"
-                                            :border "2px solid white"
-                                            :boxSizing "border-box"}]]}])]]])
+    (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
+          image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
+                       "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
+                       "03_-_Que_viene_el_Coco_thumb.jpg"
+                       "04_-_El_de_la_rollona_thumb.jpg"
+                       "05_-_Tal_para_qual_thumb.jpg"
+                       "06_-_Nadie_se_conoce_thumb.jpg"
+                       "07_-_Ni_asi_la_distingue_thumb.jpg"
+                       "09_-_Tantalo_thumb.jpg"
+                       "10_-_El_amor_y_la_muerte_thumb.jpg"
+                       "11_-_Muchachos_al_avC3ADo_thumb.jpg"
+                       "12_-_A_caza_de_dientes_thumb.jpg"
+                       "13_-_Estan_calientes_thumb.jpg"]]
+      (for [image-name image-names
+            :let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
+                  image-url (str url-base image-name)
+                  url (str "url('" image-url "')")]]
+        [:node {:size-mode [ABSOLUTE ABSOLUTE ABSOLUTE]
+                :absolute-size [500 500 0]
+                :align [0.5 0.5]
+                :mount-point [0.5 0.5]
+                :origin [0.5 0.5]
+                :components [ [:DOMElement {:backgroundImage url
+                                            :background-repeat "no-repeat"
+                                            :background-size "cover"}]]}]))
+    [:node {:id "dots"
+            :size-mode [ABSOLUTE ABSOLUTE]
+            :absolute-size [20 20]
+            :position [0 -50 0]
+            :align [0.5 1 0]
+            :mount-point [0.5 1 0]}
+     (for [i (range 5)]
+       [:node {:size-mode [ABSOLUTE ABSOLUTE]
+               :absolute-size [5 5]
+               :components [[:DOMElement {:borderRadius "5px"
+                                          :border "2px solid white"
+                                          :boxSizing "border-box"}]]}])]]])
 
 (defn make-nodes [node-as-vec]
   (let [attributes (nth node-as-vec 1)
@@ -250,7 +250,7 @@
     ;;                                                             (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
     ;;                                                             )
     ;;                                                         )
-                                                          
+    
     ;;                                                       (this-as this
     ;;                                                                (.. FamousEngine (requestUpdateOnNextTick this)))
     ;;                                                       )})))
