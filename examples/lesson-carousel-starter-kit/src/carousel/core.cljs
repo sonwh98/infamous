@@ -1,7 +1,7 @@
 (ns ^:figwheel-always carousel.core
-    (:require-macros [cljs.core.async.macros :refer [go]])
+    (:require-macros [cljs.core.async.macros :refer [go]]) 
     (:require [com.famous.Famous]
-              [carousel.util :refer [events->chan]]
+              [carousel.util :refer [events->chan get-children]]
               [cljs.core.async :refer [>! <! put! chan alts!]]))
 
 (enable-console-print!)
@@ -9,6 +9,7 @@
 (defonce famous js/famous)
 (defonce DOMElement (.. famous -domRenderables -DOMElement))
 (defonce FamousEngine (.. famous -core -FamousEngine))
+(defonce Node (.. famous -core -Node))
 (defonce GestureHandler (.. famous -components -GestureHandler))
 (defonce Size (.. famous -components -Size))
 
@@ -127,7 +128,36 @@
       (.. simulation (add box spring rotational-spring)))
     
     pages))
-  
+
+(defn make-tree []
+  [:node {:id "root"}
+   [ [:node {:id "back"
+             :align [0 0.5 0]
+             :position [40 0 0]
+             :mount-point [0 0.5 0]}]
+     [:node {:id "next"
+             :align [1 0.5 0]
+             :position [-40 0 0]
+             :mount-point [1 0.5 0]}]]])
+
+(defn make-nodes [node-as-vec]
+  (let [attributes (nth node-as-vec 1)
+        node (Node.)
+        align (clj->js (:align attributes))
+        position (clj->js (:position attributes))
+        mount-point (clj->js (:mount-point attributes))
+        children (get-children node-as-vec)]
+    (.apply (.-setAlign node) node align)
+    (.apply (.-setPosition node) node position)
+    (.apply (.-setMountPoint node) node mount-point)
+    (println node-as-vec)
+    (if-not (empty? children)
+      (doseq [n (nth node-as-vec 2)
+              :let [a-child-node (make-nodes n)]]
+        (.. node (addChild a-child-node))))
+    node))
+
+
 (defn Carousel []
   (let [simulation (PhysicsEngine.)
         context (.. FamousEngine (createScene "body"))
