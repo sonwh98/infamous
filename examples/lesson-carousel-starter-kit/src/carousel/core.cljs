@@ -160,13 +160,17 @@
 
 (defn Carousel []
       (let [simulation (PhysicsEngine.)
+            tree (make-tree)
+            root-node (make-nodes tree)
+            children (.. root-node getChildren)
             context (.. FamousEngine (createScene "body"))
-            root-node (Node.)
 
-            back-node (.. root-node addChild)
+            ;back-node (.. root-node addChild)
+            back-node (first children)
             ;back-clicks (events->chan back-node "tap")
 
-            next-node (.. root-node addChild)
+            ;next-node (.. root-node addChild)
+            next-node (second children)
             ;next-clicks (events->chan next-node "tap")
 
             ;dots-node (create-dots root-node)
@@ -181,14 +185,14 @@
 
             (.. context (addChild root-node))
 
-           (.. back-node
-               (setAlign 0 0.5 0)
-               (setPosition 40 0 0)
-               (setMountPoint 0 0.5 0))
-           (.. next-node
-               (setAlign 1 0.5 0)
-               (setPosition -40 0 0)
-               (setMountPoint 1 0.5 0))
+           ;(.. back-node
+           ;    (setAlign 0 0.5 0)
+           ;    (setPosition 40 0 0)
+           ;    (setMountPoint 0 0.5 0))
+           ;(.. next-node
+           ;    (setAlign 1 0.5 0)
+           ;    (setPosition -40 0 0)
+           ;    (setMountPoint 1 0.5 0))
 
            ;(add-watch current-index :watcher (fn [key atom old-index new-index]
            ;                                      (let [old-page (nth pages old-index)
