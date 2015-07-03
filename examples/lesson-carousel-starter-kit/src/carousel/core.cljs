@@ -209,18 +209,29 @@
                                         ;pages (create-pages root-node simulation)
 
                                         ;current-index (atom 0)
+        dot-container-node (last children)
+        dot-nodes (.. dot-container-node getChildren)
+        resize (clj->js {:onSizeChange (fn [^Float32Array size]
+                                         "NOTE: this call back is called only once because root-dot setSizeMode is ABSOLUTE (value of 1)"
+                                         (let [size (IndexedSeq. size 0)
+                                               dotWidth 10
+                                               numPages 5
+                                               spacing 5
+                                               totalDotSize (+ (* numPages dotWidth)
+                                                               (* spacing (dec numPages)))
+                                               start-x (/ (- (nth size 0) totalDotSize)
+                                                          2)]
+                                           (doseq [n (range (count dot-nodes))
+                                                   :let [dot-node (nth dot-nodes n)]]
+                                             (.. dot-node (setPosition (+ start-x
+                                                                          (* n
+                                                                             (+ dotWidth spacing)))
+                                                                       0
+                                                                       0)))))})
         ]
-
+    (.. dot-container-node (addComponent resize))
     (.. context (addChild root-node))
 
-                                        ;(.. back-node
-                                        ;    (setAlign 0 0.5 0)
-                                        ;    (setPosition 40 0 0)
-                                        ;    (setMountPoint 0 0.5 0))
-                                        ;(.. next-node
-                                        ;    (setAlign 1 0.5 0)
-                                        ;    (setPosition -40 0 0)
-                                        ;    (setMountPoint 1 0.5 0))
 
                                         ;(add-watch current-index :watcher (fn [key atom old-index new-index]
                                         ;                                      (let [old-page (nth pages old-index)
