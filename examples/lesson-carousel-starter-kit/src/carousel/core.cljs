@@ -78,8 +78,8 @@
    [[:node {:id            "back"
             :size-mode     [ABSOLUTE ABSOLUTE]
             :absolute-size [40 40]
-            :align         [0 0.5 0]
             :position      [40 0 0]
+            :align         [0 0.5 0]
             :mount-point   [0 0.5 0]
             :components    [[:DOMElement {:color         "white"
                                           :fontSize      "40px"
@@ -91,8 +91,8 @@
     [:node {:id            "next"
             :size-mode     [ABSOLUTE ABSOLUTE]
             :absolute-size [40 40]
-            :align         [1 0.5 0]
             :position      [-40 0 0]
+            :align         [1 0.5 0]
             :mount-point   [1 0.5 0]
             :components    [[:DOMElement {:color         "white"
                                           :fontSize      "40px"
@@ -225,7 +225,7 @@
                                                                        0
                                                                        0)))))})
         _ (.. dot-container-node (addComponent resize))
-        current-index (atom 1)]
+        current-index (atom 0)]
 
     ;; (add-watch current-index :watcher (fn [key atom old-index new-index]
     ;;                                     (let [old-page (nth pages old-index)
