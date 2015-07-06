@@ -102,7 +102,9 @@
                                           :zIndex        "2"
                                           :content       ">"}]]}]
 
-    [:node {:id "pager"}
+    [:node {:id "pager"
+            :align [0.5 0.5 0]
+            :mount-point [0.5 0.5 0]}
      (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
            image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
                         "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
@@ -187,14 +189,22 @@
         _ (.. context (addChild root-node))
         children (.. root-node getChildren)
 
-        back-node (first children)
+        back-node (nth children 0)
         back-clicks (events->chan back-node "tap")
 
-        next-node (second children)
+        next-node (nth children 1)
         next-clicks (events->chan next-node "tap")
 
-        pages (.. children (slice 2 (count children)))
-
+        pager-node (nth children 2)
+        node-to-box (into {}  (for [page-node (.. pager-node getChildren)
+                                    :let [box (FamousBox. (clj->js {:mass 100 :size [100 100 100]}))
+                                          anchor (Vec3. 1 0 0)
+                                          spring (Spring. nil box (clj->js {:period 0.5 :dampingRatio 0.5 :anchor anchor}))
+                                          quaternion (.. (Quaternion.) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+                                          rotational-spring (RotationalSpring. nil box (clj->js {:period 1 :dampingRatio 0.2 :anchor quaternion}))
+                                          _ (.. simulation (add box spring rotational-spring))]]
+                                [page-node box]))
+        
         dot-container-node (last children)
         dot-nodes (.. dot-container-node getChildren)
         resize (clj->js {:onSizeChange (fn [^Float32Array size]
@@ -214,18 +224,16 @@
                                                                              (+ dotWidth spacing)))
                                                                        0
                                                                        0)))))})
-        current-index (atom 0)]
-    (.. dot-container-node (addComponent resize))
+        _ (.. dot-container-node (addComponent resize))
+        current-index (atom 1)]
 
-
-
-                                        ;(add-watch current-index :watcher (fn [key atom old-index new-index]
-                                        ;                                      (let [old-page (nth pages old-index)
-                                        ;                                            new-page (nth pages new-index)]
-                                        ;                                           (.. (:anchor old-page) (set 1 0 0))
-                                        ;                                           (.. (:quaternion old-page) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
-                                        ;                                           (.. (:anchor new-page) (set 0 0 0))
-                                        ;                                           (.. (:quaternion new-page) (set 1 0 0 0)))))
+    ;; (add-watch current-index :watcher (fn [key atom old-index new-index]
+    ;;                                     (let [old-page (nth pages old-index)
+    ;;                                           new-page (nth pages new-index)]
+    ;;                                       (.. (:anchor old-page) (set 1 0 0))
+    ;;                                       (.. (:quaternion old-page) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+    ;;                                       (.. (:anchor new-page) (set 0 0 0))
+    ;;                                       (.. (:quaternion new-page) (set 1 0 0 0)))))
 
     (go
       (while true
@@ -239,7 +247,8 @@
                                       (println "next" @current-index)
                                       (swap! current-index inc)
                                       )))))
-
+    
+    
     ;; (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
     ;;                                                       (.. simulation (update time))
     ;;                                                       (doseq [page pages
