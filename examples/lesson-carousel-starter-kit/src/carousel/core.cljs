@@ -140,7 +140,7 @@
         root-node (make-nodes tree)
         _ (.. context (addChild root-node))
         children (.. root-node getChildren)
-
+        
         back-node (nth children 0)
         back-clicks (events->chan back-node "tap")
 
