@@ -25,54 +25,6 @@
 
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 
-(defn create-pages [root-node simulation]
-  (let [url-base "http://demo.famo.us.s3.amazonaws.com/hub/apps/carousel/Museo_del_Prado_-_Goya_-_Caprichos_-_No._"
-        image-names ["01_-_Autorretrato._Francisco_Goya_y_Lucientes2C_pintor_thumb.jpg"
-                     "02_-_El_si_pronuncian_y_la_mano_alargan_al_primero_que_llega_thumb.jpg"
-                     "03_-_Que_viene_el_Coco_thumb.jpg"
-                     "04_-_El_de_la_rollona_thumb.jpg"
-                     "05_-_Tal_para_qual_thumb.jpg"
-                     "06_-_Nadie_se_conoce_thumb.jpg"
-                     "07_-_Ni_asi_la_distingue_thumb.jpg"
-                     "09_-_Tantalo_thumb.jpg"
-                     "10_-_El_amor_y_la_muerte_thumb.jpg"
-                     "11_-_Muchachos_al_avC3ADo_thumb.jpg"
-                     "12_-_A_caza_de_dientes_thumb.jpg"
-                     "13_-_Estan_calientes_thumb.jpg"]
-        pages (map (fn [image-name]
-                     (let [_image-url (str url-base image-name)
-                           image-url (str "url('" _image-url "')")
-                           image-node (.. root-node addChild)
-                           el (DOMElement. image-node)
-                           box (FamousBox. (clj->js {:mass 100 :size [100 100 100]}))
-                           anchor (Vec3. 1 0 0)
-                           spring (Spring. nil box (clj->js {:period 0.5 :dampingRatio 0.5 :anchor anchor}))
-                           quaternion (.. (Quaternion.) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
-                           rotational-spring (RotationalSpring. nil box (clj->js {:period 1 :dampingRatio 0.2 :anchor quaternion}))]
-                       (.. image-node
-                           (setSizeMode ABSOLUTE ABSOLUTE ABSOLUTE)
-                           (setAbsoluteSize 500 500 0)
-                           (setAlign 0.5 0.5)
-                           (setMountPoint 0.5 0.5)
-                           (setOrigin 0.5 0.5))
-                       (.. el
-                           (setProperty "backgroundImage" image-url)
-                           (setProperty "background-repeat" "no-repeat")
-                           (setProperty "background-size" "cover"))
-
-                       {:node              image-node
-                        :el                el
-                        :box               box
-                        :spring            spring
-                        :quaternion        quaternion
-                        :rotational-spring rotational-spring
-                        :anchor            anchor}))
-                   image-names)]
-    (doseq [{:keys [box spring rotational-spring]} pages]
-      (.. simulation (add box spring rotational-spring)))
-
-    pages))
-
 (defn make-tree []
   [:node {:id "root"}
    [[:node {:id            "back"
