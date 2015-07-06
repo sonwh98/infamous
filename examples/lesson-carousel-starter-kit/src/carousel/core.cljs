@@ -89,7 +89,7 @@
             :position      [0 -50 0]
             :align         [0.5 1 0]
             :mount-point   [0.5 1 0]}
-     (for [i (range 5)]
+     (for [i (range 13)]
        [:node {:size-mode     [ABSOLUTE ABSOLUTE]
                :absolute-size [5 5]
                :components    [[:DOMElement {:borderRadius "5px"
@@ -189,7 +189,20 @@
                                               old-page-physics (node-to-physics old-page-node)
 
                                               new-page-node (nth pages new-index)
-                                              new-page-physics (node-to-physics new-page-node)]
+                                              new-page-physics (node-to-physics new-page-node)
+                                              get-dom-element (fn [node]
+                                                                (first (filter (fn [component]
+                                                                                 (= "DOMElement" (.. component -constructor -name)))
+                                                                               (.. node getComponents))))
+                                              
+                                              old-dot-node (nth dot-nodes old-index)
+                                              old-dot-dom  (get-dom-element old-dot-node)
+                                              
+                                              new-dot-node (nth dot-nodes new-index)
+                                              new-dot-dom  (get-dom-element new-dot-node)]
+                                          (.. old-dot-dom (setProperty "backgroundColor" "transparent"))
+                                          (.. new-dot-dom (setProperty "backgroundColor" "white"))
+                                          
                                           (if (< old-index new-index)
                                             (do
                                               (.. (:anchor old-page-physics) (set -1 0 0))
