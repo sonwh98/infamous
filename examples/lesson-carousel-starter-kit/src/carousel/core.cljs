@@ -196,14 +196,19 @@
         next-clicks (events->chan next-node "tap")
 
         pager-node (nth children 2)
-        node-to-box (into {}  (for [page-node (.. pager-node getChildren)
-                                    :let [box (FamousBox. (clj->js {:mass 100 :size [100 100 100]}))
-                                          anchor (Vec3. 1 0 0)
-                                          spring (Spring. nil box (clj->js {:period 0.5 :dampingRatio 0.5 :anchor anchor}))
-                                          quaternion (.. (Quaternion.) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
-                                          rotational-spring (RotationalSpring. nil box (clj->js {:period 1 :dampingRatio 0.2 :anchor quaternion}))
-                                          _ (.. simulation (add box spring rotational-spring))]]
-                                [page-node box]))
+        pages (.. pager-node getChildren)
+        node-to-physics (into {}  (for [page-node pages
+                                        :let [box (FamousBox. (clj->js {:mass 100 :size [100 100 100]}))
+                                              anchor (Vec3. 1 0 0)
+                                              spring (Spring. nil box (clj->js {:period 0.5 :dampingRatio 0.5 :anchor anchor}))
+                                              quaternion (.. (Quaternion.) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+                                              rotational-spring (RotationalSpring. nil box (clj->js {:period 1 :dampingRatio 0.2 :anchor quaternion}))
+                                              _ (.. simulation (add box spring rotational-spring))]]
+                                    [page-node {:box box
+                                                :anchor anchor
+                                                :spring spring
+                                                :quaternion quaternion
+                                                :rotational-spring rotational-spring}]))
         
         dot-container-node (last children)
         dot-nodes (.. dot-container-node getChildren)
@@ -227,13 +232,24 @@
         _ (.. dot-container-node (addComponent resize))
         current-index (atom 0)]
 
-    ;; (add-watch current-index :watcher (fn [key atom old-index new-index]
-    ;;                                     (let [old-page (nth pages old-index)
-    ;;                                           new-page (nth pages new-index)]
-    ;;                                       (.. (:anchor old-page) (set 1 0 0))
-    ;;                                       (.. (:quaternion old-page) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
-    ;;                                       (.. (:anchor new-page) (set 0 0 0))
-    ;;                                       (.. (:quaternion new-page) (set 1 0 0 0)))))
+    (add-watch current-index :watcher (fn [key atom old-index new-index]
+                                        (let [old-page-node (nth pages old-index)
+                                              old-page-physics (node-to-physics old-page-node)
+
+                                              new-page-node (nth pages new-index)
+                                              new-page-physics (node-to-physics new-page-node)]
+                                          (if (< old-index new-index)
+                                            (do
+                                              (.. (:anchor old-page-physics) (set -1 0 0))
+                                              (.. (:quaternion old-page-physics) (fromEuler 0 (/ (.. js/Math -PI) 2) 0))
+                                              (.. (:anchor new-page-physics) (set 0 0 0))
+                                              (.. (:quaternion new-page-physics) (set 1 0 0 0)))
+                                            (do
+                                              (.. (:anchor old-page-physics) (set 1 0 0))
+                                              (.. (:quaternion old-page-physics) (fromEuler 0 (/ (.. js/Math -PI) -2) 0))
+                                              (.. (:anchor new-page-physics) (set 0 0 0))
+                                              (.. (:quaternion new-page-physics) (set 1 0 0 0))))))
+               )
 
     (go
       (while true
@@ -249,22 +265,20 @@
                                       )))))
     
     
-    ;; (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
-    ;;                                                       (.. simulation (update time))
-    ;;                                                       (doseq [page pages
-    ;;                                                               :let [physics-transform (.. simulation (getTransform (:box page)))
-    ;;                                                                     p (.. physics-transform -position)
-    ;;                                                                     r (.. physics-transform -rotation)
-    ;;                                                                     node (:node page)]]
-    ;;                                                         (.. node
-    ;;                                                             (setPosition (* 0 1446) 0 0)
-    ;;                                                             (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))
-    ;;                                                             )
-    ;;                                                         )
+    (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
+                                                          (.. simulation (update time))
+                                                          (doseq [page-node pages
+                                                                  :let [physics (node-to-physics page-node)
+                                                                        physics-transform (.. simulation (getTransform (:box physics)))
+                                                                        p (.. physics-transform -position)
+                                                                        r (.. physics-transform -rotation)]]
+                                                            (.. page-node
+                                                                (setPosition (* 0 1446) 0 0)
+                                                                (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))))
 
-    ;;                                                       (this-as this
-    ;;                                                                (.. FamousEngine (requestUpdateOnNextTick this)))
-    ;;                                                       )})))
+                                                          (this-as this
+                                                                   (.. FamousEngine (requestUpdateOnNextTick this)))
+                                                          )})))
     )
 
   )
