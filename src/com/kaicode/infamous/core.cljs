@@ -1,8 +1,8 @@
 (ns ^:figwheel-always com.kaicode.infamous.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs.core.async :refer [put! chan]]
-            [datascript :as d]
-            [com.famous.Famous]))
+  (:require [com.kaicode.Famous]
+            [cljs.core.async :refer [put! chan]]
+            [datascript :as d]))
 
 (enable-console-print!)
 
@@ -35,10 +35,10 @@
                             :Align      (.. famous -components -Align)})
 
 (defn- famous-compare [x y]
-      "Compare famous javascript objects. See https://github.com/tonsky/datascript/issues/69"
-      (let [str-x (.. js/JSON (stringify x))
-            str-y (.. js/JSON (stringify y))]
-           (compare str-x str-y)))
+       "Compare famous javascript objects. See https://github.com/tonsky/datascript/issues/69"
+       (let [str-x (.. js/JSON (stringify x))
+             str-y (.. js/JSON (stringify y))]
+            (compare str-x str-y)))
 
 (extend-protocol IComparable
                  FamousBox (^number -compare [x y]
