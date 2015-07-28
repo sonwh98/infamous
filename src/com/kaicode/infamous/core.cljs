@@ -1,5 +1,4 @@
 (ns ^:figwheel-always com.kaicode.infamous.core
-  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [com.kaicode.Famous]
             [cljs.core.async :refer [put! chan]]
             [datascript :as d]))
