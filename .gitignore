@@ -15,3 +15,4 @@ pom.xml.asc
 .repl
 examples/resources/public/js/compiled/**
 examples/figwheel_server.log
+./idea/
