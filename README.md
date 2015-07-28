@@ -6,4 +6,5 @@ add the following to your project.clj dependency
 
 ## See examples:
 https://github.com/sonwh98/cljs-famous-twitter
-https://github.com/sonwh98/cljs-carousel for a complete example
+
+https://github.com/sonwh98/cljs-carousel
