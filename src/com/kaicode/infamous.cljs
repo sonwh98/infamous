@@ -20,6 +20,9 @@
 (defonce Quaternion (.. math -Quaternion))
 (defonce Vec3 (.. math -Vec3))
 
+(defn get-node-by-id [id]
+      (ffirst (d/q '[:find (pull ?node [*]) :in $ ?id :where [?node :node/id ?id]] @conn id)))
+
 (defn get-famous-components [node]
       (.. (:node/famous-node node) getComponents))
 
@@ -63,7 +66,6 @@
              :node/physics    {:db/cardinality :db.cardinality/one
                                :db/isComponent true
                                :db/valueType   :db.type/ref}})
-
 (def conn (d/create-conn schema))
 
 (defn save [scene-graph]
@@ -82,67 +84,66 @@
                                                       (put! c (or (payload-function) event))))))
         c))
 
-(defn create-component [component-descriptor famous-node]
-      (let [component-type (:component/type component-descriptor)]
-           (if (keyword? component-type)
-             (let [component-constructor (famous-components component-type)
-                   component (component-constructor. famous-node)
-                   properties (dissoc component-descriptor :component/type :db/id)]
-                  (doseq [p properties
-                          :let [name (name (first p))
-                                value (second p)]]
-                         (cond
-                           (= name "content") (.. component (setContent value))
-                           (= name "classes") (doseq [clz value]
-                                                     (.. component (addClass clz)))
-                           :else (do
-                                   (.. component (setProperty name value)))))
-                  component)
-             (let [component (clj->js component-descriptor)]
-                  (.. famous-node (addComponent component))
-                  component))))
-
-(defn- get-node-by-id [id]
-       (ffirst (d/q '[:find (pull ?node [*]) :in $ ?id :where [?node :node/id ?id]] @conn id)))
+(defn- create-component [component-descriptor famous-node]
+       (let [component-type (:component/type component-descriptor)]
+            (if (keyword? component-type)
+              (let [component-constructor (famous-components component-type)
+                    component (component-constructor. famous-node)
+                    properties (dissoc component-descriptor :component/type :db/id)]
+                   (doseq [p properties
+                           :let [name (name (first p))
+                                 value (second p)]]
+                          (cond
+                            (= name "content") (.. component (setContent value))
+                            (= name "classes") (doseq [clz value]
+                                                      (.. component (addClass clz)))
+                            :else (do
+                                    (.. component (setProperty name value)))))
+                   component)
+              (let [component (clj->js component-descriptor)]
+                   (.. famous-node (addComponent component))
+                   component))))
 
 
-(defn attach-famous-node-to-scene-graph [node]
-      (let [famous-node (Node.)
-            size-mode (clj->js (:node/size-mode node))
-            absolute-size (clj->js (:node/absolute-size node))
-            align (clj->js (:node/align node))
-            position (clj->js (:node/position node))
-            mount-point (clj->js (:node/mount-point node))
-            origin (clj->js (:node/origin node))
-            proportional-size (clj->js (:node/proportional-size node))
-            differential-size (clj->js (:node/differential-size node))
-            ]
-           (.apply (.-setSizeMode famous-node) famous-node size-mode)
-           (.apply (.-setAbsoluteSize famous-node) famous-node absolute-size)
-           (.apply (.-setAlign famous-node) famous-node align)
-           (.apply (.-setPosition famous-node) famous-node position)
-           (.apply (.-setMountPoint famous-node) famous-node mount-point)
-           (.apply (.-setOrigin famous-node) famous-node origin)
-           (.apply (.-setProportionalSize famous-node) famous-node proportional-size)
-           (.apply (.-setDifferentialSize famous-node) famous-node differential-size)
-
-           (doseq [child-node (:node/children node)
-                   :let [a-child-node (attach-famous-node-to-scene-graph child-node)
-                         a-famous-child-node (:node/famous-node a-child-node)]]
-                  (.. famous-node (addChild a-famous-child-node)))
-
-           (d/transact! conn [{:db/id            (:db/id node)
-                               :node/famous-node famous-node}])
-
-           (update-in node [:node/famous-node] #(identity famous-node))))
 
 
-(defn find-nodes-with-physics []
-      (map #(first %) (d/q '[:find (pull ?node [*]) :where [?node :node/physics _]] @conn)))
+(defn- attach-famous-node-to-scene-graph [node]
+       (let [famous-node (Node.)
+             size-mode (clj->js (:node/size-mode node))
+             absolute-size (clj->js (:node/absolute-size node))
+             align (clj->js (:node/align node))
+             position (clj->js (:node/position node))
+             mount-point (clj->js (:node/mount-point node))
+             origin (clj->js (:node/origin node))
+             proportional-size (clj->js (:node/proportional-size node))
+             differential-size (clj->js (:node/differential-size node))
+             ]
+            (.apply (.-setSizeMode famous-node) famous-node size-mode)
+            (.apply (.-setAbsoluteSize famous-node) famous-node absolute-size)
+            (.apply (.-setAlign famous-node) famous-node align)
+            (.apply (.-setPosition famous-node) famous-node position)
+            (.apply (.-setMountPoint famous-node) famous-node mount-point)
+            (.apply (.-setOrigin famous-node) famous-node origin)
+            (.apply (.-setProportionalSize famous-node) famous-node proportional-size)
+            (.apply (.-setDifferentialSize famous-node) famous-node differential-size)
+
+            (doseq [child-node (:node/children node)
+                    :let [a-child-node (attach-famous-node-to-scene-graph child-node)
+                          a-famous-child-node (:node/famous-node a-child-node)]]
+                   (.. famous-node (addChild a-famous-child-node)))
+
+            (d/transact! conn [{:db/id            (:db/id node)
+                                :node/famous-node famous-node}])
+
+            (update-in node [:node/famous-node] #(identity famous-node))))
 
 
-(defn find-nodes-with-components []
-      (map #(first %) (d/q '[:find (pull ?node [*]) :where [?node :node/components _]] @conn)))
+(defn- find-nodes-with-physics []
+       (map #(first %) (d/q '[:find (pull ?node [*]) :where [?node :node/physics _]] @conn)))
+
+
+(defn- find-nodes-with-components []
+       (map #(first %) (d/q '[:find (pull ?node [*]) :where [?node :node/components _]] @conn)))
 
 (defn render-scene-graph [root-id]
       (let [simulation (PhysicsEngine.)
