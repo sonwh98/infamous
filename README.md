@@ -6,7 +6,7 @@ lein install
 
 Then in your project.clj dependencies
 ```
-[com.famous/famous "0.7.0"]
+[com.kaicode/infamous "0.7-SNAPSHOT"]
 ```
 
 See https://github.com/sonwh98/cljs-carousel for a complete example
