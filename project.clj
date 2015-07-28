@@ -1,5 +1,7 @@
 (defproject com.kaicode/infamous "0.7-SNAPSHOT"
   :description "ClojureScript DSL for Famous.js"
   :url "https://github.com/sonwh98/infamous"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"})
+  :scm {:name "git"
+        :url "https://github.com/sonwh98/infamous"}
+  :license {:name "MIT License"
+            :url "https://en.wikipedia.org/wiki/MIT_License"})
