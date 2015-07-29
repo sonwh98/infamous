@@ -20,9 +20,6 @@
 (defonce Quaternion (.. math -Quaternion))
 (defonce Vec3 (.. math -Vec3))
 
-(defn get-node-by-id [id]
-      (ffirst (d/q '[:find (pull ?node [*]) :in $ ?id :where [?node :node/id ?id]] @conn id)))
-
 (defn get-famous-components [node]
       (.. (:node/famous-node node) getComponents))
 
@@ -70,6 +67,9 @@
 
 (defn save [scene-graph]
       (d/transact! conn [scene-graph]))
+
+(defn get-node-by-id [id]
+      (ffirst (d/q '[:find (pull ?node [*]) :in $ ?id :where [?node :node/id ?id]] @conn id)))
 
 (defn events->chan
       "Given a node and event type return a channel of
