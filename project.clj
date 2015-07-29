@@ -1,4 +1,4 @@
-(defproject com.kaicode/infamous "0.7-SNAPSHOT"
+(defproject com.kaicode/infamous "0.7.1-SNAPSHOT"
   :description "ClojureScript DSL for Famous.js"
   :url "https://github.com/sonwh98/infamous"
   :scm {:name "git"

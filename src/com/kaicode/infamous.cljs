@@ -145,13 +145,17 @@
 (defn- find-nodes-with-components []
        (map #(first %) (d/q '[:find (pull ?node [*]) :where [?node :node/components _]] @conn)))
 
-(defn render-scene-graph [root-id]
-      (let [simulation (PhysicsEngine.)
+(defn render-scene-graph [scene-graph mount-element]
+      "mount-element can be a dom id or a dom element"
+      (save scene-graph)
+
+      (let [root-id (:node/id scene-graph)
+            simulation (PhysicsEngine.)
             scene-graph (attach-famous-node-to-scene-graph (get-node-by-id root-id))
             root-node (:node/famous-node scene-graph)
             physics-nodes (find-nodes-with-physics)
             nodes-with-components (find-nodes-with-components)
-            context (.. FamousEngine (createScene "body"))]
+            context (.. FamousEngine (createScene mount-element))]
            (.. context (addChild root-node))
 
            (doseq [{physics :node/physics} physics-nodes]
