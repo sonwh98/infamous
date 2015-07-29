@@ -1,7 +1,7 @@
 ## Use
 add the following to your project.clj dependency
 ```
-[com.kaicode/infamous "0.7-SNAPSHOT"]
+[com.kaicode/infamous "0.7.2-SNAPSHOT"]
 ```
 
 ## See examples:
