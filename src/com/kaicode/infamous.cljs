@@ -95,6 +95,7 @@
                                  value (second p)]]
                           (cond
                             (= name "content") (.. component (setContent value))
+                            (= name "id") (.. component (setId value))
                             (= name "classes") (doseq [clz value]
                                                       (.. component (addClass clz)))
                             :else (do
