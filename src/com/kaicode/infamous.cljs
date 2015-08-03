@@ -65,8 +65,8 @@
                                :db/valueType   :db.type/ref}})
 (def conn (d/create-conn schema))
 
-(defn save [scene-graph]
-      (d/transact! conn [scene-graph]))
+(defn save [datum]
+      (d/transact! conn [datum]))
 
 (defn get-node-by-id [id]
       (ffirst (d/q '[:find (pull ?node [*]) :in $ ?id :where [?node :node/id ?id]] @conn id)))
