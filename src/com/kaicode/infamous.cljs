@@ -101,7 +101,6 @@
                                                       (.. component (addClass clz)))
                             (= name "depth") (.. component (setDepth value))
                             :else (do
-                                    (println "blah; " name "=" value)
                                     (.. component (setProperty name value)))))
                    component)
               (let [component (clj->js component-descriptor)]
