@@ -31,7 +31,8 @@
                           famous-components))))
 
 (defonce famous-components {:DOMElement (.. famous -domRenderables -DOMElement)
-                            :Align      (.. famous -components -Align)})
+                            :Align      (.. famous -components -Align)
+                            :Camera     (.. famous -components -Camera)})
 
 (defn- famous-compare [x y]
        "Compare famous javascript objects. See https://github.com/tonsky/datascript/issues/69"
@@ -98,7 +99,9 @@
                             (= name "id") (.. component (setId value))
                             (= name "classes") (doseq [clz value]
                                                       (.. component (addClass clz)))
+                            (= name "depth") (.. component (setDepth value))
                             :else (do
+                                    (println "blah; " name "=" value)
                                     (.. component (setProperty name value)))))
                    component)
               (let [component (clj->js component-descriptor)]
@@ -178,7 +181,7 @@
                                                                                  p (.. physics-transform -position)
                                                                                  r (.. physics-transform -rotation)]]
                                                                           (.. famous-node
-                                                                              (setPosition (* 0 1446) 0 0)
+                                                                              (setPosition (* (nth p 0) 1446) 0 0)
                                                                               (setRotation (nth r 0) (nth r 1) (nth r 2) (nth r 3))))
 
                                                                    (this-as this
