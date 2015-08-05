@@ -96,7 +96,7 @@
                                  value (second p)]]
                           (cond
                             (= name "content") (.. component (setContent value))
-                            (= name "id") (do (println "id=" value) (.. component (setId value)))
+                            (= name "id") (do (.. component (setId value)))
                             (= name "classes") (doseq [clz value]
                                                       (.. component (addClass clz)))
                             (= name "depth") (.. component (setDepth value))
