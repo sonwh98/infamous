@@ -93,7 +93,11 @@
        (let [component-type (:component/type component-descriptor)]
             (if (keyword? component-type)
               (let [component-constructor (famous-components component-type)
-                    component (component-constructor. famous-node)
+                    component (if (= :DOMElement component-type)
+                                (let [tag-name (:tag-name component-descriptor)
+                                      options (clj->js {:tagName tag-name})]
+                                     (component-constructor. famous-node options))
+                                (component-constructor. famous-node))
                     properties (dissoc component-descriptor :component/type :db/id)]
                    (doseq [p properties
                            :let [name (name (first p))
