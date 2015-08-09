@@ -98,10 +98,16 @@
                                       options (clj->js {:tagName tag-name})]
                                      (component-constructor. famous-node options))
                                 (component-constructor. famous-node))
-                    properties (dissoc component-descriptor :component/type :db/id)]
-                   (doseq [p properties
-                           :let [name (name (first p))
-                                 value (second p)]]
+                    css (:css component-descriptor)
+                    attributes (dissoc component-descriptor :component/type :db/id :tag-name :css)]
+                   (doseq [c css
+                           :let [name (name (first c))
+                                 value (second c)]]
+                          (.. component (setProperty name value)))
+
+                   (doseq [a attributes
+                           :let [name (name (first a))
+                                 value (second a)]]
                           (cond
                             (= name "content") (.. component (setContent value))
                             (= name "id") (do (.. component (setId value)))
@@ -109,14 +115,13 @@
                                                       (.. component (addClass clz)))
                             (= name "depth") (.. component (setDepth value))
                             :else (do
-                                    (.. component (setProperty name value)))))
+                                    (.. component (setAttribute name value))))
+
+                          )
                    component)
               (let [component (clj->js component-descriptor)]
                    (.. famous-node (addComponent component))
                    component))))
-
-
-
 
 (defn- attach-famous-node-to-scene-graph [node]
        (let [famous-node (Node.)
