@@ -55,8 +55,11 @@
                                         (famous-compare x y))
 
                  function (^number -compare [x y]
-                                            (println "type x=" (type x) " type y=" (type y))
-                                            (famous-compare x y)))
+                                            (famous-compare x y))
+
+                 PersistentArrayMap (^number -compare [x y]
+                                                      (famous-compare x y))
+                 )
 
 (def schema {:node/id         {:db/unique :db.unique/identity}
              :node/children   {:db/cardinality :db.cardinality/many
