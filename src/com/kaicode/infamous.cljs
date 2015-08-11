@@ -1,7 +1,9 @@
 (ns ^:figwheel-always com.kaicode.infamous
+  (:require-macros [hiccups.core :as hiccups :refer [html]])
   (:require [com.kaicode.Famous]
             [cljs.core.async :refer [put! chan]]
-            [datascript :as d]))
+            [datascript :as d]
+            [hiccups.runtime :as hiccupsrt]))
 
 (enable-console-print!)
 
@@ -112,7 +114,10 @@
                            :let [name (name (first a))
                                  value (second a)]]
                           (cond
-                            (= name "content") (.. component (setContent value))
+                            (= name "content") (let [content (if (vector? value)
+                                                               (html value)
+                                                               value)]
+                                                    (.. component (setContent content)))
                             (= name "id") (do (.. component (setId value)))
                             (= name "classes") (doseq [clz value]
                                                       (.. component (addClass clz)))
