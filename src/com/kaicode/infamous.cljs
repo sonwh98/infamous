@@ -1,6 +1,7 @@
 (ns ^:figwheel-always com.kaicode.infamous
   (:require-macros [hiccups.core :as hiccups :refer [html]])
   (:require [com.kaicode.Famous]
+            [reagent.core :as reagent]
             [cljs.core.async :refer [put! chan]]
             [datascript :as d]
             [hiccups.runtime :as hiccupsrt]))
@@ -94,6 +95,16 @@
                                                       (put! c (or (payload-function) event))))))
         c))
 
+(defn mount-component [reagent-component get-mount-element]
+
+      (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
+                                                              (println "mounting " (get-mount-element))
+                                                              (let [element (get-mount-element)]
+                                                                   (if element
+                                                                     (reagent/render [reagent-component] element)
+                                                                     (this-as this
+                                                                              (.. FamousEngine (requestUpdateOnNextTick this))))))}))))
+
 (defn- create-component [component-descriptor famous-node]
        (let [component-type (:component/type component-descriptor)]
             (if (keyword? component-type)
@@ -114,9 +125,13 @@
                            :let [name (name (first a))
                                  value (second a)]]
                           (cond
-                            (= name "content") (let [content (if (vector? value)
-                                                               (html value)
-                                                               value)]
+                            (= name "content") (let [content (cond
+                                                               (vector? value) (html value)
+                                                               (fn? value) (let [id (:id attributes)
+                                                                                 reagent-component value]
+                                                                                (mount-component reagent-component #(.. js/document (getElementById id))))
+                                                               :else value)
+                                                     ]
                                                     (.. component (setContent content)))
                             (= name "id") (do (.. component (setId value)))
                             (= name "classes") (doseq [clz value]
