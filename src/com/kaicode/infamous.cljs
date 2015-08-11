@@ -101,9 +101,9 @@
                                       options (clj->js {:tagName tag-name})]
                                      (component-constructor. famous-node options))
                                 (component-constructor. famous-node))
-                    css (:css component-descriptor)
-                    attributes (dissoc component-descriptor :component/type :db/id :tag-name :css)]
-                   (doseq [c css
+                    style (:style component-descriptor)
+                    attributes (dissoc component-descriptor :component/type :db/id :tag-name :style)]
+                   (doseq [c style
                            :let [name (name (first c))
                                  value (second c)]]
                           (.. component (setProperty name value)))
