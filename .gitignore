@@ -7,6 +7,7 @@ pom.xml
 pom.xml.asc
 *.jar
 *.class
+*.iml
 /.lein-*
 /.nrepl-port
 .lein-deps-sum
@@ -15,4 +16,4 @@ pom.xml.asc
 .repl
 examples/resources/public/js/compiled/**
 examples/figwheel_server.log
-./idea/
+.idea
