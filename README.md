@@ -8,3 +8,5 @@ add the following to your project.clj dependency
 https://github.com/sonwh98/cljs-famous-twitter
 
 https://github.com/sonwh98/cljs-carousel
+
+https://github.com/sonwh98/cljs-famous-seed
