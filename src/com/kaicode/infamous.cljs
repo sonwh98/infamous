@@ -98,7 +98,6 @@
 (defn mount-component [reagent-component get-mount-element]
 
       (.. FamousEngine (requestUpdate (clj->js {:onUpdate (fn [time]
-                                                              (println "mounting " (get-mount-element))
                                                               (let [element (get-mount-element)]
                                                                    (if element
                                                                      (reagent/render [reagent-component] element)
